@@ -1,4 +1,4 @@
-package com.needy.hagenberg.needy;
+package com.hagenberg.needy;
 
 import org.junit.Test;
 
