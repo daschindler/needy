@@ -7,6 +7,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+
+import java.sql.ResultSet;
+import java.sql.Time;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -63,7 +67,14 @@ public class CreateRecipeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_create_recipe, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_create_recipe, container, false);
+
+        Context context = rootView.getContext(); // android.content.Context
+        LinearLayout linearLayout = new LinearLayout(context);
+
+
+
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
