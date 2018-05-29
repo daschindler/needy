@@ -1,10 +1,13 @@
-package com.hagenberg.needy;
+package com.hagenberg.needy.Activities;
 
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class CreateRecipeActivity extends AppCompatActivity implements CreateRecipeFragment.OnFragmentInteractionListener{
+import com.hagenberg.needy.CreateRecipeFragment;
+import com.hagenberg.needy.R;
+
+public class CreateRecipeActivity extends AppCompatActivity implements CreateRecipeFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
