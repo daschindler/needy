@@ -9,7 +9,6 @@ import android.widget.EditText;
 
 import com.hagenberg.needy.Adapters.CreateRecipeBookListAdapter;
 import com.hagenberg.needy.R;
-
 import java.util.ArrayList;
 import java.util.List;
 

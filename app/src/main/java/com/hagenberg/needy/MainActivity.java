@@ -4,10 +4,13 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.hagenberg.needy.Adapters.MainPagerAdapter;
 import com.hagenberg.needy.Entity.Recipe;
 import com.hagenberg.needy.ViewModel.RecipeViewModel;
 
@@ -15,11 +18,19 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    FragmentPagerAdapter viewPagerAdapter;
+    ViewPager viewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(viewPagerAdapter);
+    }
 
+    public void ShowDatabaseFunctionality() {
         //Hallo Leute, hier eine kleine Demo wie ihr mit Dominiks cooler Datenbank interagieren könnt
 
         //Zuerst holt ihr euch das ViewModel (zB das für Recipe)
