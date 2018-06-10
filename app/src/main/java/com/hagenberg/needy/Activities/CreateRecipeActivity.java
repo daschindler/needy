@@ -4,7 +4,7 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.hagenberg.needy.CreateRecipeFragment;
+import com.hagenberg.needy.Fragments.CreateRecipeFragment;
 import com.hagenberg.needy.R;
 
 public class CreateRecipeActivity extends AppCompatActivity implements CreateRecipeFragment.OnFragmentInteractionListener {

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.hagenberg.needy.Activities.CreateRecipeActivity">
 
-    <fragment android:name="com.hagenberg.needy.CreateRecipeFragment"
+    <fragment android:name="com.hagenberg.needy.Fragments.CreateRecipeFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/fragment_browser"/>
