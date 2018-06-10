@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hagenberg.needy.Entity.Ingredient;
+import com.hagenberg.needy.Entity.IngredientViewId;
 import com.hagenberg.needy.Entity.Recipe;
 import com.hagenberg.needy.Entity.Unit;
 import com.hagenberg.needy.R;
@@ -77,13 +78,16 @@ public class CreateRecipeFragment extends Fragment {
 
     TextView tv_create_recipe_name;
     Button bt_new_ingredient, bt_save;
-    LinearLayout ll_ingredients, ll_first_ingredient;
+    LinearLayout ll_ingredients;
+
+    List<IngredientViewId> ingredientViewIdList = new ArrayList<>();
+    int idCounter = 13400;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_create_recipe, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_create_recipe, container, false);
         tv_create_recipe_name = rootView.findViewById(R.id.tv_create_recipe_name);
         bt_new_ingredient = rootView.findViewById(R.id.bt_create_recipe_new_ingredient);
         bt_save = rootView.findViewById(R.id.bt_create_recipe_saverecipe);
@@ -102,8 +106,11 @@ public class CreateRecipeFragment extends Fragment {
         bt_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (tv_create_recipe_name.getText() != null && !tv_create_recipe_name.getText().equals(""))
-                Toast.makeText(getActivity(), "Rezept erstellt", Toast.LENGTH_SHORT).show();
+                if (tv_create_recipe_name.getText() != null && !tv_create_recipe_name.getText().equals("")) {
+                    EditText editText = rootView.findViewById(ingredientViewIdList.get(0).getNameId());
+                    Toast.makeText(getActivity(), editText.getText().toString(), Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -135,10 +142,12 @@ public class CreateRecipeFragment extends Fragment {
         EditText etnewIngredientName = new EditText(getActivity());
         etnewIngredientName.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 4f));
         etnewIngredientName.setHint("Name");
+        etnewIngredientName.setId(idCounter++);
 
         EditText etNewIngredientAmount = new EditText(getActivity());
         etNewIngredientAmount.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 2f));
         etNewIngredientAmount.setHint("Menge");
+        etNewIngredientAmount.setId(idCounter++);
 
         ArrayList<String> spinnerArray = new ArrayList<String>();
         spinnerArray.add(Unit.CoffeeSpoon.toString());
@@ -146,11 +155,12 @@ public class CreateRecipeFragment extends Fragment {
         spinnerArray.add(Unit.Liter.toString());
         spinnerArray.add(Unit.Unit.toString());
 
-        Spinner etNewIngredientSpinner = new Spinner(getActivity());
+        Spinner newIngredientSpinner = new Spinner(getActivity());
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, spinnerArray);
-        etNewIngredientSpinner.setAdapter(spinnerArrayAdapter);
-        etNewIngredientSpinner.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 2f));
-        etNewIngredientSpinner.setPrompt("Einheit");
+        newIngredientSpinner.setAdapter(spinnerArrayAdapter);
+        newIngredientSpinner.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 2f));
+        newIngredientSpinner.setPrompt("Einheit");
+        newIngredientSpinner.setId(idCounter++);
 
         Button btDeleteIngredient = new Button(getActivity());
         btDeleteIngredient.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f));
@@ -158,11 +168,14 @@ public class CreateRecipeFragment extends Fragment {
 
         llnewIngredientHorizontal1.addView(etnewIngredientName);
         llnewIngredientHorizontal1.addView(etNewIngredientAmount);
-        llnewIngredientHorizontal2.addView(etNewIngredientSpinner);
+        llnewIngredientHorizontal2.addView(newIngredientSpinner);
         llnewIngredientHorizontal2.addView(btDeleteIngredient);
 
         llnewIngredientVertical.addView(llnewIngredientHorizontal1);
         llnewIngredientVertical.addView(llnewIngredientHorizontal2);
+
+        IngredientViewId ingredientViewId = new IngredientViewId(etnewIngredientName.getId(), etNewIngredientAmount.getId(), newIngredientSpinner.getId());
+        ingredientViewIdList.add(ingredientViewId);
 
         ll_ingredients.addView(llnewIngredientVertical);
 
