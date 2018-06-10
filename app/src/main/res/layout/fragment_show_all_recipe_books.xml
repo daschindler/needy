@@ -1,12 +1,72 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.hagenberg.needy.Activities.ShowAllRecipeBooksFragment">
+    tools:context="com.hagenberg.needy.Fragments.ShowAllRecipeBooksFragment">
+
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Fragment #2" />
+        android:id="@+id/show_recipe_books_tv_filter"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Filter recipe books by: "
+        app:layout_constraintBottom_toTopOf="@+id/show_recipe_books_sp_filter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="spread"
+        app:layout_constraintVertical_weight="1" />
 
-</FrameLayout>
+    <Spinner
+        android:id="@+id/show_recipe_books_sp_filter"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/show_recipe_books_sv_recipe_books"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/show_recipe_books_tv_filter"
+        app:layout_constraintVertical_chainStyle="spread"
+        app:layout_constraintVertical_weight="1" />
+
+    <ScrollView
+        android:id="@+id/show_recipe_books_sv_recipe_books"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/show_recipe_books_sp_filter"
+        app:layout_constraintVertical_chainStyle="spread"
+        app:layout_constraintVertical_weight="7">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/show_recipe_books_rv_recipe_books"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </ScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/show_recipe_books_fab_add_recipe_book"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:clickable="true"
+        android:src="@android:drawable/ic_input_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</android.support.constraint.ConstraintLayout>

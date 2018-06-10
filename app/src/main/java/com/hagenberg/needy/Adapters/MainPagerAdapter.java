@@ -5,8 +5,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.hagenberg.needy.Activities.ShowAllRecipeBooksFragment;
-import com.hagenberg.needy.Activities.ShowAllRecipesFragment;
+import com.hagenberg.needy.Fragments.ShowAllRecipeBooksFragment;
+import com.hagenberg.needy.Fragments.ShowAllRecipesFragment;
 
 public class MainPagerAdapter extends FragmentPagerAdapter {
     private static int page_count = 2;
