@@ -7,6 +7,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.CycleInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -80,8 +84,13 @@ public class CreateRecipeFragment extends Fragment {
     Button bt_new_ingredient, bt_save;
     LinearLayout ll_ingredients;
 
+    //hier werden alle Ids zu den dynamisch erzeugten Ingredient Views gespeichert um
+    //ihre Inhalte später abrufen zu können
     List<IngredientViewId> ingredientViewIdList = new ArrayList<>();
     int idCounter = 13400;
+
+    boolean infoValid = true;
+    List<Ingredient> ingredients = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,6 +102,7 @@ public class CreateRecipeFragment extends Fragment {
         bt_save = rootView.findViewById(R.id.bt_create_recipe_saverecipe);
         ll_ingredients = rootView.findViewById(R.id.ll_create_recipe_ingredients);
 
+        //Dass schon einmal ein Ingredient angezeigt wird, wenn das Fragment geladen wurde
         CreateNewIngredientView();
 
 
@@ -106,9 +116,39 @@ public class CreateRecipeFragment extends Fragment {
         bt_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (tv_create_recipe_name.getText() != null && !tv_create_recipe_name.getText().equals("")) {
-                    EditText editText = rootView.findViewById(ingredientViewIdList.get(0).getNameId());
-                    Toast.makeText(getActivity(), editText.getText().toString(), Toast.LENGTH_SHORT).show();
+                infoValid = true;
+                if (!tv_create_recipe_name.getText().toString().equals("")) {
+                    if (!ingredientViewIdList.isEmpty()) {
+                        for (IngredientViewId ingredientIds : ingredientViewIdList) {
+                            EditText etName = rootView.findViewById(ingredientIds.getNameId());
+                            String name = etName.getText().toString();
+
+                            EditText etAmount = rootView.findViewById(ingredientIds.getAmountId());
+                            String amount = etAmount.getText().toString();
+
+                            if (name.equals("")) {
+                                Toast.makeText(getActivity(), "Infos fehlen", Toast.LENGTH_SHORT).show();
+                                etName.startAnimation(shakeError());
+                                infoValid = false;
+                            }
+                            if (amount.equals("")) {
+                                Toast.makeText(getActivity(), "Infos fehlen", Toast.LENGTH_SHORT).show();
+                                etAmount.startAnimation(shakeError());
+                                infoValid = false;
+                            }
+
+                            if (infoValid = true) {
+                                Spinner spUnit = rootView.findViewById(ingredientIds.getUnitId());
+                                Unit unit = Unit.valueOf(spUnit.getSelectedItem().toString());
+                                int numberAmount = Integer.getInteger(amount);
+
+                                //Ingredient ingredient = new Ingredient(name, numberAmount, unit);
+                            } else {
+                                ingredients.clear();
+                            }
+
+                        }
+                    }
                 }
 
             }
@@ -118,6 +158,13 @@ public class CreateRecipeFragment extends Fragment {
 
 
         return rootView;
+    }
+
+    private TranslateAnimation shakeError() {
+        TranslateAnimation shake = new TranslateAnimation(0, 10, 0, 0);
+        shake.setDuration(500);
+        shake.setInterpolator(new CycleInterpolator(7));
+        return shake;
     }
 
     private void CreateNewIngredientView() {
@@ -174,7 +221,7 @@ public class CreateRecipeFragment extends Fragment {
         llnewIngredientVertical.addView(llnewIngredientHorizontal1);
         llnewIngredientVertical.addView(llnewIngredientHorizontal2);
 
-        IngredientViewId ingredientViewId = new IngredientViewId(etnewIngredientName.getId(), etNewIngredientAmount.getId(), newIngredientSpinner.getId());
+        final IngredientViewId ingredientViewId = new IngredientViewId(etnewIngredientName.getId(), etNewIngredientAmount.getId(), newIngredientSpinner.getId());
         ingredientViewIdList.add(ingredientViewId);
 
         ll_ingredients.addView(llnewIngredientVertical);
@@ -183,6 +230,7 @@ public class CreateRecipeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 ll_ingredients.removeView(llnewIngredientVertical);
+                ingredientViewIdList.remove(ingredientViewId);
             }
         });
     }
