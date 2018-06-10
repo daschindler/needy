@@ -9,11 +9,11 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="30dp"
+        android:paddingBottom="20dp"
         android:id="@+id/tv_create_recipe_name"
-        android:paddingTop="30dp"
+        android:paddingTop="20dp"
         android:gravity="center"
-        android:textSize="25dp"
+        android:textSize="20dp"
         android:hint="Rezeptname"
         android:background="@color/colorRecipeBack"/>
 
@@ -37,6 +37,7 @@
             android:id="@+id/ll_create_recipe_ingredients"
             android:layout_height="wrap_content">
 
+            <!--
             <LinearLayout
                 android:id="@+id/ll_create_recipe_first_ingredient"
                 android:layout_width="match_parent"
@@ -65,7 +66,7 @@
                 </Spinner>
 
 
-            </LinearLayout>
+            </LinearLayout>-->
 
 
         </LinearLayout>

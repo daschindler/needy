@@ -7,16 +7,21 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hagenberg.needy.Entity.Ingredient;
 import com.hagenberg.needy.Entity.Recipe;
+import com.hagenberg.needy.Entity.Unit;
 import com.hagenberg.needy.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -72,7 +77,7 @@ public class CreateRecipeFragment extends Fragment {
 
     TextView tv_create_recipe_name;
     Button bt_new_ingredient, bt_save;
-    LinearLayout ll_ingredients;
+    LinearLayout ll_ingredients, ll_first_ingredient;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -84,11 +89,13 @@ public class CreateRecipeFragment extends Fragment {
         bt_save = rootView.findViewById(R.id.bt_create_recipe_saverecipe);
         ll_ingredients = rootView.findViewById(R.id.ll_create_recipe_ingredients);
 
-        //push verkackt manno
+        CreateNewIngredientView();
+
+
         bt_new_ingredient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                CreateNewIngredientView();
             }
         });
 
@@ -104,6 +111,67 @@ public class CreateRecipeFragment extends Fragment {
 
 
         return rootView;
+    }
+
+    private void CreateNewIngredientView() {
+        //create vertical layout to fit 2 horizontal layout
+        final LinearLayout llnewIngredientVertical = new LinearLayout(getActivity());
+        llnewIngredientVertical.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        llnewIngredientVertical.setOrientation(LinearLayout.VERTICAL);
+        llnewIngredientVertical.setPadding(0,15,0,15);
+
+        //first horizontal layout fitting name and amount
+        LinearLayout llnewIngredientHorizontal1 = new LinearLayout(getActivity());
+        llnewIngredientHorizontal1.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        llnewIngredientHorizontal1.setOrientation(LinearLayout.HORIZONTAL);
+        llnewIngredientHorizontal1.setPadding(0,0,0,0);
+
+        //second horizontal layout fitting unit and delete
+        LinearLayout llnewIngredientHorizontal2 = new LinearLayout(getActivity());
+        llnewIngredientHorizontal2.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        llnewIngredientHorizontal2.setOrientation(LinearLayout.HORIZONTAL);
+        llnewIngredientHorizontal2.setPadding(0,0,0,0);
+
+        EditText etnewIngredientName = new EditText(getActivity());
+        etnewIngredientName.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 4f));
+        etnewIngredientName.setHint("Name");
+
+        EditText etNewIngredientAmount = new EditText(getActivity());
+        etNewIngredientAmount.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 2f));
+        etNewIngredientAmount.setHint("Menge");
+
+        ArrayList<String> spinnerArray = new ArrayList<String>();
+        spinnerArray.add(Unit.CoffeeSpoon.toString());
+        spinnerArray.add(Unit.Gram.toString());
+        spinnerArray.add(Unit.Liter.toString());
+        spinnerArray.add(Unit.Unit.toString());
+
+        Spinner etNewIngredientSpinner = new Spinner(getActivity());
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, spinnerArray);
+        etNewIngredientSpinner.setAdapter(spinnerArrayAdapter);
+        etNewIngredientSpinner.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 2f));
+        etNewIngredientSpinner.setPrompt("Einheit");
+
+        Button btDeleteIngredient = new Button(getActivity());
+        btDeleteIngredient.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f));
+        btDeleteIngredient.setText("Delete");
+
+        llnewIngredientHorizontal1.addView(etnewIngredientName);
+        llnewIngredientHorizontal1.addView(etNewIngredientAmount);
+        llnewIngredientHorizontal2.addView(etNewIngredientSpinner);
+        llnewIngredientHorizontal2.addView(btDeleteIngredient);
+
+        llnewIngredientVertical.addView(llnewIngredientHorizontal1);
+        llnewIngredientVertical.addView(llnewIngredientHorizontal2);
+
+        ll_ingredients.addView(llnewIngredientVertical);
+
+        btDeleteIngredient.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ll_ingredients.removeView(llnewIngredientVertical);
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event
