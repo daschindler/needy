@@ -127,13 +127,13 @@ public class CreateRecipeFragment extends Fragment {
                             String amount = etAmount.getText().toString();
 
                             if (name.equals("")) {
-                                Toast.makeText(getActivity(), "Infos fehlen", Toast.LENGTH_SHORT).show();
-                                etName.startAnimation(shakeError());
+                                //Toast.makeText(getActivity(), "Infos fehlen", Toast.LENGTH_SHORT).show();
+                                //etName.startAnimation(shakeError());
                                 infoValid = false;
                             }
                             if (amount.equals("")) {
-                                Toast.makeText(getActivity(), "Infos fehlen", Toast.LENGTH_SHORT).show();
-                                etAmount.startAnimation(shakeError());
+                                //Toast.makeText(getActivity(), "Infos fehlen", Toast.LENGTH_SHORT).show();
+                                //etAmount.startAnimation(shakeError());
                                 infoValid = false;
                             }
 
@@ -143,10 +143,20 @@ public class CreateRecipeFragment extends Fragment {
                                 int numberAmount = Integer.getInteger(amount);
 
                                 //Ingredient ingredient = new Ingredient(name, numberAmount, unit);
+                                //add ingredient to ingredientList
                             } else {
                                 ingredients.clear();
                             }
 
+                        }
+
+                        if (infoValid == true){
+                            //Beschreibung Popup
+                            //IngredientListe muss an diesem Punkt vorhanden sein
+
+
+                        } else {
+                            Toast.makeText(getActivity(), "Alle angelegten Felder muessen ausgefuellt werden!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
