@@ -1,5 +1,6 @@
 package com.hagenberg.needy.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -9,11 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.hagenberg.needy.Activities.CreateRecipeBookActivity;
 import com.hagenberg.needy.R;
 
 public class ShowAllRecipeBooksFragment extends Fragment {
 
+    String searchString;
     TextView tvFilter;
     Spinner spFilter;
     RecyclerView rvRecipeBooks;
@@ -21,6 +25,11 @@ public class ShowAllRecipeBooksFragment extends Fragment {
 
     public ShowAllRecipeBooksFragment() {
         // Required empty public constructor
+    }
+
+    public void setSearchString(String searchString) {
+        this.searchString = searchString;
+        Toast.makeText(getContext(), "Updating this views layouts with new search string: " + searchString, Toast.LENGTH_LONG).show();
     }
 
     public static ShowAllRecipeBooksFragment newInstance() {
@@ -42,7 +51,15 @@ public class ShowAllRecipeBooksFragment extends Fragment {
         tvFilter = rootView.findViewById(R.id.show_recipe_books_tv_filter);
         spFilter = rootView.findViewById(R.id.show_recipe_books_sp_filter);
         rvRecipeBooks = rootView.findViewById(R.id.show_recipe_books_rv_recipe_books);
+
         fabAddRecipeBook = rootView.findViewById(R.id.show_recipe_books_fab_add_recipe_book);
+        fabAddRecipeBook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), CreateRecipeBookActivity.class);
+                getActivity().startActivity(intent);
+            }
+        });
 
         return rootView;
     }

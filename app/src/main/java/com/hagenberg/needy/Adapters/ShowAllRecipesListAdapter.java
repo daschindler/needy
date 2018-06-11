@@ -1,6 +1,7 @@
 package com.hagenberg.needy.Adapters;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,6 +17,14 @@ import java.util.List;
 
 public class ShowAllRecipesListAdapter extends RecyclerView.Adapter<ShowAllRecipesListAdapter.ViewHolder> {
     private List<Recipe> recipes;
+
+    public boolean updateData(List<Recipe> recipes){
+        if(recipes.size()>0) {
+            this.recipes = recipes;
+            return true;
+        }
+        return false;
+    }
 
     public ShowAllRecipesListAdapter(List<Recipe> recipes) {
         this.recipes = recipes;
@@ -34,6 +43,12 @@ public class ShowAllRecipesListAdapter extends RecyclerView.Adapter<ShowAllRecip
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         final String recipeName = recipes.get(i).getName();
         viewHolder.tvRecipeName.setText(recipeName);
+        viewHolder.tvRecipeName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Call detail view of clicked Recipe.
+            }
+        });
 
     }
 
