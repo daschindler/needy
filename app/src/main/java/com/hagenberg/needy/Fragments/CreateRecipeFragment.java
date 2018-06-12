@@ -172,7 +172,7 @@ public class CreateRecipeFragment extends Fragment {
     }
 
     private void openDialogToFinish(final String recipeName) {
-        final Dialog dialogDescription = new Dialog(getActivity());
+        final Dialog dialogDescription = new Dialog(getActivity(), R.style.DescriptionDialog);
         dialogDescription.setContentView(R.layout.dialog_create_recipe_description);
         Button btSave = dialogDescription.findViewById(R.id.bt_create_recipe_dialog_save);
         Button btCancel = dialogDescription.findViewById(R.id.bt_create_recipe_dialog_cancel);

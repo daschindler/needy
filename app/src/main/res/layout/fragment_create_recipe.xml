@@ -15,7 +15,7 @@
         android:gravity="center"
         android:textSize="20dp"
         android:hint="Rezeptname"
-        android:background="@color/colorRecipeBack"/>
+        android:background="#efefef"/>
 
     <TextView
         android:layout_width="match_parent"
