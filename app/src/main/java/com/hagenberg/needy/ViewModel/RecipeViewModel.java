@@ -18,10 +18,12 @@ public class RecipeViewModel extends AndroidViewModel {
         super(application);
 
         mRepository = new NeedyRepository(application);
-        mAllRecipes = mRepository.getAllWords();
+        mAllRecipes = mRepository.getAllRecipes();
     }
 
     public LiveData<List<Recipe>> getAllRecipes() { return mAllRecipes; }
 
     public void insert(Recipe recipe) { mRepository.insert(recipe); }
+
+    public void update(Recipe recipe) { mRepository.update(recipe); }
 }

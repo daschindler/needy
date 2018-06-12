@@ -5,6 +5,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import com.hagenberg.needy.Entity.Recipe;
 
@@ -23,8 +24,11 @@ public interface RecipeData {
     LiveData<Recipe> findByName(String name, String desc);
 
     @Insert
-    void insertAll(Recipe... users);
+    void insertAll(Recipe... recipes);
 
     @Delete
-    void delete(Recipe user);
+    void delete(Recipe recipe);
+
+    @Update
+    void update(Recipe recipe);
 }
