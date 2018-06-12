@@ -1,21 +1,21 @@
 package com.hagenberg.needy.Fragments;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -81,7 +81,7 @@ public class CreateRecipeFragment extends Fragment {
     }
 
     TextView tv_create_recipe_name;
-    Button bt_new_ingredient, bt_save;
+    Button bt_new_ingredient, bt_continue;
     LinearLayout ll_ingredients;
 
     //hier werden alle Ids zu den dynamisch erzeugten Ingredient Views gespeichert um
@@ -99,7 +99,7 @@ public class CreateRecipeFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_create_recipe, container, false);
         tv_create_recipe_name = rootView.findViewById(R.id.tv_create_recipe_name);
         bt_new_ingredient = rootView.findViewById(R.id.bt_create_recipe_new_ingredient);
-        bt_save = rootView.findViewById(R.id.bt_create_recipe_saverecipe);
+        bt_continue = rootView.findViewById(R.id.bt_create_recipe_saverecipe);
         ll_ingredients = rootView.findViewById(R.id.ll_create_recipe_ingredients);
 
         //Dass schon einmal ein Ingredient angezeigt wird, wenn das Fragment geladen wurde
@@ -113,11 +113,12 @@ public class CreateRecipeFragment extends Fragment {
             }
         });
 
-        bt_save.setOnClickListener(new View.OnClickListener() {
+        bt_continue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 infoValid = true;
-                if (!tv_create_recipe_name.getText().toString().equals("")) {
+                final String recipeName = tv_create_recipe_name.getText().toString();
+                if (!recipeName.equals("")) {
                     if (!ingredientViewIdList.isEmpty()) {
                         for (IngredientViewId ingredientIds : ingredientViewIdList) {
                             EditText etName = rootView.findViewById(ingredientIds.getNameId());
@@ -137,28 +138,28 @@ public class CreateRecipeFragment extends Fragment {
                                 infoValid = false;
                             }
 
-                            if (infoValid = true) {
+                            if (infoValid == true) {
                                 Spinner spUnit = rootView.findViewById(ingredientIds.getUnitId());
                                 Unit unit = Unit.valueOf(spUnit.getSelectedItem().toString());
-                                int numberAmount = Integer.getInteger(amount);
+                                int numberAmount = Integer.parseInt(amount);
+                                Ingredient ingredient = new Ingredient(name, numberAmount, unit);
+                                ingredients.add(ingredient);
 
-                                //Ingredient ingredient = new Ingredient(name, numberAmount, unit);
-                                //add ingredient to ingredientList
-                            } else {
+                                } else {
                                 ingredients.clear();
+
                             }
 
                         }
 
                         if (infoValid == true){
-                            //Beschreibung Popup
-                            //IngredientListe muss an diesem Punkt vorhanden sein
-
-
+                            openDialogToFinish(recipeName);
                         } else {
                             Toast.makeText(getActivity(), "Alle angelegten Felder muessen ausgefuellt werden!", Toast.LENGTH_SHORT).show();
                         }
                     }
+                } else {
+                    Toast.makeText(getActivity(), "Das Rezept braucht einen Namen.", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -168,6 +169,31 @@ public class CreateRecipeFragment extends Fragment {
 
 
         return rootView;
+    }
+
+    private void openDialogToFinish(final String recipeName) {
+        final Dialog dialogDescription = new Dialog(getActivity());
+        dialogDescription.setContentView(R.layout.dialog_create_recipe_description);
+        Button btSave = dialogDescription.findViewById(R.id.bt_create_recipe_dialog_save);
+        Button btCancel = dialogDescription.findViewById(R.id.bt_create_recipe_dialog_cancel);
+        final EditText etDescription = dialogDescription.findViewById(R.id.et_create_recipe_dialog_description);
+
+        btCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogDescription.dismiss();
+            }
+        });
+
+        btSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String description = etDescription.getText().toString();
+                Recipe recipe = new Recipe(recipeName, description, ingredients);
+                //In Datenbank speichern
+            }
+        });
+        dialogDescription.show();
     }
 
     private TranslateAnimation shakeError() {
@@ -204,6 +230,7 @@ public class CreateRecipeFragment extends Fragment {
         EditText etNewIngredientAmount = new EditText(getActivity());
         etNewIngredientAmount.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 2f));
         etNewIngredientAmount.setHint("Menge");
+        etNewIngredientAmount.setInputType(InputType.TYPE_CLASS_NUMBER);
         etNewIngredientAmount.setId(idCounter++);
 
         ArrayList<String> spinnerArray = new ArrayList<String>();

@@ -87,7 +87,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:id="@+id/bt_create_recipe_saverecipe"
-            android:text="Speichern"/>
+            android:text="Weiter"/>
     </LinearLayout>
 
 

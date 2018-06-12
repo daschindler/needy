@@ -20,9 +20,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
-        android:id="@+id/et_create_recipe_description"
-        android:lines="4"
+        android:id="@+id/et_create_recipe_dialog_description"
+        android:lines="7"
+        android:background="#efefef"
+        android:hint="Hier eingeben"
         android:gravity="top|left"
         />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="20dp">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Abbrechen"
+            android:id="@+id/bt_create_recipe_dialog_cancel"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Speichern"
+            android:id="@+id/bt_create_recipe_dialog_save"/>
+    </LinearLayout>
 
 </LinearLayout>
