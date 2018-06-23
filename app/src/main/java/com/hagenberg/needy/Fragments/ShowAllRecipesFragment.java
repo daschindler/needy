@@ -19,12 +19,10 @@ import android.widget.Toast;
 
 import com.hagenberg.needy.Activities.CreateRecipeActivity;
 import com.hagenberg.needy.Adapters.ShowAllRecipesListAdapter;
-import com.hagenberg.needy.Entity.Ingredient;
 import com.hagenberg.needy.Entity.Recipe;
 import com.hagenberg.needy.R;
 import com.hagenberg.needy.ViewModel.RecipeViewModel;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -77,7 +75,7 @@ public class ShowAllRecipesFragment extends Fragment {
         });
 
         RecipeViewModel recipeViewModel = ViewModelProviders.of(this.getActivity()).get(RecipeViewModel.class);
-        LiveData<List<Recipe>> allRecipes = recipeViewModel.getAllRecipes();
+        LiveData<List<Recipe>> allRecipes = recipeViewModel.getAllLiveRecipes();
         List<Recipe> recipeList = allRecipes.getValue();
 
         //Only set up RecyclerView, if the dataset contains values

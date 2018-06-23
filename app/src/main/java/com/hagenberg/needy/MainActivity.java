@@ -7,26 +7,17 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.SearchEvent;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hagenberg.needy.Adapters.MainPagerAdapter;
 import com.hagenberg.needy.Entity.Recipe;
-import com.hagenberg.needy.Fragments.ShowAllRecipesFragment;
 import com.hagenberg.needy.ViewModel.RecipeViewModel;
 
 import java.util.List;
@@ -56,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         RecipeViewModel recipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
 
         //ViewModel Anfrage: zB Alle Rezepte Getten (als LIVEDATA omg :o)
-        LiveData<List<Recipe>> allRecipes = recipeViewModel.getAllRecipes();
+        LiveData<List<Recipe>> allRecipes = recipeViewModel.getAllLiveRecipes();
 
         //So bekommt ihr die Daten aus dem LiveData-Holder
         List<Recipe> recipesOutsideOfLiveData = allRecipes.getValue();
