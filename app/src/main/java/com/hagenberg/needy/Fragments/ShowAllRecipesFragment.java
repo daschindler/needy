@@ -84,9 +84,9 @@ public class ShowAllRecipesFragment extends Fragment {
     }
 
     private void setUpListAdapter(final String searchString) {
-        recipeViewModel = ViewModelProviders.of(this.getActivity()).get(RecipeViewModel.class);
+        RecipeViewModel recipeViewModel = ViewModelProviders.of(this.getActivity()).get(RecipeViewModel.class);
+        LiveData<List<Recipe>> allRecipes = recipeViewModel.getAllLiveRecipes();
         insertTestValues(recipeViewModel);
-        LiveData<List<Recipe>> allRecipes = recipeViewModel.getAllRecipes();
         List<Recipe> recipeList = allRecipes.getValue();
 
         if(recipeList==null) {

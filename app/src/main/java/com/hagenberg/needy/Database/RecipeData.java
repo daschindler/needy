@@ -19,9 +19,9 @@ public interface RecipeData {
     @Query("SELECT * FROM Recipe WHERE uid IN (:recipeIds)")
     LiveData<List<Recipe>> loadAllByIds(int[] recipeIds);
 
-    @Query("SELECT * FROM Recipe WHERE name LIKE :name AND "
-            + "description LIKE :desc LIMIT 1")
-    LiveData<Recipe> findByName(String name, String desc);
+    @Query("SELECT * FROM Recipe WHERE name LIKE :keyword AND "
+            + "description LIKE :keyword")
+    LiveData<List<Recipe>> findByNameOrDesc(String keyword);
 
     @Insert
     void insertAll(Recipe... recipes);

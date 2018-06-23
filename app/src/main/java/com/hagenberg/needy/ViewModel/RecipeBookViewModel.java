@@ -13,18 +13,42 @@ import java.util.List;
 public class RecipeBookViewModel extends AndroidViewModel {
 
     private NeedyRepository mRepository;
-    private LiveData<List<RecipeBook>> mAllRecipeBooks;
 
     public RecipeBookViewModel(Application application) {
         super(application);
-
         mRepository = new NeedyRepository(application);
-        mAllRecipeBooks = mRepository.getAllRecipeBooks();
     }
 
-    public LiveData<List<RecipeBook>> getAllRecipes() { return mAllRecipeBooks; }
+    // - - -  Getting Live Data - - -
+    public LiveData<List<RecipeBook>> getAllLiveRecipeBooks() { return mRepository.getAllRecipeBooks(); }
 
-    public void insert(RecipeBook recipebook) { mRepository.insert(recipebook); }
+    public LiveData<List<RecipeBook>> getAllLiveRecipeBooksByNameOrDesc(String keyword) { return mRepository.getRecipeBooksByNameOrDesc(keyword); }
+
+    // - - - Getting Data NOT Live - - -
+    public List<RecipeBook> getCurrentAllRecipeBooks() { return mRepository.getAllRecipeBooks().getValue(); }
+
+    public List<RecipeBook> getCurrentAllRecipeBooksByNameOrDesc(String keyword) { return mRepository.getRecipeBooksByNameOrDesc(keyword).getValue(); }
+
+    public RecipeBook getCurrentRecipeBookById(int id) {
+        int[] ids = {id};
+
+        List<RecipeBook> recipeBookList = mRepository.getRecipeBooksByIds(ids);
+
+        if(recipeBookList.size() > 0){
+            return recipeBookList.get(0);
+        }else{
+            return null;
+        }
+    }
+
+    public List<RecipeBook> getCurrentRecipeBooksById(int... id) {
+        return mRepository.getRecipeBooksByIds(id);
+    }
+
+
+    // - - - Inserts & Updates - - -
+
+    public void insert(RecipeBook... recipebooks) { mRepository.insert(recipebooks); }
 
     public void update(RecipeBook recipebook) { mRepository.insert(recipebook); }
 }
