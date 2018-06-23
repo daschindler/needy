@@ -29,8 +29,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ShowAllRecipesFragment extends Fragment {
+    RecipeViewModel recipeViewModel;
     String searchString;
-    Spinner spinnerFilter;
     RecyclerView rvRecipes;
     FloatingActionButton fabAddRecipe;
     RecyclerView.LayoutManager layoutManager;
@@ -39,7 +39,9 @@ public class ShowAllRecipesFragment extends Fragment {
     public void setSearchString(String searchString) {
         this.searchString = searchString;
         //Update recipes with this search string
-        Toast.makeText(getContext(), "Updating this views layouts with new search string: " + searchString, Toast.LENGTH_LONG).show();
+
+        setUpListAdapter(searchString);
+        //Toast.makeText(getContext(), "Updating this views layouts with new search string: " + searchString, Toast.LENGTH_LONG).show();
     }
 
     public ShowAllRecipesFragment() {
@@ -61,7 +63,6 @@ public class ShowAllRecipesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_show_all_recipes, container, false);
-        spinnerFilter = rootView.findViewById(R.id.show_recipes_sp_filter);
 
         rvRecipes = rootView.findViewById(R.id.show_recipes_rv_recipes);
         layoutManager = new LinearLayoutManager(getActivity());
@@ -76,21 +77,26 @@ public class ShowAllRecipesFragment extends Fragment {
             }
         });
 
-        RecipeViewModel recipeViewModel = ViewModelProviders.of(this.getActivity()).get(RecipeViewModel.class);
+        setUpListAdapter("");
+
+        return rootView;
+
+    }
+
+    private void setUpListAdapter(final String searchString) {
+        recipeViewModel = ViewModelProviders.of(this.getActivity()).get(RecipeViewModel.class);
+        insertTestValues(recipeViewModel);
         LiveData<List<Recipe>> allRecipes = recipeViewModel.getAllRecipes();
         List<Recipe> recipeList = allRecipes.getValue();
 
-        //Only set up RecyclerView, if the dataset contains values
-        if(recipeList!=null) {
-            //Test values for adapter
-//            List<Ingredient> ingredients = new ArrayList<>();
-//            Recipe rec = new Recipe("Recipe1", "Description of Recipe1", ingredients);
-//            recipeList = new LinkedList<Recipe>();
-//            recipeList.add(rec);
-
+        if(recipeList==null) {
+            recipeList = new LinkedList<Recipe>();
             listAdapter = new ShowAllRecipesListAdapter(recipeList);
             rvRecipes.setAdapter(listAdapter);
-
+        } else {
+            recipeList = searchRecipeList(recipeList, searchString);
+            listAdapter = new ShowAllRecipesListAdapter(recipeList);
+            rvRecipes.setAdapter(listAdapter);
         }
         allRecipes.observe(this, new Observer<List<Recipe>>() {
             @Override
@@ -98,14 +104,35 @@ public class ShowAllRecipesFragment extends Fragment {
                 // allRecipes hat sich geändert (new entry, deleted entry, async insert, ...)
                 if(recipes != null){
                     //reload RecyclerView with new RecipeValues
-                    listAdapter.updateData(recipes);
+                    List<Recipe> searchedRecipes = searchRecipeList(recipes, searchString);
+                    listAdapter.updateData(searchedRecipes);
                     listAdapter.notifyDataSetChanged();
                 }
             }
         });
+    }
 
-        return rootView;
+    private List<Recipe> searchRecipeList(List<Recipe> recipeList, String searchString) {
+        if (searchString == "") {
+            return recipeList;
+        }
 
+        List<Recipe> searchedRecipeList = new LinkedList<Recipe>();
+        for(Recipe recipe : recipeList) {
+            if(recipe.getName().startsWith(searchString)){
+                searchedRecipeList.add(recipe);
+            }
+        }
+        return searchedRecipeList;
+    }
+
+
+    private void insertTestValues(RecipeViewModel rvm) {
+        List<Ingredient> ingredients = new ArrayList<>();
+        Recipe rec = new Recipe("Recipe1", "Description of Recipe1", ingredients);
+        Recipe rec1 = new Recipe("Recipe2", "sweg", ingredients);
+        rvm.insert(rec);
+        rvm.insert(rec1);
     }
 
     @Override

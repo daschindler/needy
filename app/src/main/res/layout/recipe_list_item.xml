@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/textMain"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/rectangle_background"
+        android:paddingBottom="5dp"
+        android:paddingStart="5dp"
+        android:paddingTop="5dp"
+        android:text="Recipe Name"
+        android:textAlignment="textStart"
+        android:textColor="@android:color/black"
+        android:textSize="30dp"
+        android:textStyle="normal" />
+</LinearLayout>

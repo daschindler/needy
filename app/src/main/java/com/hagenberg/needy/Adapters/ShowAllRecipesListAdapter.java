@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.hagenberg.needy.Activities.CreateRecipeActivity;
 import com.hagenberg.needy.Entity.Recipe;
 import com.hagenberg.needy.R;
 
@@ -32,24 +33,26 @@ public class ShowAllRecipesListAdapter extends RecyclerView.Adapter<ShowAllRecip
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, final int i) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+        View view = inflater.inflate(R.layout.recipe_list_item, parent, false);
         ViewHolder vh = new ViewHolder(view);
         return vh;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
         final String recipeName = recipes.get(i).getName();
         viewHolder.tvRecipeName.setText(recipeName);
         viewHolder.tvRecipeName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Call detail view of clicked Recipe.
+                Intent intent = new Intent(view.getContext(), CreateRecipeActivity.class);
+                intent.putExtra("id", recipes.get(i).getUid());
+                view.getContext().startActivity(intent);
             }
         });
-
     }
 
     @Override
@@ -64,7 +67,8 @@ public class ShowAllRecipesListAdapter extends RecyclerView.Adapter<ShowAllRecip
         public ViewHolder(View v) {
             super(v);
             rowLayout = v;
-            tvRecipeName = v.findViewById(android.R.id.text1);
+            tvRecipeName = v.findViewById(R.id.textMain);
         }
+
     }
 }
