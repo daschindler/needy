@@ -5,10 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CheckedTextView;
 import android.widget.TextView;
 
+import com.hagenberg.needy.Entity.Recipe;
 import com.hagenberg.needy.R;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -16,7 +19,11 @@ import java.util.List;
  */
 
 public class CreateRecipeBookListAdapter extends RecyclerView.Adapter<CreateRecipeBookListAdapter.ViewHolder> {
-    private List<String> recipes;   //Changes to generic type recipes as soon as the entity exists
+    private List<Recipe> recipes;
+
+    public void updateData(List<Recipe> recipes) {
+        this.recipes = recipes;
+    }
 
     @Override
     public CreateRecipeBookListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -29,17 +36,8 @@ public class CreateRecipeBookListAdapter extends RecyclerView.Adapter<CreateReci
     //Reduzieren auf ausschließlich Checkbox, Tv durch Text von Checkbox ersetzen (!!!)
     @Override
     public void onBindViewHolder(CreateRecipeBookListAdapter.ViewHolder vh, int position) {
-        final String name = recipes.get(position);  //Some implementation for recipes here
+        final String name = recipes.get(position).getName();
         vh.tvRecipeName.setText(name);
-
-        vh.rowLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Do some Intent stuff here maybe
-            }
-        });
-        vh.cbRecipeChoosen.setActivated(false);
-        vh.cbRecipeChoosen.setText(" ");
     }
 
     @Override
@@ -47,21 +45,60 @@ public class CreateRecipeBookListAdapter extends RecyclerView.Adapter<CreateReci
         return recipes.size();
     }
 
+    private boolean isRecipeChecked(int index) {
+        return true;
+    }
+
+    public List<Recipe> getCheckedRecipes() {
+        int index = 0;
+        List<Recipe> checkedRecipes = new LinkedList<Recipe>();
+        for(Recipe recipe : this.recipes) {
+            if(isRecipeChecked(index)) {
+                checkedRecipes.add(recipe);
+            }
+            index++;
+        }
+
+        return checkedRecipes;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public TextView tvRecipeName;
-        public CheckBox cbRecipeChoosen;
+        public CheckedTextView tvRecipeName;
         public View rowLayout;
 
         public ViewHolder(View v) {
             super(v);
             rowLayout = v;
-            tvRecipeName = rowLayout.findViewById(R.id.create_recipe_book_row_tv);
-            cbRecipeChoosen = rowLayout.findViewById((R.id.create_recipe_book_row_checkbox));
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(tvRecipeName.isChecked()) {
+                        tvRecipeName.setChecked(false);
+                        tvRecipeName.setCheckMarkDrawable(android.R.drawable.checkbox_off_background);
+                    } else {
+                        tvRecipeName.setCheckMarkDrawable(android.R.drawable.checkbox_on_background);
+                        tvRecipeName.setChecked(true);
+                    }
+                }
+            });
+            tvRecipeName = rowLayout.findViewById(R.id.checkedTextView);
+            tvRecipeName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(tvRecipeName.isChecked()) {
+                        tvRecipeName.setChecked(false);
+                        tvRecipeName.setCheckMarkDrawable(android.R.drawable.checkbox_off_background);
+                    } else {
+                        tvRecipeName.setCheckMarkDrawable(android.R.drawable.checkbox_on_background);
+                        tvRecipeName.setChecked(true);
+                    }
+                }
+            });
         }
     }
 
-    public CreateRecipeBookListAdapter(List<String> recipes) {
+    public CreateRecipeBookListAdapter(List<Recipe> recipes) {
         this.recipes = recipes;
     }
 }

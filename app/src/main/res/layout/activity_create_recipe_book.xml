@@ -33,10 +33,11 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:background="@color/colorPrimary"
         android:text="Finish"
+        android:textColor="@color/colorSecondaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/createRB_bt_cancel"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="1.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintVertical_weight="1" />
@@ -74,20 +75,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/createRB_et_name"
-        app:layout_constraintVertical_weight="1" />
-
-    <Button
-        android:id="@+id/createRB_bt_cancel"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:text="Cancel"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@+id/createRB_bt_finish" />
+        app:layout_constraintVertical_weight="0.5" />
 
 </android.support.constraint.ConstraintLayout>
