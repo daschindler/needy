@@ -4,6 +4,8 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.hagenberg.needy.Entity.Ingredient;
@@ -16,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ViewRecipeActivity extends AppCompatActivity {
+
+    LinearLayout ll_ingredientsbutton, ll_descriptionbutton, ll_share, ll_edit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +40,40 @@ public class ViewRecipeActivity extends AppCompatActivity {
         //Testdaten
 
         getSupportActionBar().setTitle(selectedRecipe.getName());
+
+
+        ll_descriptionbutton = findViewById(R.id.ll_view_recipe_descriptionbutton);
+        ll_edit = findViewById(R.id.ll_view_recipe_editbutton);
+        ll_ingredientsbutton = findViewById(R.id.ll_view_recipe_ingredientbutton);
+        ll_share = findViewById(R.id.ll_view_recipe_sharebutton);
+
+        ll_ingredientsbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        ll_descriptionbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        ll_share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        ll_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
 
     }
