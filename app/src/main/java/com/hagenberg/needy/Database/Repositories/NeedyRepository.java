@@ -68,7 +68,13 @@ public class NeedyRepository {
 
     public LiveData<List<RecipeBook>> getRecipeBooksByNameOrDesc(String keyword) { return mRecipeBookData.findByNameOrDesc(keyword); }
 
-    public List<RecipeBook> getRecipeBooksByIds(int[] ids) { return mRecipeBookData.loadAllByIds(ids).getValue(); }
+    public List<RecipeBook> getRecipeBooksByIds(int[] ids) {
+        LiveData<List<RecipeBook>> books = mRecipeBookData.loadAllByIds(ids);
+
+        if(books == null)
+            return null:
+
+        return mRecipeBookData.loadAllByIds(ids).getValue(); }
 
     public void insert (RecipeBook... recipeBooks) {
         new insertRecipeBookAsyncTask(mRecipeBookData).execute(recipeBooks);
