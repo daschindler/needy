@@ -2,11 +2,18 @@ package com.hagenberg.needy.Fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +32,7 @@ import com.hagenberg.needy.Entity.IngredientViewId;
 import com.hagenberg.needy.Entity.Recipe;
 import com.hagenberg.needy.Entity.Unit;
 import com.hagenberg.needy.R;
+import com.hagenberg.needy.ViewModel.RecipeViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -189,8 +197,33 @@ public class CreateRecipeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String description = etDescription.getText().toString();
-                Recipe recipe = new Recipe(recipeName, description, ingredients);
+                final Recipe recipe = new Recipe(recipeName, description, ingredients);
                 //In Datenbank speichern
+                RecipeViewModel recipeViewModel = ViewModelProviders.of(getActivity()).get(RecipeViewModel.class);
+                recipeViewModel.insert(recipe);
+
+
+                LiveData<List<Recipe>> allRecipes = recipeViewModel.getAllLiveRecipes();
+                List<Recipe> recipesOutsideOfLiveData = allRecipes.getValue();
+                allRecipes.observe(getActivity(), new Observer<List<Recipe>>() {
+                    @Override
+                    public void onChanged(@Nullable final List<Recipe> recipes) {
+                        // allRecipes hat sich geändert (new entry, deleted entry, async insert, ...)
+                        if(recipes != null){
+                            if (recipes.get(recipes.size()-1).getName().equals(recipe.getName())) {
+                                Toast.makeText(getActivity(), "Rezept angelegt", Toast.LENGTH_SHORT).show();
+                                dialogDescription.dismiss();
+                                getActivity().finish();
+                            } else {
+                                Toast.makeText(getActivity(), "Fehler bei der Erstellung", Toast.LENGTH_SHORT).show();
+                                dialogDescription.dismiss();
+                            }
+                        } else {
+                            Toast.makeText(getActivity(), "Fehler", Toast.LENGTH_SHORT).show();
+                            dialogDescription.dismiss();
+                        }
+                    }
+                });
             }
         });
         dialogDescription.show();
