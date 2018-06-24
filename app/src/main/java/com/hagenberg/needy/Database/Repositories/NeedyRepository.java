@@ -72,7 +72,7 @@ public class NeedyRepository {
         LiveData<List<RecipeBook>> books = mRecipeBookData.loadAllByIds(ids);
 
         if(books == null)
-            return null:
+            return null;
 
         return mRecipeBookData.loadAllByIds(ids).getValue(); }
 

@@ -6,9 +6,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.hagenberg.needy.Entity.Ingredient;
 import com.hagenberg.needy.Entity.Recipe;
+import com.hagenberg.needy.Entity.Unit;
 import com.hagenberg.needy.R;
 import com.hagenberg.needy.ViewModel.RecipeViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ViewRecipeActivity extends AppCompatActivity {
 
@@ -22,6 +27,16 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         RecipeViewModel recipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
         Recipe selectedRecipe = recipeViewModel.getCurrentRecipeById(intent.getIntExtra("id", 404040));
-        //getSupportActionBar().setTitle(selectedRecipe.getName());
+
+        //Testdaten
+        List<Ingredient> ingredients = new ArrayList<>();
+        ingredients.add(new Ingredient("Zucker", 100, Unit.Unit));
+        ingredients.add(new Ingredient("Alkohol", 50, Unit.Liter));
+        selectedRecipe = new Recipe("Mojito", "Schmeckt gut mit Alkohol lol", ingredients);
+        //Testdaten
+
+        getSupportActionBar().setTitle(selectedRecipe.getName());
+
+
     }
 }
