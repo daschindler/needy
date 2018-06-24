@@ -2,11 +2,15 @@ package com.hagenberg.needy.Activities;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.hagenberg.needy.Entity.Ingredient;
 import com.hagenberg.needy.Entity.Recipe;
@@ -19,7 +23,17 @@ import java.util.List;
 
 public class ViewRecipeActivity extends AppCompatActivity {
 
-    LinearLayout ll_ingredientsbutton, ll_descriptionbutton, ll_share, ll_edit;
+    private LinearLayout ll_ingredientsbutton, ll_descriptionbutton, ll_share, ll_edit;
+    private LinearLayout ll_ingredients, ll_description;
+
+    private ImageView imgv_ingredientsarrow, imgv_descriptionarrow;
+
+    private TextView tv_description_label, tv_ingredient_label;
+
+    private boolean ingredientsShown = false;
+    private boolean descriptionShown = false;
+
+    private ColorStateList originalLabelColors;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,13 +44,14 @@ public class ViewRecipeActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         RecipeViewModel recipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
-        Recipe selectedRecipe = recipeViewModel.getCurrentRecipeById(intent.getIntExtra("id", 404040));
+        //Recipe selectedRecipe = recipeViewModel.getCurrentRecipeById(intent.getIntExtra("id", 404040));
 
         //Testdaten
-        List<Ingredient> ingredients = new ArrayList<>();
+        final List<Ingredient> ingredients = new ArrayList<>();
         ingredients.add(new Ingredient("Zucker", 100, Unit.Unit));
         ingredients.add(new Ingredient("Alkohol", 50, Unit.Liter));
-        selectedRecipe = new Recipe("Mojito", "Schmeckt gut mit Alkohol lol", ingredients);
+        final Recipe selectedRecipe = new Recipe("Mojito", "Schmeckt gut mit Alkohol lol, und das ist " +
+                "ein Test um die Funktionalität des Programms zu testen und zu sehen wie alles so ist", ingredients);
         //Testdaten
 
         getSupportActionBar().setTitle(selectedRecipe.getName());
@@ -46,10 +61,40 @@ public class ViewRecipeActivity extends AppCompatActivity {
         ll_edit = findViewById(R.id.ll_view_recipe_editbutton);
         ll_ingredientsbutton = findViewById(R.id.ll_view_recipe_ingredientbutton);
         ll_share = findViewById(R.id.ll_view_recipe_sharebutton);
+        ll_description = findViewById(R.id.ll_view_recipe_description);
+        ll_ingredients = findViewById(R.id.ll_view_recipe_ingredients);
+        imgv_descriptionarrow = findViewById(R.id.img_view_recipe_description_arrow);
+        imgv_ingredientsarrow = findViewById(R.id.img_view_recipe_ingredients_arrow);
+        tv_description_label = findViewById(R.id.tv_view_recipe_description_label);
+        tv_ingredient_label = findViewById(R.id.tv_view_recipe_ingredient_label);
+
+        originalLabelColors = tv_description_label.getTextColors();
 
         ll_ingredientsbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (ingredientsShown == false) {
+                    TextView tv_ingredients = new TextView(ViewRecipeActivity.this);
+                    tv_ingredients.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    tv_ingredients.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+                    StringBuilder ingredientString = new StringBuilder();
+                    for (Ingredient ingredient : ingredients) {
+                        ingredientString.append(ingredient.getAmount() + " " + ingredient.getAmountUnit().toString() + " " + ingredient.getName() + "\n");
+                    }
+
+                    tv_ingredients.setText(ingredientString.toString());
+
+                    ll_ingredients.addView(tv_ingredients);
+                    imgv_ingredientsarrow.setImageResource(R.drawable.ic_expand_less_black_24dp);
+                    tv_ingredient_label.setTextColor(Color.rgb(0,0,0));
+                    ingredientsShown = true;
+                } else {
+                    ll_ingredients.removeAllViews();
+                    ingredientsShown = false;
+                    imgv_ingredientsarrow.setImageResource(R.drawable.ic_expand_more_grey_24dp);
+                    tv_ingredient_label.setTextColor(originalLabelColors);
+                }
 
             }
         });
@@ -57,7 +102,24 @@ public class ViewRecipeActivity extends AppCompatActivity {
         ll_descriptionbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (descriptionShown == false) {
+                    TextView tv_description = new TextView(ViewRecipeActivity.this);
+                    tv_description.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    tv_description.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    tv_description.setPadding(40,0,40,0);
 
+                    tv_description.setText(selectedRecipe.getDescription() + "\n");
+
+                    imgv_descriptionarrow.setImageResource(R.drawable.ic_expand_less_black_24dp);
+                    tv_description_label.setTextColor(Color.rgb(0,0,0));
+                    descriptionShown = true;
+                    ll_description.addView(tv_description);
+                } else {
+                    ll_description.removeAllViews();
+                    descriptionShown = false;
+                    imgv_descriptionarrow.setImageResource(R.drawable.ic_expand_more_grey_24dp);
+                    tv_description_label.setTextColor(originalLabelColors);
+                }
             }
         });
 
