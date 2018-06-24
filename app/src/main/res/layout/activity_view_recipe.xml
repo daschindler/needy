@@ -1,9 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:orientation="vertical"
     tools:context="com.hagenberg.needy.Activities.ViewRecipeActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="30">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_view_recipe_ingredientbutton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shadow_201358"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_weight="10"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp"
+            android:text="Zutaten"
+            android:textSize="20dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp"
+            android:src="@drawable/ic_expand_more_black_24dp"></ImageView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_view_recipe_descriptionbutton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shadow_201358"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_weight="10"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp"
+            android:text="Beschreibung"
+            android:textSize="20dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp"
+            android:src="@drawable/ic_expand_more_black_24dp"></ImageView>
+    </LinearLayout>
+    </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:id="@+id/ll_view_recipe_sharebutton"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/shadow_205951">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Teilen"
+                android:textColor="@color/colorPrimary"
+                android:textAlignment="center"
+                android:layout_weight="1"
+                android:background="@color/white" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/ll_view_recipe_editbutton"
+
+            android:background="@drawable/shadow_205951">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimary"
+                android:background="@color/white"
+                android:text="Bearbeiten" />
+        </LinearLayout>
+
+
+
+
+
+    </LinearLayout>
+</LinearLayout>

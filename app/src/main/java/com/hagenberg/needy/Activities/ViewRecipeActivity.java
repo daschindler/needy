@@ -20,9 +20,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        //RecipeViewModel recipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
-        //Recipe selectedRecipe = recipeViewModel.getCurrentRecipeById(intent.getIntExtra("id", 404040));
-
-        //Toast.makeText(this, selectedRecipe.getName(), Toast.LENGTH_LONG).show();
+        RecipeViewModel recipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
+        Recipe selectedRecipe = recipeViewModel.getCurrentRecipeById(intent.getIntExtra("id", 404040));
+        //getSupportActionBar().setTitle(selectedRecipe.getName());
     }
 }

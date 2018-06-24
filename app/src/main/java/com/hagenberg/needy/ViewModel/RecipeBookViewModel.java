@@ -49,7 +49,7 @@ public class RecipeBookViewModel extends AndroidViewModel {
         List<RecipeBook> recipeBookList = mRepository.getRecipeBooksByIds(ids);
 
         if(recipeBookList == null)
-            return null
+            return null;
 
         if(recipeBookList.size() > 0){
             return recipeBookList.get(0);
