@@ -20,9 +20,19 @@ import java.util.List;
 
 public class CreateRecipeBookListAdapter extends RecyclerView.Adapter<CreateRecipeBookListAdapter.ViewHolder> {
     private List<Recipe> recipes;
+    private Boolean[] isChecked;
 
     public void updateData(List<Recipe> recipes) {
         this.recipes = recipes;
+        this.isChecked = setUnchecked(new Boolean[recipes.size()]);
+
+    }
+
+    private Boolean[] setUnchecked(Boolean[] recipes) {
+        for (int i = 0; i<recipes.length; i++){
+            recipes[i] = Boolean.FALSE;
+        }
+        return recipes;
     }
 
     @Override
@@ -35,9 +45,37 @@ public class CreateRecipeBookListAdapter extends RecyclerView.Adapter<CreateReci
 
     //Reduzieren auf ausschließlich Checkbox, Tv durch Text von Checkbox ersetzen (!!!)
     @Override
-    public void onBindViewHolder(CreateRecipeBookListAdapter.ViewHolder vh, int position) {
+    public void onBindViewHolder(final CreateRecipeBookListAdapter.ViewHolder vh, final int position) {
         final String name = recipes.get(position).getName();
         vh.tvRecipeName.setText(name);
+        vh.rowLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(vh.tvRecipeName.isChecked()) {
+                    vh.tvRecipeName.setChecked(false);
+                    vh.tvRecipeName.setCheckMarkDrawable(android.R.drawable.checkbox_off_background);
+                    isChecked[position] = Boolean.FALSE;
+                } else {
+                    vh.tvRecipeName.setCheckMarkDrawable(android.R.drawable.checkbox_on_background);
+                    vh.tvRecipeName.setChecked(true);
+                    isChecked[position] = Boolean.TRUE;
+                }
+            }
+        });
+        vh.tvRecipeName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(vh.tvRecipeName.isChecked()) {
+                    vh.tvRecipeName.setChecked(false);
+                    vh.tvRecipeName.setCheckMarkDrawable(android.R.drawable.checkbox_off_background);
+                    isChecked[position] = Boolean.FALSE;
+                } else {
+                    vh.tvRecipeName.setCheckMarkDrawable(android.R.drawable.checkbox_on_background);
+                    vh.tvRecipeName.setChecked(true);
+                    isChecked[position] = Boolean.TRUE;
+                }
+            }
+        });
     }
 
     @Override
@@ -46,7 +84,7 @@ public class CreateRecipeBookListAdapter extends RecyclerView.Adapter<CreateReci
     }
 
     private boolean isRecipeChecked(int index) {
-        return true;
+        return this.isChecked[index];
     }
 
     public List<Recipe> getCheckedRecipes() {
@@ -58,7 +96,6 @@ public class CreateRecipeBookListAdapter extends RecyclerView.Adapter<CreateReci
             }
             index++;
         }
-
         return checkedRecipes;
     }
 
@@ -70,35 +107,36 @@ public class CreateRecipeBookListAdapter extends RecyclerView.Adapter<CreateReci
         public ViewHolder(View v) {
             super(v);
             rowLayout = v;
-            v.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(tvRecipeName.isChecked()) {
-                        tvRecipeName.setChecked(false);
-                        tvRecipeName.setCheckMarkDrawable(android.R.drawable.checkbox_off_background);
-                    } else {
-                        tvRecipeName.setCheckMarkDrawable(android.R.drawable.checkbox_on_background);
-                        tvRecipeName.setChecked(true);
-                    }
-                }
-            });
+//            v.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    if(tvRecipeName.isChecked()) {
+//                        tvRecipeName.setChecked(false);
+//                        tvRecipeName.setCheckMarkDrawable(android.R.drawable.checkbox_off_background);
+//                    } else {
+//                        tvRecipeName.setCheckMarkDrawable(android.R.drawable.checkbox_on_background);
+//                        tvRecipeName.setChecked(true);
+//                    }
+//                }
+//            });
             tvRecipeName = rowLayout.findViewById(R.id.checkedTextView);
-            tvRecipeName.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(tvRecipeName.isChecked()) {
-                        tvRecipeName.setChecked(false);
-                        tvRecipeName.setCheckMarkDrawable(android.R.drawable.checkbox_off_background);
-                    } else {
-                        tvRecipeName.setCheckMarkDrawable(android.R.drawable.checkbox_on_background);
-                        tvRecipeName.setChecked(true);
-                    }
-                }
-            });
+//            tvRecipeName.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    if(tvRecipeName.isChecked()) {
+//                        tvRecipeName.setChecked(false);
+//                        tvRecipeName.setCheckMarkDrawable(android.R.drawable.checkbox_off_background);
+//                    } else {
+//                        tvRecipeName.setCheckMarkDrawable(android.R.drawable.checkbox_on_background);
+//                        tvRecipeName.setChecked(true);
+//                    }
+//                }
+//            });
         }
     }
 
     public CreateRecipeBookListAdapter(List<Recipe> recipes) {
         this.recipes = recipes;
+        this.isChecked = setUnchecked(new Boolean[recipes.size()]);
     }
 }

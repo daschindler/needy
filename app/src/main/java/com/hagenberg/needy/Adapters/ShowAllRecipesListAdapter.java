@@ -11,6 +11,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.hagenberg.needy.Activities.CreateRecipeActivity;
+import com.hagenberg.needy.Activities.ViewRecipeActivity;
 import com.hagenberg.needy.Entity.Recipe;
 import com.hagenberg.needy.R;
 
@@ -48,7 +49,15 @@ public class ShowAllRecipesListAdapter extends RecyclerView.Adapter<ShowAllRecip
             @Override
             public void onClick(View view) {
                 //Call detail view of clicked Recipe.
-                Intent intent = new Intent(view.getContext(), CreateRecipeActivity.class);
+                Intent intent = new Intent(view.getContext(), ViewRecipeActivity.class);
+                intent.putExtra("id", recipes.get(i).getUid());
+                view.getContext().startActivity(intent);
+            }
+        });
+        viewHolder.rowLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), ViewRecipeActivity.class);
                 intent.putExtra("id", recipes.get(i).getUid());
                 view.getContext().startActivity(intent);
             }

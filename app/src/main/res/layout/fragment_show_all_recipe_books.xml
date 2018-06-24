@@ -6,37 +6,6 @@
     tools:context="com.hagenberg.needy.Fragments.ShowAllRecipeBooksFragment">
 
 
-    <TextView
-        android:id="@+id/show_recipe_books_tv_filter"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Filter recipe books by: "
-        app:layout_constraintBottom_toTopOf="@+id/show_recipe_books_sp_filter"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="spread"
-        app:layout_constraintVertical_weight="1" />
-
-    <Spinner
-        android:id="@+id/show_recipe_books_sp_filter"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/show_recipe_books_sv_recipe_books"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/show_recipe_books_tv_filter"
-        app:layout_constraintVertical_chainStyle="spread"
-        app:layout_constraintVertical_weight="1" />
-
     <ScrollView
         android:id="@+id/show_recipe_books_sv_recipe_books"
         android:layout_width="0dp"
@@ -49,7 +18,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/show_recipe_books_sp_filter"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="spread"
         app:layout_constraintVertical_weight="7">
 

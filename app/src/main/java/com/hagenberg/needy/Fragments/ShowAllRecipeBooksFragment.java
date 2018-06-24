@@ -18,8 +18,6 @@ import com.hagenberg.needy.R;
 public class ShowAllRecipeBooksFragment extends Fragment {
 
     String searchString;
-    TextView tvFilter;
-    Spinner spFilter;
     RecyclerView rvRecipeBooks;
     FloatingActionButton fabAddRecipeBook;
 
@@ -48,8 +46,6 @@ public class ShowAllRecipeBooksFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_show_all_recipe_books, container, false);
 
-        tvFilter = rootView.findViewById(R.id.show_recipe_books_tv_filter);
-        spFilter = rootView.findViewById(R.id.show_recipe_books_sp_filter);
         rvRecipeBooks = rootView.findViewById(R.id.show_recipe_books_rv_recipe_books);
 
         fabAddRecipeBook = rootView.findViewById(R.id.show_recipe_books_fab_add_recipe_book);
