@@ -1,9 +1,14 @@
 package com.hagenberg.needy.Fragments;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,13 +18,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hagenberg.needy.Activities.CreateRecipeBookActivity;
+import com.hagenberg.needy.Adapters.ShowAllRecipeBooksListAdapter;
+import com.hagenberg.needy.Entity.RecipeBook;
 import com.hagenberg.needy.R;
+import com.hagenberg.needy.ViewModel.RecipeBookViewModel;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class ShowAllRecipeBooksFragment extends Fragment {
-
-    String searchString;
+    RecipeBookViewModel recipeBookViewModel;
+    String searchString = "";
     RecyclerView rvRecipeBooks;
     FloatingActionButton fabAddRecipeBook;
+    RecyclerView.LayoutManager layoutManager;
+    ShowAllRecipeBooksListAdapter listAdapter = new ShowAllRecipeBooksListAdapter(new LinkedList<RecipeBook>());
 
     public ShowAllRecipeBooksFragment() {
         // Required empty public constructor
@@ -27,7 +40,7 @@ public class ShowAllRecipeBooksFragment extends Fragment {
 
     public void setSearchString(String searchString) {
         this.searchString = searchString;
-        Toast.makeText(getContext(), "Updating this views layouts with new search string: " + searchString, Toast.LENGTH_LONG).show();
+        initializeRecyclerView(searchString);
     }
 
     public static ShowAllRecipeBooksFragment newInstance() {
@@ -47,6 +60,8 @@ public class ShowAllRecipeBooksFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_show_all_recipe_books, container, false);
 
         rvRecipeBooks = rootView.findViewById(R.id.show_recipe_books_rv_recipe_books);
+        layoutManager = new LinearLayoutManager(getActivity());
+        rvRecipeBooks.setLayoutManager(layoutManager);
 
         fabAddRecipeBook = rootView.findViewById(R.id.show_recipe_books_fab_add_recipe_book);
         fabAddRecipeBook.setOnClickListener(new View.OnClickListener() {
@@ -57,6 +72,44 @@ public class ShowAllRecipeBooksFragment extends Fragment {
             }
         });
 
+        initializeRecyclerView(searchString);
+
         return rootView;
+    }
+
+    private void initializeRecyclerView(final String searchString) {
+        recipeBookViewModel = ViewModelProviders.of(this.getActivity()).get(RecipeBookViewModel.class);
+        LiveData<List<RecipeBook>> liveRecipeBooks = recipeBookViewModel.getAllLiveRecipeBooks();
+        List<RecipeBook> recipeBooks = liveRecipeBooks.getValue();
+        if(recipeBooks == null) {
+            recipeBooks = new LinkedList<RecipeBook>();
+        }
+        recipeBooks = searchRecipeBooks(recipeBooks, searchString);
+        listAdapter = new ShowAllRecipeBooksListAdapter(recipeBooks);
+        rvRecipeBooks.setAdapter(listAdapter);
+        liveRecipeBooks.observe(this, new Observer<List<RecipeBook>>() {
+            @Override
+            public void onChanged(@Nullable List<RecipeBook> recipeBooks) {
+                if(recipeBooks != null) {
+                    recipeBooks = searchRecipeBooks(recipeBooks, searchString);
+                    listAdapter.updateData(recipeBooks);
+                    listAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+
+    }
+
+    private LinkedList<RecipeBook> searchRecipeBooks(List<RecipeBook> recipeBooks, String searchString) {
+        LinkedList<RecipeBook> searchedBooks = new LinkedList<RecipeBook>();
+
+        if(recipeBooks != null){
+            for(RecipeBook book : recipeBooks) {
+                if(book.getName().startsWith(searchString)){
+                    searchedBooks.add(book);
+                }
+            }
+        }
+        return searchedBooks;
     }
 }

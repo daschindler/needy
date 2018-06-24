@@ -10,10 +10,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.widget.SearchView;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.hagenberg.needy.Adapters.MainPagerAdapter;
@@ -81,18 +82,22 @@ public class MainActivity extends AppCompatActivity {
         inflater.inflate(R.menu.main_menu, menu);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        android.widget.SearchView searchView = (SearchView) menu.findItem(R.id.main_menu_search).getActionView();
+        SearchView searchView = (SearchView) menu.findItem(R.id.main_menu_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+
+        menu.findItem(R.id.main_menu_search).setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
-            public boolean onClose() {
-                Toast.makeText(getApplicationContext(), "Clear button pressed", Toast.LENGTH_SHORT).show();
+            public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
                 viewPagerAdapter.setSearchString("");
                 viewPagerAdapter.notifyDataSetChanged();
-                return false;
+                return true;
             }
         });
-
         return super.onCreateOptionsMenu(menu);
     }
 
