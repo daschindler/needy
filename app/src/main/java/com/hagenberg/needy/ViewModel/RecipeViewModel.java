@@ -26,14 +26,36 @@ public class RecipeViewModel extends AndroidViewModel {
 
 
     // - - - Getting Data NOT Live - - -
-    public List<Recipe> getCurrentAllRecipes() { return mRepository.getAllRecipes().getValue(); }
+    public List<Recipe> getCurrentAllRecipes() {
+        LiveData<List<Recipe>> recipes =  mRepository.getAllRecipes();
 
-    public List<Recipe> getCurrentAllRecipesByNameOrDesc(String keyword) { return mRepository.getRecipesByNameOrDesc(keyword).getValue(); }
+        if(recipes == null){
+            return null;
+        }
+
+        return mRepository.getAllRecipes().getValue();
+    }
+
+    public List<Recipe> getCurrentAllRecipesByNameOrDesc(String keyword) {
+
+        LiveData<List<Recipe>> recipeList = mRepository.getRecipesByNameOrDesc(keyword);
+
+        if(recipeList == null){
+            return null;
+        }
+
+        return recipeList.getValue();
+
+    }
 
     public Recipe getCurrentRecipeById(int id) {
         int[] ids = {id};
 
         List<Recipe> recipeList = mRepository.getRecipesByIds(ids);
+
+        if(recipeList == null){
+            return null;
+        }
 
         if(recipeList.size() > 0){
             return recipeList.get(0);

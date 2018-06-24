@@ -25,14 +25,31 @@ public class RecipeBookViewModel extends AndroidViewModel {
     public LiveData<List<RecipeBook>> getAllLiveRecipeBooksByNameOrDesc(String keyword) { return mRepository.getRecipeBooksByNameOrDesc(keyword); }
 
     // - - - Getting Data NOT Live - - -
-    public List<RecipeBook> getCurrentAllRecipeBooks() { return mRepository.getAllRecipeBooks().getValue(); }
+    public List<RecipeBook> getCurrentAllRecipeBooks() {
+        LiveData<List<RecipeBook>> books = mRepository.getAllRecipeBooks();
 
-    public List<RecipeBook> getCurrentAllRecipeBooksByNameOrDesc(String keyword) { return mRepository.getRecipeBooksByNameOrDesc(keyword).getValue(); }
+        if(books == null)
+            return null;
+
+        return mRepository.getAllRecipeBooks().getValue();
+    }
+
+    public List<RecipeBook> getCurrentAllRecipeBooksByNameOrDesc(String keyword) {
+        LiveData<List<RecipeBook>> books = mRepository.getRecipeBooksByNameOrDesc(keyword);
+
+        if(books == null)
+            return null;
+
+        return mRepository.getRecipeBooksByNameOrDesc(keyword).getValue();
+    }
 
     public RecipeBook getCurrentRecipeBookById(int id) {
         int[] ids = {id};
 
         List<RecipeBook> recipeBookList = mRepository.getRecipeBooksByIds(ids);
+
+        if(recipeBookList == null)
+            return null
 
         if(recipeBookList.size() > 0){
             return recipeBookList.get(0);
