@@ -50,7 +50,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.hagenberg.needy.MainActivity" />
         </activity>
-        <activity android:name=".Activities.ImportRecipeActivity"
+        <activity
+            android:name=".Activities.ImportRecipeActivity"
             android:label="Import Recipe"
             android:parentActivityName=".Activities.CreateRecipeActivity">
             <meta-data
@@ -62,5 +63,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.hagenberg.needy.MainActivity" />
         </activity>
+        <activity android:name=".Activities.EditRecipeActivity"
+            android:label="Edit Recipe"
+            android:parentActivityName=".Activities.ViewRecipeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.hagenberg.needy.Activities.ViewRecipeActivity" />
+        </activity>
     </application>
+
 </manifest>

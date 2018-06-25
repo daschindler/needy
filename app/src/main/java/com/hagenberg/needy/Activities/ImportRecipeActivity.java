@@ -1,17 +1,33 @@
 package com.hagenberg.needy.Activities;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.hagenberg.needy.Entity.Ingredient;
+import com.hagenberg.needy.Entity.Recipe;
+import com.hagenberg.needy.Entity.Unit;
 import com.hagenberg.needy.R;
+import com.hagenberg.needy.ViewModel.RecipeViewModel;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ImportRecipeActivity extends AppCompatActivity {
 
@@ -61,43 +77,42 @@ public class ImportRecipeActivity extends AppCompatActivity {
             final File[] files = dirs.listFiles();
             for (int i = 0; i < files.length; i++){
                 //Layout für einzelnen Ordner/File vorbereiten
-                final LinearLayout v = new LinearLayout(this);
-                v.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 110));
-                v.setOrientation(LinearLayout.HORIZONTAL);
-                TextView tv_type = new TextView(this);
+                final LinearLayout llProgExplorer = new LinearLayout(this);
+                llProgExplorer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 160));
+                llProgExplorer.setPadding(70,60,100,10);
+                llProgExplorer.setOrientation(LinearLayout.HORIZONTAL);
+                ImageView imgvType = new ImageView(this);
                 //Setup wenn es sich um einen Ordner handelt
                 if (files[i].isDirectory()){
                     if (!files[i].getName().startsWith(".") && !files[i].getName().contains(".")) {
-                        //listItems.add(files[i].getName());
-                        TextView tv_foldername = new TextView(this);
+                        TextView tvFoldername = new TextView(this);
 
-                        tv_foldername.setText(files[i].getName());
-                        tv_foldername.setId(i+1);
-                        tv_foldername.setTextSize(21);
-                        //tv_foldername.offsetTopAndBottom(20);
-                        tv_type.setText("Folder");
-                        tv_type.setId(i+2);
+                        tvFoldername.setText(files[i].getName());
+                        tvFoldername.setId(i+1);
+                        tvFoldername.setTextSize(21);
+                        imgvType.setImageResource(R.drawable.ic_folder_grey_24dp);
+                        imgvType.setId(i+2);
 
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                         params.weight = 1.0f;
-                        tv_foldername.setLayoutParams(params);
+                        tvFoldername.setLayoutParams(params);
 
-                        v.setId(i);
-                        v.addView(tv_foldername);
-                        v.addView(tv_type);
+                        llProgExplorer.setId(i);
+                        llProgExplorer.addView(tvFoldername);
+                        llProgExplorer.addView(imgvType);
 
 
-                        ll_explorer.addView(v);
+                        ll_explorer.addView(llProgExplorer);
 
                         //Methode wird erneut mit "tieferem" Pfad aufgerufen
-                        v.setOnClickListener(new View.OnClickListener() {
+                        llProgExplorer.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 if (stageCounter == 0) {
                                     bt_level_up.setVisibility(View.VISIBLE);
                                 }
                                 stageCounter = stageCounter + 1;
-                                int id = v.getId();
+                                int id = llProgExplorer.getId();
                                 ll_explorer.removeAllViews();
                                 SetupFilebrowser(files[id]);
                             }
@@ -106,29 +121,28 @@ public class ImportRecipeActivity extends AppCompatActivity {
                     //Setup wenn es sich um eine Datei handelt
                 } else if (files[i].isFile()){
                     if (files[i].getName().contains(".needy") && !files[i].getName().startsWith(".")){
-                        //listItems.add(files[i].getName());
-                        TextView tv_filename = new TextView(this);
-                        tv_filename.setText(files[i].getName());
-                        tv_filename.setId(i+1);
-                        tv_filename.setTextSize(21);
-                        v.setId(i);
-                        tv_type.setText("File");
-                        tv_type.setId(i+2);
-                        tv_filename.setTextColor(getResources().getColor(R.color.colorPrimary));
+                        TextView tvFilename = new TextView(this);
+                        tvFilename.setText(files[i].getName());
+                        tvFilename.setId(i+1);
+                        tvFilename.setTextSize(21);
+                        llProgExplorer.setId(i);
+                        imgvType.setImageResource(R.drawable.ic_insert_drive_file_grey_24dp);
+                        imgvType.setId(i+2);
+                        tvFilename.setTextColor(getResources().getColor(R.color.colorPrimary));
 
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                         params.weight = 1.0f;
-                        tv_filename.setLayoutParams(params);
+                        tvFilename.setLayoutParams(params);
 
-                        v.addView(tv_filename);
-                        v.addView(tv_type);
-                        ll_explorer.addView(v);
+                        llProgExplorer.addView(tvFilename);
+                        llProgExplorer.addView(imgvType);
+                        ll_explorer.addView(llProgExplorer);
 
-                        v.setOnClickListener(new View.OnClickListener() {
+                        llProgExplorer.setOnClickListener(new View.OnClickListener() {
                             @Override
                             //Pfad wird an andere Activity mitgegeben
                             public void onClick(View view) {
-                                StoreRecipe(files[v.getId()]);
+                                StoreRecipe(files[llProgExplorer.getId()]);
                                 ImportRecipeActivity.this.finish();
                             }
                         });
@@ -140,6 +154,40 @@ public class ImportRecipeActivity extends AppCompatActivity {
     }
 
     private void StoreRecipe(File file) {
+        StringBuilder recipeFromFileString = new StringBuilder();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
 
+            while ((line = br.readLine()) != null) {
+                recipeFromFileString.append(line);
+            }
+            br.close();
+        }
+        catch (IOException e) {
+            Log.e("readRecipeFromFile", e.getMessage());
+        }
+
+        Log.d("recipefromfilestring", recipeFromFileString.toString());
+
+        String[] recipeArry = recipeFromFileString.toString().split(";");
+
+        String recipeName = recipeArry[0];
+        String recipeDesc = recipeArry[1];
+        List<Ingredient> ingredientList = new ArrayList<>();
+
+        for (int i = 2; i <recipeArry.length; i++){
+            String[] ingredientArry = recipeArry[i].split("/");
+            String ingredientName = ingredientArry[0];
+            int ingredientAmount = Integer.valueOf(ingredientArry[1]);
+            Unit ingredientUnit = Unit.valueOf(ingredientArry[2]);
+
+            ingredientList.add(new Ingredient(ingredientName, ingredientAmount, ingredientUnit));
+
+        }
+
+        final Recipe recipeToStore = new Recipe(recipeName, recipeDesc, ingredientList);
+        RecipeViewModel recipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
+        recipeViewModel.insert(recipeToStore);
     }
 }

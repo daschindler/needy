@@ -49,7 +49,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
     private TextView tv_description_label, tv_ingredient_label;
 
-    private Button bt_share;
+    private Button bt_share, bt_edit;
 
     private boolean ingredientsShown = false;
     private boolean descriptionShown = false;
@@ -78,6 +78,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
         tv_description_label = findViewById(R.id.tv_view_recipe_description_label);
         tv_ingredient_label = findViewById(R.id.tv_view_recipe_ingredient_label);
         bt_share = findViewById(R.id.bt_view_recipe_share);
+        bt_edit = findViewById(R.id.bt_view_recipe_edit);
 
 
         final LiveData<Recipe> selectedLiveRecipe = recipeViewModel.getRecipeById(intent.getIntExtra("id", 404040));
@@ -160,10 +161,11 @@ public class ViewRecipeActivity extends AppCompatActivity {
             }
         });
 
-        ll_edit.setOnClickListener(new View.OnClickListener() {
+        bt_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intentToEdit = new Intent(ViewRecipeActivity.this, EditRecipeActivity.class);
+                ViewRecipeActivity.this.startActivity(intentToEdit);
             }
         });
 
@@ -204,13 +206,13 @@ public class ViewRecipeActivity extends AppCompatActivity {
         if (recipe.getName() != null){
             formattedRecipe.append(recipe.getName()+";");
         } else {
-            formattedRecipe.append("no name");
+            formattedRecipe.append("no name;");
         }
 
         if (recipe.getDescription() != null){
             formattedRecipe.append(recipe.getDescription()+";");
         } else {
-            formattedRecipe.append("no description");
+            formattedRecipe.append("no description;");
         }
 
         if (recipe.getIngredients() != null) {
@@ -220,7 +222,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
                 formattedRecipe.append(ingredient.getAmountUnit().toString()+";");
             }
         } else {
-            formattedRecipe.append("no ingredients");
+            formattedRecipe.append("no ingredientname/no ingredientdesc/no unit;");
         }
 
         return formattedRecipe.toString();
