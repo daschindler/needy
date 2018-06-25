@@ -104,7 +104,7 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
     private void initializeListAdapter() {
         recipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
         recipeBookViewModel = ViewModelProviders.of(this).get(RecipeBookViewModel.class);
-        LiveData<List<Recipe>> allRecipes = recipeViewModel.getAllLiveRecipes();
+        LiveData<List<Recipe>> allRecipes = recipeViewModel.getAllRecipes();
         List<Recipe> recipeList = allRecipes.getValue();
 
         if(recipeList == null) {
