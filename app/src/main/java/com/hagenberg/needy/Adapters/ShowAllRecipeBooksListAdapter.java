@@ -1,5 +1,6 @@
 package com.hagenberg.needy.Adapters;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hagenberg.needy.Activities.ViewRecipeBookActivity;
 import com.hagenberg.needy.Entity.Recipe;
 import com.hagenberg.needy.Entity.RecipeBook;
 import com.hagenberg.needy.R;
@@ -33,7 +35,9 @@ public class ShowAllRecipeBooksListAdapter extends RecyclerView.Adapter<ShowAllR
         viewHolder.tvRecipeName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(), "Position Nr. " + i + " clicked!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(view.getContext(), ViewRecipeBookActivity.class);
+                intent.putExtra("id", recipeBooks.get(i).getUid());
+                view.getContext().startActivity(intent);
             }
         });
     }

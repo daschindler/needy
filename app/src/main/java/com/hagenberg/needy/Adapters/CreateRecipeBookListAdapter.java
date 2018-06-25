@@ -43,7 +43,6 @@ public class CreateRecipeBookListAdapter extends RecyclerView.Adapter<CreateReci
         return vh;
     }
 
-    //Reduzieren auf ausschließlich Checkbox, Tv durch Text von Checkbox ersetzen (!!!)
     @Override
     public void onBindViewHolder(final CreateRecipeBookListAdapter.ViewHolder vh, final int position) {
         final String name = recipes.get(position).getName();
@@ -107,31 +106,7 @@ public class CreateRecipeBookListAdapter extends RecyclerView.Adapter<CreateReci
         public ViewHolder(View v) {
             super(v);
             rowLayout = v;
-//            v.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    if(tvRecipeName.isChecked()) {
-//                        tvRecipeName.setChecked(false);
-//                        tvRecipeName.setCheckMarkDrawable(android.R.drawable.checkbox_off_background);
-//                    } else {
-//                        tvRecipeName.setCheckMarkDrawable(android.R.drawable.checkbox_on_background);
-//                        tvRecipeName.setChecked(true);
-//                    }
-//                }
-//            });
             tvRecipeName = rowLayout.findViewById(R.id.checkedTextView);
-//            tvRecipeName.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    if(tvRecipeName.isChecked()) {
-//                        tvRecipeName.setChecked(false);
-//                        tvRecipeName.setCheckMarkDrawable(android.R.drawable.checkbox_off_background);
-//                    } else {
-//                        tvRecipeName.setCheckMarkDrawable(android.R.drawable.checkbox_on_background);
-//                        tvRecipeName.setChecked(true);
-//                    }
-//                }
-//            });
         }
     }
 

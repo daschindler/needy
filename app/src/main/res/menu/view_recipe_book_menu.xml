@@ -4,10 +4,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/main_menu_search"
-        android:icon="@android:drawable/ic_menu_search"
+        android:title="Delete"
+        android:id="@+id/view_recipe_book_menu_delete"
+        android:icon="@android:drawable/ic_menu_delete"
         android:iconTint="@color/white"
-        android:title="Search"
-        app:showAsAction="collapseActionView|ifRoom"
-        app:actionViewClass="android.support.v7.widget.SearchView" />
+        app:showAsAction="always" />
 </menu>
