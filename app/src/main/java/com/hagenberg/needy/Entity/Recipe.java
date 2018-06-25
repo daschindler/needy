@@ -20,6 +20,7 @@ public class Recipe {
     // --- Fields ---
 
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "uid")
     private int uid;
 
     @ColumnInfo(name = "name")

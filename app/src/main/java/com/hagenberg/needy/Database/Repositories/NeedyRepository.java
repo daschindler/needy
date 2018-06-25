@@ -37,7 +37,21 @@ public class NeedyRepository {
         return mAllRecipes;
     }
 
+    public List<Recipe> getAllCurrentRecipes(){
+        if(mAllRecipes != null) {
+            if (mAllRecipes.getValue() != null) {
+                return mAllRecipes.getValue();
+            }
+        }
+
+        return mRecipeData.getAllCurrent();
+    }
+
     public LiveData<List<Recipe>> getRecipesByNameOrDesc(String keyword) { return mRecipeData.findByNameOrDesc(keyword); }
+
+    public Recipe getRecipeById(int id) {
+        return mRecipeData.loadById(id);
+    }
 
     public List<Recipe> getRecipesByIds(int[] ids) {
         if (ids.length == 0)
@@ -62,8 +76,22 @@ public class NeedyRepository {
 
     /// - - - RecipeBook Methods
 
+    public RecipeBook getRecipeBookById(int id) {
+        return mRecipeBookData.loadById(id);
+    }
+
     public LiveData<List<RecipeBook>> getAllRecipeBooks() {
         return mAllRecipeBooks;
+    }
+
+    public List<RecipeBook> getAllCurrentRecipeBooks() {
+        if(mAllRecipeBooks != null) {
+            if (mAllRecipeBooks.getValue() != null) {
+                return mAllRecipeBooks.getValue();
+            }
+        }
+
+        return mRecipeBookData.getAllCurrent();
     }
 
     public LiveData<List<RecipeBook>> getRecipeBooksByNameOrDesc(String keyword) { return mRecipeBookData.findByNameOrDesc(keyword); }
