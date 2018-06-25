@@ -20,35 +20,14 @@ public class RecipeViewModel extends AndroidViewModel {
     }
 
     // - - -  Getting Live Data - - -
-    public LiveData<List<Recipe>> getAllLiveRecipes() { return mRepository.getAllRecipes(); }
+    public LiveData<List<Recipe>> getAllRecipes() { return mRepository.getAllRecipes(); }
 
-    public LiveData<List<Recipe>> getAllLiveRecipesByNameOrDesc(String keyword) { return mRepository.getRecipesByNameOrDesc(keyword); }
-
-
-    // - - - Getting Data NOT Live - - -
-    public List<Recipe> getAllCurrentRecipes() {
-        return mRepository.getAllCurrentRecipes();
-    }
-
-    public List<Recipe> getAllCurrentRecipesByNameOrDesc(String keyword) {
-
-        LiveData<List<Recipe>> recipeList = mRepository.getRecipesByNameOrDesc(keyword);
-
-        if(recipeList == null){
-            return null;
-        }
-
-        return recipeList.getValue();
-
-    }
-
-    public Recipe getCurrentRecipeById(int id) {
+    public LiveData<Recipe> getRecipeById(int id) {
         return mRepository.getRecipeById(id);
     }
 
-    public List<Recipe> getCurrentRecipesById(int... id) {
-        return mRepository.getRecipesByIds(id);
-    }
+    public LiveData<List<Recipe>> getAllRecipesByNameOrDesc(String keyword) { return mRepository.getRecipesByNameOrDesc(keyword); }
+
 
 
     // - - - Inserts & Updates - - -

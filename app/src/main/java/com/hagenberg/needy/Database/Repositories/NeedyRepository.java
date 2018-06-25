@@ -37,20 +37,11 @@ public class NeedyRepository {
         return mAllRecipes;
     }
 
-    public List<Recipe> getAllCurrentRecipes(){
-        if(mAllRecipes != null) {
-            if (mAllRecipes.getValue() != null) {
-                return mAllRecipes.getValue();
-            }
-        }
-
-        return mRecipeData.getAllCurrent();
-    }
-
     public LiveData<List<Recipe>> getRecipesByNameOrDesc(String keyword) { return mRecipeData.findByNameOrDesc(keyword); }
 
-    public Recipe getRecipeById(int id) {
-        return mRecipeData.loadById(id);
+    public LiveData<Recipe> getRecipeById(int id) {
+        LiveData<Recipe> recipe = mRecipeData.loadById(id);
+        return recipe;
     }
 
     public List<Recipe> getRecipesByIds(int[] ids) {
@@ -76,7 +67,7 @@ public class NeedyRepository {
 
     /// - - - RecipeBook Methods
 
-    public RecipeBook getRecipeBookById(int id) {
+    public LiveData<RecipeBook> getRecipeBookById(int id) {
         return mRecipeBookData.loadById(id);
     }
 
@@ -84,25 +75,11 @@ public class NeedyRepository {
         return mAllRecipeBooks;
     }
 
-    public List<RecipeBook> getAllCurrentRecipeBooks() {
-        if(mAllRecipeBooks != null) {
-            if (mAllRecipeBooks.getValue() != null) {
-                return mAllRecipeBooks.getValue();
-            }
-        }
-
-        return mRecipeBookData.getAllCurrent();
-    }
-
     public LiveData<List<RecipeBook>> getRecipeBooksByNameOrDesc(String keyword) { return mRecipeBookData.findByNameOrDesc(keyword); }
 
-    public List<RecipeBook> getRecipeBooksByIds(int[] ids) {
-        LiveData<List<RecipeBook>> books = mRecipeBookData.loadAllByIds(ids);
-
-        if(books == null)
-            return null;
-
-        return mRecipeBookData.loadAllByIds(ids).getValue(); }
+    public LiveData<List<RecipeBook>> getRecipeBooksByIds(int[] ids) {
+        return mRecipeBookData.loadAllByIds(ids);
+    }
 
     public void insert (RecipeBook... recipeBooks) {
         new insertRecipeBookAsyncTask(mRecipeBookData).execute(recipeBooks);
