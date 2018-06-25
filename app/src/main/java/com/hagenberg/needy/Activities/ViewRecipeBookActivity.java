@@ -1,5 +1,6 @@
 package com.hagenberg.needy.Activities;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -25,10 +26,11 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
     TextView tvName;
     TextView tvDesc;
     RecyclerView rvRecipes;
+    RecipeBook recipeBook;
     RecipeBookViewModel recipeBookViewModel;
     RecyclerView.LayoutManager layoutManager;
     ViewRecipeBookListAdapter listAdapter = new ViewRecipeBookListAdapter(new LinkedList<Recipe>());
-    RecipeBook rb;
+    LiveData<RecipeBook> rb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +51,15 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
         if(extras != null) {
             id = (int) extras.get("id");
         }
-        rb = recipeBookViewModel.getCurrentRecipeBookById(id);
+        rb = recipeBookViewModel.getRecipeBookById(id);
         if(rb!= null) {
-            tvName.setText(rb.getName());
-            tvDesc.setText(rb.getDescription());
-            listAdapter = new ViewRecipeBookListAdapter(rb.getRecipies());
-            rvRecipes.setAdapter(listAdapter);
+            recipeBook = rb.getValue();
+            if(recipeBook!=null) {
+                tvName.setText(recipeBook.getName());
+                tvDesc.setText(recipeBook.getDescription());
+                listAdapter = new ViewRecipeBookListAdapter(recipeBook.getRecipies());
+                rvRecipes.setAdapter(listAdapter);
+            }
         }
 
         //Next step: Set up menu. 1.5 Hours in. 0945 started again.
