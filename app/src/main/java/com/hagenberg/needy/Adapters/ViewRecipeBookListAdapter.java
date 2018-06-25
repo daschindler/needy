@@ -24,7 +24,7 @@ public class ViewRecipeBookListAdapter extends RecyclerView.Adapter<ViewRecipeBo
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-        View row = inflater.inflate(R.layout.recipe_list_item, viewGroup);
+        View row = inflater.inflate(R.layout.recipe_list_item, viewGroup, false);
         ViewHolder rowVH = new ViewHolder(row);
         return rowVH;
     }

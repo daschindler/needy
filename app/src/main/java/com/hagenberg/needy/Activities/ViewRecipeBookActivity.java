@@ -1,8 +1,11 @@
 package com.hagenberg.needy.Activities;
 
+import android.app.Dialog;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +13,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,17 +57,17 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
             id = (int) extras.get("id");
         }
         rb = recipeBookViewModel.getRecipeBookById(id);
-        if(rb!= null) {
-            recipeBook = rb.getValue();
-            if(recipeBook!=null) {
-                tvName.setText(recipeBook.getName());
-                tvDesc.setText(recipeBook.getDescription());
-                listAdapter = new ViewRecipeBookListAdapter(recipeBook.getRecipies());
-                rvRecipes.setAdapter(listAdapter);
+        rb.observe(this, new Observer<RecipeBook>() {
+            @Override
+            public void onChanged(@Nullable RecipeBook recipeBook) {
+                if(recipeBook!=null) {
+                    tvName.setText(recipeBook.getName());
+                    tvDesc.setText(recipeBook.getDescription());
+                    listAdapter = new ViewRecipeBookListAdapter(recipeBook.getRecipies());
+                    rvRecipes.setAdapter(listAdapter);
+                }
             }
-        }
-
-        //Next step: Set up menu. 1.5 Hours in. 0945 started again.
+        });
 
 
     }
@@ -79,7 +84,6 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.view_recipe_book_menu_delete:
-                Toast.makeText(this, "Delete has been clicked.", Toast.LENGTH_SHORT).show();
                 deleteRecipeBook();
             default:
                 return super.onOptionsItemSelected(item);
@@ -87,9 +91,34 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
     }
 
     private void deleteRecipeBook() {
+        //Start up delete-dialog
         if(rb!=null) {
-            //Delete RB.
+            final Dialog deleteDialog = new Dialog(this, R.style.DescriptionDialog);
+            deleteDialog.setContentView(R.layout.dialog_delete_recipe_book);
+            Button btCancel = deleteDialog.findViewById(R.id.dialog_deleteRB_bt_cancel);
+            Button btDelete = deleteDialog.findViewById(R.id.dialog_deleteRB_bt_delete);
+            TextView tvTitle = deleteDialog.findViewById(R.id.dialog_deleteRB_title);
+            TextView tvText = deleteDialog.findViewById(R.id.dialog_deleteRB_text);
+
+            if(rb.getValue()!=null) {
+                recipeBook = rb.getValue();
+                tvTitle.setText(recipeBook.getName());
+                tvText.setText("Do you really want to delete this recipe book?");
+                btCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        deleteDialog.dismiss();
+                    }
+                });
+                btDelete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //delete happens
+                        onBackPressed();
+                    }
+                });
+            }
+            deleteDialog.show();
         }
-        onBackPressed();
     }
 }

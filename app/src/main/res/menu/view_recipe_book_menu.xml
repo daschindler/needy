@@ -6,7 +6,7 @@
     <item
         android:title="Delete"
         android:id="@+id/view_recipe_book_menu_delete"
-        android:icon="@android:drawable/ic_menu_delete"
+        android:icon="@drawable/ic_action_delete"
         android:iconTint="@color/white"
         app:showAsAction="always" />
 </menu>

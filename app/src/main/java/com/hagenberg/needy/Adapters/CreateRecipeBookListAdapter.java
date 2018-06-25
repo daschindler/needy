@@ -46,16 +46,16 @@ public class CreateRecipeBookListAdapter extends RecyclerView.Adapter<CreateReci
     @Override
     public void onBindViewHolder(final CreateRecipeBookListAdapter.ViewHolder vh, final int position) {
         final String name = recipes.get(position).getName();
-        vh.tvRecipeName.setText(name);
+        vh.tvRecipeName.setText("   " + name);
         vh.rowLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(vh.tvRecipeName.isChecked()) {
                     vh.tvRecipeName.setChecked(false);
-                    vh.tvRecipeName.setCheckMarkDrawable(android.R.drawable.checkbox_off_background);
+                    vh.tvRecipeName.setCheckMarkDrawable(R.drawable.ic_checkbox_off);
                     isChecked[position] = Boolean.FALSE;
                 } else {
-                    vh.tvRecipeName.setCheckMarkDrawable(android.R.drawable.checkbox_on_background);
+                    vh.tvRecipeName.setCheckMarkDrawable(R.drawable.ic_checkbox_on);
                     vh.tvRecipeName.setChecked(true);
                     isChecked[position] = Boolean.TRUE;
                 }
@@ -66,10 +66,10 @@ public class CreateRecipeBookListAdapter extends RecyclerView.Adapter<CreateReci
             public void onClick(View view) {
                 if(vh.tvRecipeName.isChecked()) {
                     vh.tvRecipeName.setChecked(false);
-                    vh.tvRecipeName.setCheckMarkDrawable(android.R.drawable.checkbox_off_background);
+                    vh.tvRecipeName.setCheckMarkDrawable(R.drawable.ic_checkbox_off);
                     isChecked[position] = Boolean.FALSE;
                 } else {
-                    vh.tvRecipeName.setCheckMarkDrawable(android.R.drawable.checkbox_on_background);
+                    vh.tvRecipeName.setCheckMarkDrawable(R.drawable.ic_checkbox_on);
                     vh.tvRecipeName.setChecked(true);
                     isChecked[position] = Boolean.TRUE;
                 }
