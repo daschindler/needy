@@ -203,7 +203,7 @@ public class CreateRecipeFragment extends Fragment {
                 recipeViewModel.insert(recipe);
 
 
-                LiveData<List<Recipe>> allRecipes = recipeViewModel.getAllLiveRecipes();
+                LiveData<List<Recipe>> allRecipes = recipeViewModel.getAllRecipes();
                 List<Recipe> recipesOutsideOfLiveData = allRecipes.getValue();
                 allRecipes.observe(getActivity(), new Observer<List<Recipe>>() {
                     @Override

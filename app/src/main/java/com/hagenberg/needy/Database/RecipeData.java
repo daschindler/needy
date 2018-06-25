@@ -16,6 +16,9 @@ public interface RecipeData {
     @Query("SELECT * FROM Recipe")
     LiveData<List<Recipe>> getAll();
 
+    @Query("SELECT * FROM Recipe WHERE uid = :recipeId LIMIT 1")
+    LiveData<Recipe> loadById(int recipeId);
+
     @Query("SELECT * FROM Recipe WHERE uid IN (:recipeIds)")
     LiveData<List<Recipe>> loadAllByIds(int[] recipeIds);
 

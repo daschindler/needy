@@ -20,53 +20,14 @@ public class RecipeViewModel extends AndroidViewModel {
     }
 
     // - - -  Getting Live Data - - -
-    public LiveData<List<Recipe>> getAllLiveRecipes() { return mRepository.getAllRecipes(); }
+    public LiveData<List<Recipe>> getAllRecipes() { return mRepository.getAllRecipes(); }
 
-    public LiveData<List<Recipe>> getAllLiveRecipesByNameOrDesc(String keyword) { return mRepository.getRecipesByNameOrDesc(keyword); }
-
-
-    // - - - Getting Data NOT Live - - -
-    public List<Recipe> getCurrentAllRecipes() {
-        LiveData<List<Recipe>> recipes =  mRepository.getAllRecipes();
-
-        if(recipes == null){
-            return null;
-        }
-
-        return mRepository.getAllRecipes().getValue();
+    public LiveData<Recipe> getRecipeById(int id) {
+        return mRepository.getRecipeById(id);
     }
 
-    public List<Recipe> getCurrentAllRecipesByNameOrDesc(String keyword) {
+    public LiveData<List<Recipe>> getAllRecipesByNameOrDesc(String keyword) { return mRepository.getRecipesByNameOrDesc(keyword); }
 
-        LiveData<List<Recipe>> recipeList = mRepository.getRecipesByNameOrDesc(keyword);
-
-        if(recipeList == null){
-            return null;
-        }
-
-        return recipeList.getValue();
-
-    }
-
-    public Recipe getCurrentRecipeById(int id) {
-        int[] ids = {id};
-
-        List<Recipe> recipeList = mRepository.getRecipesByIds(ids);
-
-        if(recipeList == null){
-            return null;
-        }
-
-        if(recipeList.size() > 0){
-            return recipeList.get(0);
-        }else{
-            return null;
-        }
-    }
-
-    public List<Recipe> getCurrentRecipesById(int... id) {
-        return mRepository.getRecipesByIds(id);
-    }
 
 
     // - - - Inserts & Updates - - -

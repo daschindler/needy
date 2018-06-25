@@ -17,6 +17,7 @@ public class RecipeBook {
     // --- Fields ---
 
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "uid")
     private int uid;
 
     @ColumnInfo(name = "name")

@@ -37,7 +37,7 @@
                         android:id="@+id/tv_view_recipe_ingredient_label"
                         android:paddingBottom="20dp"
                         android:paddingTop="20dp"
-                        android:text="Zutaten"
+                        android:text="Ingredients"
                         android:textSize="20dp" />
 
                     <View
@@ -84,7 +84,7 @@
                         android:id="@+id/tv_view_recipe_description_label"
                         android:paddingBottom="20dp"
                         android:paddingTop="20dp"
-                        android:text="Beschreibung"
+                        android:text="Description"
                         android:textSize="20dp" />
 
                     <View
@@ -115,7 +115,6 @@
     </ScrollView>
 
     <LinearLayout
-        android:id="@+id/ll_view_recipe_sharebutton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -123,14 +122,17 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:id="@+id/ll_view_recipe_sharebutton">
+
             <!--android:background="@drawable/shadow_205951">-->
             <Button
                 android:layout_width="wrap_content"
+                android:id="@+id/bt_view_recipe_share"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@color/white"
-                android:text="Teilen"
+                android:text="Share"
                 android:textAlignment="center"
                 android:textColor="@color/colorPrimary" />
 
@@ -150,7 +152,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@color/white"
-                android:text="Bearbeiten"
+                android:text="Edit Recipe"
                 android:textAlignment="center"
                 android:textColor="@color/colorPrimary" />
         </LinearLayout>

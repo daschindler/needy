@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hagenberg.needy">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -47,6 +50,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.hagenberg.needy.MainActivity" />
         </activity>
+        <activity android:name=".Activities.ImportRecipeActivity"></activity>
         <activity android:name=".Activities.ViewRecipeBookActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
