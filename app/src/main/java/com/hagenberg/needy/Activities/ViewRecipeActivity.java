@@ -1,6 +1,8 @@
 package com.hagenberg.needy.Activities;
 
 import android.Manifest;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -8,6 +10,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -48,6 +51,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
     private boolean ingredientsShown = false;
     private boolean descriptionShown = false;
 
+    private Recipe selectedRecipe;
+
     private ColorStateList originalLabelColors;
 
     @Override
@@ -59,19 +64,6 @@ public class ViewRecipeActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         RecipeViewModel recipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
-        //final Recipe selectedRecipe = recipeViewModel.getCurrentRecipeById(intent.getIntExtra("id", 404040));
-
-        //Testdaten
-
-        final List<Ingredient> ingredients = new ArrayList<>();
-        ingredients.add(new Ingredient("Zucker", 100, Unit.Unit));
-        ingredients.add(new Ingredient("Alkohol", 50, Unit.Liter));
-        final Recipe selectedRecipe = new Recipe("Mojito", "Schmeckt gut mit Alkohol lol, und das ist " +
-                "ein Test um die Funktionalität des Programms zu testen und zu sehen wie alles so ist", ingredients);
-        //Testdaten
-
-        getSupportActionBar().setTitle(selectedRecipe.getName());
-
 
         ll_descriptionbutton = findViewById(R.id.ll_view_recipe_descriptionbutton);
         ll_edit = findViewById(R.id.ll_view_recipe_editbutton);
@@ -84,6 +76,20 @@ public class ViewRecipeActivity extends AppCompatActivity {
         tv_ingredient_label = findViewById(R.id.tv_view_recipe_ingredient_label);
         bt_share = findViewById(R.id.bt_view_recipe_share);
 
+
+        final LiveData<Recipe> selectedLiveRecipe = recipeViewModel.getRecipeById(intent.getIntExtra("id", 404040));
+
+
+        selectedLiveRecipe.observe(this, new Observer<Recipe>() {
+            @Override
+            public void onChanged(@Nullable final Recipe recipe) {
+                if(recipe != null){
+                    selectedRecipe = recipe;
+                    getSupportActionBar().setTitle(selectedRecipe.getName());
+                }
+            }
+        });
+
         originalLabelColors = tv_description_label.getTextColors();
 
         ll_ingredientsbutton.setOnClickListener(new View.OnClickListener() {
@@ -95,9 +101,14 @@ public class ViewRecipeActivity extends AppCompatActivity {
                     tv_ingredients.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
                     StringBuilder ingredientString = new StringBuilder();
-                    for (Ingredient ingredient : selectedRecipe.getIngredients()) {
-                        ingredientString.append(ingredient.getAmount() + " " + ingredient.getAmountUnit().toString() + " " + ingredient.getName() + "\n");
+                    if (selectedRecipe.getIngredients() != null) {
+                        for (Ingredient ingredient : selectedRecipe.getIngredients()) {
+                            ingredientString.append(ingredient.getAmount() + " " + ingredient.getAmountUnit().toString() + " " + ingredient.getName() + "\n");
+                        }
+                    } else {
+                        ingredientString.append("No ingredients added\n");
                     }
+
 
                     tv_ingredients.setText(ingredientString.toString());
 
@@ -142,28 +153,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
         bt_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    File folder = new File(Environment.getExternalStorageDirectory().toString()+"/needy");
-                    if (!folder.isDirectory()) {
-                        folder.mkdirs();
-                    }
-
-                    File file = new File(Environment.getExternalStorageDirectory().toString(), "/needy/"+selectedRecipe.getName()+".txt");
-                    FileOutputStream fileOutput = new FileOutputStream(file);
-                    OutputStreamWriter outputStreamWriter=new OutputStreamWriter(fileOutput);
-                    outputStreamWriter.write(selectedRecipe.getName() + ";" + selectedRecipe.getDescription());
-                    outputStreamWriter.flush();
-                    fileOutput.getFD().sync();
-                    outputStreamWriter.close();
-                } catch (IOException e) {
-                    Log.d("Write to storage", "Failed");
-                }
-
-                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-                sharingIntent.setType("text/*");
-                sharingIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(Environment.getExternalStorageDirectory().toString() +
-                        "/needy/"+selectedRecipe.getName()+".txt"));
-                startActivity(Intent.createChooser(sharingIntent, "share file with"));
+                CreateFileAndShare();
             }
         });
 
@@ -175,5 +165,59 @@ public class ViewRecipeActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void CreateFileAndShare() {
+        try {
+            File folder = new File(Environment.getExternalStorageDirectory().toString()+"/needy");
+            if (!folder.isDirectory()) {
+                folder.mkdirs();
+            }
+
+            File file = new File(Environment.getExternalStorageDirectory().toString(), "/needy/"+selectedRecipe.getName()+".needy");
+            FileOutputStream fileOutput = new FileOutputStream(file);
+            OutputStreamWriter outputStreamWriter=new OutputStreamWriter(fileOutput);
+            String fileContent = FormatRecipeToString(selectedRecipe);
+            outputStreamWriter.write(fileContent);
+            outputStreamWriter.flush();
+            fileOutput.getFD().sync();
+            outputStreamWriter.close();
+        } catch (IOException e) {
+            Log.d("Write to storage", "Failed");
+        }
+
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.setType("text/*");
+        sharingIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(Environment.getExternalStorageDirectory().toString() +
+                "/needy/"+selectedRecipe.getName()+".needy"));
+        startActivity(Intent.createChooser(sharingIntent, "share file with"));
+    }
+
+    private String FormatRecipeToString(Recipe recipe) {
+        StringBuilder formattedRecipe = new StringBuilder();
+
+        if (recipe.getName() != null){
+            formattedRecipe.append(recipe.getName()+";");
+        } else {
+            formattedRecipe.append("no name");
+        }
+
+        if (recipe.getDescription() != null){
+            formattedRecipe.append(recipe.getDescription()+";");
+        } else {
+            formattedRecipe.append("no description");
+        }
+
+        if (recipe.getIngredients() != null) {
+            for (Ingredient ingredient : recipe.getIngredients()) {
+                formattedRecipe.append(ingredient.getName()+"/");
+                formattedRecipe.append(ingredient.getAmount()+"/");
+                formattedRecipe.append(ingredient.getAmountUnit().toString()+";");
+            }
+        } else {
+            formattedRecipe.append("no ingredients");
+        }
+
+        return formattedRecipe.toString();
     }
 }
