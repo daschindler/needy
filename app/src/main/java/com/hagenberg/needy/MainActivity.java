@@ -1,12 +1,16 @@
 package com.hagenberg.needy;
 
+import android.Manifest;
 import android.app.SearchManager;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -41,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(viewPagerAdapter);
 
         handleIntent(getIntent());
+
+        AskStoragePermissions();
     }
 
     //Demo wie man mit Dominiks cooler Datenbank interagieren kann
@@ -123,6 +129,17 @@ public class MainActivity extends AppCompatActivity {
         //Das jetzt so in die Datenbank gespeichert wird:
         recipeViewModel.insert(sampleRecipe1);
         //Wenn der Insert erfolgreich abgeschlossen ist, gibt euch der Observer bescheid, dass sich allRecipies geändert hat
+    }
+
+    private void AskStoragePermissions(){
+        if (ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    0);
+        }
     }
 
     @Override

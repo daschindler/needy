@@ -1,16 +1,25 @@
 package com.hagenberg.needy.Activities;
 
+import android.Manifest;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hagenberg.needy.Entity.Ingredient;
 import com.hagenberg.needy.Entity.Recipe;
@@ -18,6 +27,10 @@ import com.hagenberg.needy.Entity.Unit;
 import com.hagenberg.needy.R;
 import com.hagenberg.needy.ViewModel.RecipeViewModel;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +42,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
     private ImageView imgv_ingredientsarrow, imgv_descriptionarrow;
 
     private TextView tv_description_label, tv_ingredient_label;
+
+    private Button bt_share;
 
     private boolean ingredientsShown = false;
     private boolean descriptionShown = false;
@@ -44,9 +59,10 @@ public class ViewRecipeActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         RecipeViewModel recipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
-        //Recipe selectedRecipe = recipeViewModel.getCurrentRecipeById(intent.getIntExtra("id", 404040));
+        //final Recipe selectedRecipe = recipeViewModel.getCurrentRecipeById(intent.getIntExtra("id", 404040));
 
         //Testdaten
+
         final List<Ingredient> ingredients = new ArrayList<>();
         ingredients.add(new Ingredient("Zucker", 100, Unit.Unit));
         ingredients.add(new Ingredient("Alkohol", 50, Unit.Liter));
@@ -60,13 +76,13 @@ public class ViewRecipeActivity extends AppCompatActivity {
         ll_descriptionbutton = findViewById(R.id.ll_view_recipe_descriptionbutton);
         ll_edit = findViewById(R.id.ll_view_recipe_editbutton);
         ll_ingredientsbutton = findViewById(R.id.ll_view_recipe_ingredientbutton);
-        ll_share = findViewById(R.id.ll_view_recipe_sharebutton);
         ll_description = findViewById(R.id.ll_view_recipe_description);
         ll_ingredients = findViewById(R.id.ll_view_recipe_ingredients);
         imgv_descriptionarrow = findViewById(R.id.img_view_recipe_description_arrow);
         imgv_ingredientsarrow = findViewById(R.id.img_view_recipe_ingredients_arrow);
         tv_description_label = findViewById(R.id.tv_view_recipe_description_label);
         tv_ingredient_label = findViewById(R.id.tv_view_recipe_ingredient_label);
+        bt_share = findViewById(R.id.bt_view_recipe_share);
 
         originalLabelColors = tv_description_label.getTextColors();
 
@@ -79,7 +95,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
                     tv_ingredients.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
                     StringBuilder ingredientString = new StringBuilder();
-                    for (Ingredient ingredient : ingredients) {
+                    for (Ingredient ingredient : selectedRecipe.getIngredients()) {
                         ingredientString.append(ingredient.getAmount() + " " + ingredient.getAmountUnit().toString() + " " + ingredient.getName() + "\n");
                     }
 
@@ -123,10 +139,31 @@ public class ViewRecipeActivity extends AppCompatActivity {
             }
         });
 
-        ll_share.setOnClickListener(new View.OnClickListener() {
+        bt_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                try {
+                    File folder = new File(Environment.getExternalStorageDirectory().toString()+"/needy");
+                    if (!folder.isDirectory()) {
+                        folder.mkdirs();
+                    }
 
+                    File file = new File(Environment.getExternalStorageDirectory().toString(), "/needy/"+selectedRecipe.getName()+".txt");
+                    FileOutputStream fileOutput = new FileOutputStream(file);
+                    OutputStreamWriter outputStreamWriter=new OutputStreamWriter(fileOutput);
+                    outputStreamWriter.write(selectedRecipe.getName() + ";" + selectedRecipe.getDescription());
+                    outputStreamWriter.flush();
+                    fileOutput.getFD().sync();
+                    outputStreamWriter.close();
+                } catch (IOException e) {
+                    Log.d("Write to storage", "Failed");
+                }
+
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                sharingIntent.setType("text/*");
+                sharingIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(Environment.getExternalStorageDirectory().toString() +
+                        "/needy/"+selectedRecipe.getName()+".txt"));
+                startActivity(Intent.createChooser(sharingIntent, "share file with"));
             }
         });
 
