@@ -2,7 +2,7 @@ package com.hagenberg.needy.Entity;
 
 public class Ingredient {
     private String name;
-    private int amount;
+    private double amount;
     private Unit amountUnit;
 
     public String getName() {
@@ -13,7 +13,7 @@ public class Ingredient {
         this.name = name;
     }
 
-    public int getAmount() {
+    public double getAmount() {
         return amount;
     }
 

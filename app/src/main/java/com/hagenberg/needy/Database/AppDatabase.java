@@ -8,7 +8,7 @@ import android.content.Context;
 import com.hagenberg.needy.Entity.Recipe;
 import com.hagenberg.needy.Entity.RecipeBook;
 
-@Database(entities = {Recipe.class, RecipeBook.class}, version = 2)
+@Database(entities = {Recipe.class, RecipeBook.class}, version = 3)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract RecipeData recipeData();
     public abstract RecipeBookData recipeBookData();
