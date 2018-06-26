@@ -1,15 +1,23 @@
 package com.hagenberg.needy.Activities;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,11 +27,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hagenberg.needy.Adapters.ViewRecipeBookListAdapter;
+import com.hagenberg.needy.Entity.Ingredient;
 import com.hagenberg.needy.Entity.Recipe;
 import com.hagenberg.needy.Entity.RecipeBook;
 import com.hagenberg.needy.R;
 import com.hagenberg.needy.ViewModel.RecipeBookViewModel;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.LinkedList;
 
 public class ViewRecipeBookActivity extends AppCompatActivity {
@@ -66,6 +79,17 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
             }
         });
 
+        btShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (checkStoragePermission()){
+                    CreateFileToShare();
+                } else {
+                    askStoragePermission();
+                }
+            }
+        });
+
         int id = 0;
         Intent calling = getIntent();
         Bundle extras = calling.getExtras();
@@ -86,8 +110,32 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
                 }
             }
         });
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 0:
+                if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //Permission granted
+                    CreateFileToShare();
+                } else {
+                    Toast.makeText(this, "We are sorry, but sharing Recipe Books is only possible with storage access...", Toast.LENGTH_LONG).show();
+                }
+            default:
+                return;
+        }
+    }
 
+    private boolean checkStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        }
+        return true;
+    }
+
+    private void askStoragePermission(){
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},0);
     }
 
     @Override
@@ -106,6 +154,87 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void CreateFileToShare() {
+        try {
+            File folder = new File(Environment.getExternalStorageDirectory().toString()+ "/needy");
+            if(!folder.isDirectory()) {
+                folder.mkdirs();
+            }
+
+            File file = new File(Environment.getExternalStorageDirectory().toString(), "/needy/" + publicRB.getName() + ".rbneedy");
+            FileOutputStream fileOutput = new FileOutputStream(file);
+            OutputStreamWriter streamWriter = new OutputStreamWriter(fileOutput);
+            String fileContent = FormatRecipebookToString(publicRB);
+            streamWriter.write(fileContent);
+            streamWriter.flush();
+            fileOutput.getFD().sync();
+            streamWriter.close();
+            //Toast.makeText(this,"This recipebook is saved in your storage and ready to be shared with your friends!", Toast.LENGTH_LONG).show();
+        } catch (IOException ex) {
+            Log.d("Write to storage", "Failed");
+        }
+
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.setType("text/*");
+        sharingIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(Environment.getExternalStorageDirectory().toString() +
+                "/needy/" + publicRB.getName()+ ".rbneedy"));
+        startActivity(Intent.createChooser(sharingIntent, "Share Recipe Book via"));
+    }
+
+    private String FormatRecipebookToString(RecipeBook recipeBook) {
+        StringBuilder formattedRecipeBook = new StringBuilder();
+
+        if(recipeBook.getName() != null) {
+            formattedRecipeBook.append(recipeBook.getName()+";");
+        } else {
+            formattedRecipeBook.append("no recipebook name;");
+        }
+
+        if(recipeBook.getDescription()!=null) {
+            formattedRecipeBook.append(recipeBook.getDescription()+";");
+        } else {
+            formattedRecipeBook.append("no recipebook description;");
+        }
+
+        if(recipeBook.getRecipies() != null) {
+            for (Recipe recipe : recipeBook.getRecipies()){
+                formattedRecipeBook.append(FormatRecipeToString(recipe));
+            }
+        } else {
+            formattedRecipeBook.append("no recipes;");
+        }
+
+        return formattedRecipeBook.toString();
+    }
+
+    private String FormatRecipeToString(Recipe recipe) {
+        StringBuilder formattedRecipe = new StringBuilder();
+
+        if (recipe.getName() != null){
+            formattedRecipe.append(recipe.getName()+":");
+        } else {
+            formattedRecipe.append("no name:");
+        }
+
+        if (recipe.getDescription() != null){
+            formattedRecipe.append(recipe.getDescription()+":");
+        } else {
+            formattedRecipe.append("no description:");
+        }
+
+        if (recipe.getIngredients() != null) {
+            for (Ingredient ingredient : recipe.getIngredients()) {
+                formattedRecipe.append(ingredient.getName()+"/");
+                formattedRecipe.append(ingredient.getAmount()+"/");
+                formattedRecipe.append(ingredient.getAmountUnit().toString()+":");
+            }
+            formattedRecipe.append(";");
+        } else {
+            formattedRecipe.append("no ingredientname/no ingredientdesc/no unit;");
+        }
+        return formattedRecipe.toString();
     }
 
     private void deleteRecipeBook() {

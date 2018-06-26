@@ -70,6 +70,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.hagenberg.needy.Activities.ViewRecipeActivity" />
         </activity>
+        <activity android:name=".Activities.ImportRecipeBookActivity"></activity>
     </application>
 
 </manifest>

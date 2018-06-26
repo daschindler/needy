@@ -1,12 +1,17 @@
 package com.hagenberg.needy.Activities;
 
+import android.Manifest;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -211,7 +216,12 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.createRB_menu_import:
-                Toast.makeText(this, "Import clicked!", Toast.LENGTH_SHORT).show();
+                if(checkStoragePermission()) {
+                    Intent intent = new Intent(this, ImportRecipeBookActivity.class);
+                    startActivity(intent);
+                } else {
+                    askStoragePermission();
+                }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -220,5 +230,32 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 0:
+                if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //Permission granted
+                    Intent intent = new Intent(this, ImportRecipeBookActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(this, "We are sorry, but importing Recipe Books is only possible with storage access...", Toast.LENGTH_LONG).show();
+                }
+            default:
+                return;
+        }
+    }
+
+    private boolean checkStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        }
+        return true;
+    }
+
+    private void askStoragePermission(){
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},0);
     }
 }
