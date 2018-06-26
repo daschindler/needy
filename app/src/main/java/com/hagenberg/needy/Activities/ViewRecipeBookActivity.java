@@ -30,8 +30,10 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
 
     TextView tvName;
     TextView tvDesc;
+    Button btShare;
+    Button btEdit;
     RecyclerView rvRecipes;
-    RecipeBook recipeBook;
+    RecipeBook publicRB;
     RecipeBookViewModel recipeBookViewModel;
     RecyclerView.LayoutManager layoutManager;
     ViewRecipeBookListAdapter listAdapter = new ViewRecipeBookListAdapter(new LinkedList<Recipe>());
@@ -43,11 +45,26 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_recipe_book);
         tvName = findViewById(R.id.viewRB_tv_name);
         tvDesc = findViewById(R.id.viewRB_tv_desc);
+        btEdit = findViewById(R.id.viewRB_bt_edit);
+        btShare = findViewById(R.id.viewRB_bt_share);
         rvRecipes = findViewById(R.id.viewRB_rv_recipes);
         recipeBookViewModel = ViewModelProviders.of(this).get(RecipeBookViewModel.class);
 
         layoutManager = new LinearLayoutManager(this);
         rvRecipes.setLayoutManager(layoutManager);
+
+        btEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(publicRB !=null) {
+                    Intent intent = new Intent(view.getContext(), CreateRecipeBookActivity.class);
+                    intent.putExtra("id", publicRB.getUid());
+                    view.getContext().startActivity(intent);
+                } else{
+                    Toast.makeText(view.getContext(), "Please wait until everything is finished loading...", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         int id = 0;
         Intent calling = getIntent();
@@ -61,6 +78,7 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable RecipeBook recipeBook) {
                 if(recipeBook!=null) {
+                    publicRB = recipeBook;
                     tvName.setText(recipeBook.getName());
                     tvDesc.setText(recipeBook.getDescription());
                     listAdapter = new ViewRecipeBookListAdapter(recipeBook.getRecipies());
@@ -101,8 +119,8 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
             TextView tvText = deleteDialog.findViewById(R.id.dialog_deleteRB_text);
 
             if(rb.getValue()!=null) {
-                recipeBook = rb.getValue();
-                tvTitle.setText(recipeBook.getName());
+                publicRB = rb.getValue();
+                tvTitle.setText(publicRB.getName());
                 tvText.setText("Do you really want to delete this recipe book?");
                 btCancel.setOnClickListener(new View.OnClickListener() {
                     @Override

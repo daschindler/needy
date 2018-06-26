@@ -11,6 +11,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -41,6 +44,10 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
     RecipeViewModel recipeViewModel;
     RecipeBookViewModel recipeBookViewModel;
     CreateRecipeBookListAdapter listAdapter;
+    List<Recipe> checkedRecipes;
+    List<Recipe> allDatabaseRecipes;
+    int id;
+    Boolean update = false;
 
 
     @Override
@@ -63,19 +70,35 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
             public void onClick(View view) {
                 RecipeBook recipeBookNew = checkViews();
                 if(recipeBookNew!= null) {
+                    if(update) {
+                        //recipeBookViewModel.update(recipeBookNew);
+                        onBackPressed();
+                    }
                     //insert
-                    recipeBookViewModel.insert(recipeBookNew);
-                    onBackPressed();    //Go back to main activity.
+                    else {
+                        recipeBookViewModel.insert(recipeBookNew);
+                        onBackPressed();    //Go back to main activity.
+                    }
                 }
             }
         });
 
-        //Some recipe values for the adapter, usually taken outta the SQLite Database
+        //In case this activity is called with edit-purposes...
+        Bundle extras = getIntent().getExtras();
+        if(extras != null) {
+            id = extras.getInt("id");
+            update = true;
+            btFinish.setText("Save Changes");
+        }
+
         initializeListAdapter();
     }
 
     private RecipeBook checkViews() {
         RecipeBook recipeBook = new RecipeBook();
+        if(update) {
+            recipeBook.setUid(this.id);
+        }
         boolean correctInput = true;
         Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
         if(etRecipeBookName.getText().toString().length()==0)
@@ -104,7 +127,29 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
     private void initializeListAdapter() {
         recipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
         recipeBookViewModel = ViewModelProviders.of(this).get(RecipeBookViewModel.class);
-        LiveData<List<Recipe>> allRecipes = recipeViewModel.getAllRecipes();
+
+        if(update) {
+            LiveData<RecipeBook> recipeBook = recipeBookViewModel.getRecipeBookById(id);
+            recipeBook.observe(this, new Observer<RecipeBook>() {
+                @Override
+                public void onChanged(@Nullable RecipeBook recipeBook) {
+                    if(recipeBook!=null) {
+                        //Initialize Update views
+                        etRecipeBookName.setText(recipeBook.getName());
+                        etRecipeBookDescription.setText(recipeBook.getDescription());
+                        checkedRecipes = recipeBook.getRecipies();
+
+                        if(checkedRecipes!=null && allDatabaseRecipes!=null) {
+                            Boolean[] checked = updateRecipeView(allDatabaseRecipes, checkedRecipes);
+                            listAdapter.updateData(allDatabaseRecipes, checked);
+                            listAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+            });
+        }
+
+        final LiveData<List<Recipe>> allRecipes = recipeViewModel.getAllRecipes();
         List<Recipe> recipeList = allRecipes.getValue();
 
         if(recipeList == null) {
@@ -116,7 +161,14 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable List<Recipe> recipes) {
                 if(recipes != null) {
-                    listAdapter.updateData(recipes);
+                    allDatabaseRecipes = recipes;
+
+                    if(allDatabaseRecipes!=null && checkedRecipes!=null) {
+                        Boolean[] checked = updateRecipeView(allDatabaseRecipes, checkedRecipes);
+                        listAdapter.updateData(allDatabaseRecipes, checked);
+                    } else {
+                        listAdapter.updateData(recipes);
+                    }
                     listAdapter.notifyDataSetChanged();
                 }
             }
@@ -125,4 +177,48 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
         rvChoosenRecipes.setAdapter(listAdapter);
     }
 
+    private Boolean[] updateRecipeView(List<Recipe> allRec, List<Recipe> rbRec) {
+        Boolean[] checked = new Boolean[allRec.size()];
+
+        for(int i = 0; i < allRec.size(); i++) {
+            if(recipeBookIncluded(rbRec, allRec.get(i))) {
+                checked[i] = true;
+            } else {
+                checked[i] = false;
+            }
+        }
+
+        return checked;
+    }
+
+    private boolean recipeBookIncluded(List<Recipe> rbRec, Recipe recipe) {
+        for(Recipe rec : rbRec) {
+            if(rec.getUid()==recipe.getUid()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.create_recipe_book_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.createRB_menu_import:
+                Toast.makeText(this, "Import clicked!", Toast.LENGTH_SHORT).show();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

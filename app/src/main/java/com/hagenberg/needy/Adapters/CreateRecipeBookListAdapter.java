@@ -28,6 +28,13 @@ public class CreateRecipeBookListAdapter extends RecyclerView.Adapter<CreateReci
 
     }
 
+    public void updateData(List<Recipe> recipes, Boolean[] checked) {
+        if(recipes.size()==checked.length) {
+            this.recipes = recipes;
+            this.isChecked = checked;
+        }
+    }
+
     private Boolean[] setUnchecked(Boolean[] recipes) {
         for (int i = 0; i<recipes.length; i++){
             recipes[i] = Boolean.FALSE;
@@ -47,6 +54,14 @@ public class CreateRecipeBookListAdapter extends RecyclerView.Adapter<CreateReci
     public void onBindViewHolder(final CreateRecipeBookListAdapter.ViewHolder vh, final int position) {
         final String name = recipes.get(position).getName();
         vh.tvRecipeName.setText("   " + name);
+        if(isChecked!=null) {
+            if (isChecked[position]) {
+                vh.tvRecipeName.setCheckMarkDrawable(R.drawable.ic_checkbox_on);
+            } else {
+                vh.tvRecipeName.setCheckMarkDrawable(R.drawable.ic_checkbox_off);
+            }
+            vh.tvRecipeName.setChecked(isChecked[position]);
+        }
         vh.rowLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,5 +128,10 @@ public class CreateRecipeBookListAdapter extends RecyclerView.Adapter<CreateReci
     public CreateRecipeBookListAdapter(List<Recipe> recipes) {
         this.recipes = recipes;
         this.isChecked = setUnchecked(new Boolean[recipes.size()]);
+    }
+
+    public CreateRecipeBookListAdapter(List<Recipe> recipes, Boolean[] isChecked) {
+        this.recipes = recipes;
+        this.isChecked = isChecked;
     }
 }

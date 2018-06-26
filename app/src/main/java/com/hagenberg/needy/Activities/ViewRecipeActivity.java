@@ -126,7 +126,6 @@ public class ViewRecipeActivity extends AppCompatActivity {
                     imgv_ingredientsarrow.setImageResource(R.drawable.ic_expand_more_grey_24dp);
                     tv_ingredient_label.setTextColor(originalLabelColors);
                 }
-
             }
         });
 
