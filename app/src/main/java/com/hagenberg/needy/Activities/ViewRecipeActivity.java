@@ -226,4 +226,19 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         return formattedRecipe.toString();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            default:
+                this.finish();
+                break;
+        }
+        return true;
+    }
 }
