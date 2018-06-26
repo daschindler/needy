@@ -22,7 +22,7 @@ public abstract class AppDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, "needyDatabase").fallbackToDestructiveMigration().build();
 
-                    //ToDo: Migration statt .fallbackToDestructiveMigration()
+                    //CouldDo: Migration statt .fallbackToDestructiveMigration()
                 }
             }
         }

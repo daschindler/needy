@@ -19,7 +19,7 @@ public class RecipeViewModel extends AndroidViewModel {
         mRepository = new NeedyRepository(application);
     }
 
-    // - - -  Getting Live Data - - -
+    // - - -  Getting Data - - -
     public LiveData<List<Recipe>> getAllRecipes() { return mRepository.getAllRecipes(); }
 
     public LiveData<Recipe> getRecipeById(int id) {
@@ -34,5 +34,7 @@ public class RecipeViewModel extends AndroidViewModel {
 
     public void insert(Recipe... recipe) { mRepository.insert(recipe); }
 
-    public void update(Recipe recipe) { mRepository.update(recipe); }
+    public void update(Recipe... recipe) { mRepository.update(recipe); }
+
+    public void delete(Recipe... recipe) { mRepository.delete(recipe); }
 }

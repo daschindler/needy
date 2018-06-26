@@ -30,8 +30,8 @@ public interface RecipeData {
     void insertAll(Recipe... recipes);
 
     @Delete
-    void delete(Recipe recipe);
+    void delete(Recipe... recipe);
 
     @Update
-    void update(Recipe recipe);
+    void update(Recipe... recipe);
 }

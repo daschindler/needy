@@ -19,7 +19,7 @@ public class RecipeBookViewModel extends AndroidViewModel {
         mRepository = new NeedyRepository(application);
     }
 
-    // - - -  Getting Live Data - - -
+    // - - -  Getting Data - - -
     public LiveData<List<RecipeBook>> getAllLiveRecipeBooks() { return mRepository.getAllRecipeBooks(); }
 
     public LiveData<RecipeBook> getRecipeBookById(int id) {
@@ -39,5 +39,7 @@ public class RecipeBookViewModel extends AndroidViewModel {
 
     public void insert(RecipeBook... recipebooks) { mRepository.insert(recipebooks); }
 
-    public void update(RecipeBook recipebook) { mRepository.insert(recipebook); }
+    public void update(RecipeBook... recipebook) { mRepository.insert(recipebook); }
+
+    public void delete(RecipeBook... recipebook) { mRepository.delete(recipebook); }
 }
