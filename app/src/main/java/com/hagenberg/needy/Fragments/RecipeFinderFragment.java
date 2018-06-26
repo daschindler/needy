@@ -16,7 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hagenberg.needy.Activities.CreateRecipeActivity;
+import com.hagenberg.needy.Adapters.ShowAllIngredientsListAdapter;
 import com.hagenberg.needy.Adapters.ShowAllRecipesListAdapter;
+import com.hagenberg.needy.Adapters.ShowFoundRecipesByIngredientsListAdapter;
 import com.hagenberg.needy.Entity.Ingredient;
 import com.hagenberg.needy.Entity.Recipe;
 import com.hagenberg.needy.R;
@@ -33,8 +35,11 @@ public class RecipeFinderFragment extends Fragment {
     RecyclerView rvRecipes;
     RecyclerView rvIngredients;
 
-    RecyclerView.LayoutManager layoutManager;
-    ShowAllRecipesListAdapter listAdapter;
+    RecyclerView.LayoutManager verticalLayoutManager;
+    RecyclerView.LayoutManager horizontalLayoutManagaer;
+
+    ShowFoundRecipesByIngredientsListAdapter recipesListAdapter;
+    ShowAllIngredientsListAdapter ingredientsListAdapter;
 
     public RecipeFinderFragment() {}
 
@@ -56,13 +61,13 @@ public class RecipeFinderFragment extends Fragment {
 
         //RecyclerView Recipe-List
         rvRecipes = rootView.findViewById(R.id.list_recipes);
-        layoutManager = new LinearLayoutManager(getActivity());
-        rvRecipes.setLayoutManager(layoutManager);
+        verticalLayoutManager = new LinearLayoutManager(getActivity());
+        rvRecipes.setLayoutManager(verticalLayoutManager);
 
         //RecyclerView Ingredient-List
         rvIngredients = rootView.findViewById(R.id.rvIngredients);
-        layoutManager = new LinearLayoutManager(getActivity());
-        rvRecipes.setLayoutManager(layoutManager);
+        horizontalLayoutManagaer= new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        rvIngredients.setLayoutManager(horizontalLayoutManagaer);
 
         setUpListAdapter();
 
@@ -71,29 +76,27 @@ public class RecipeFinderFragment extends Fragment {
     }
 
     private void setUpListAdapter() {
-
-
         recipeViewModel = ViewModelProviders.of(this.getActivity()).get(RecipeViewModel.class);
         LiveData<List<Recipe>> allRecipes = recipeViewModel.getAllRecipes();
         List<Recipe> recipeList = allRecipes.getValue();
 
         if(recipeList==null) {
-            recipeList = new LinkedList<Recipe>();
-            listAdapter = new ShowAllRecipesListAdapter(recipeList);
-            rvRecipes.setAdapter(listAdapter);
-        } else {
-            listAdapter = new ShowAllRecipesListAdapter(recipeList);
-            rvRecipes.setAdapter(listAdapter);
+            recipeList = new LinkedList<>();
         }
+
+        recipesListAdapter = new ShowFoundRecipesByIngredientsListAdapter(recipeList);
+
+        ingredientsListAdapter = new ShowAllIngredientsListAdapter(recipeList, recipesListAdapter);
+
+        rvRecipes.setAdapter(recipesListAdapter);
+        rvIngredients.setAdapter(ingredientsListAdapter);
 
         allRecipes.observe(this, new Observer<List<Recipe>>() {
             @Override
             public void onChanged(@Nullable final List<Recipe> recipes) {
                 // allRecipes hat sich geändert (new entry, deleted entry, async insert, ...)
                 if(recipes != null){
-                    //reload RecyclerView with new RecipeValues
-                    listAdapter.updateData(recipes);
-                    listAdapter.notifyDataSetChanged();
+                    //ToDo
                 }
             }
         });
