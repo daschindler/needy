@@ -10,6 +10,7 @@ import com.hagenberg.needy.Entity.Recipe;
 import java.util.List;
 
 public class RecipeViewModel extends AndroidViewModel {
+    //okok
 
     private NeedyRepository mRepository;
 
