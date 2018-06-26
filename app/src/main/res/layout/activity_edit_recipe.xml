@@ -12,9 +12,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/shadow_orange"
-        android:textAlignment="center"
+        android:paddingLeft="35dp"
         android:id="@+id/et_edit_recipe_recipe_name"
         android:hint="Recipename"
+        android:textStyle="bold"
+        android:textSize="28dp"
         android:paddingTop="25dp"
         android:paddingBottom="25dp"/>
 
@@ -116,7 +118,7 @@
                     android:id="@+id/ll_edit_recipe_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="horizontal">
 
                 </LinearLayout>
 
