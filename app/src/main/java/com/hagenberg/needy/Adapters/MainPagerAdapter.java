@@ -6,11 +6,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.hagenberg.needy.Fragments.RecipeFinderFragment;
 import com.hagenberg.needy.Fragments.ShowAllRecipeBooksFragment;
 import com.hagenberg.needy.Fragments.ShowAllRecipesFragment;
 
 public class MainPagerAdapter extends FragmentPagerAdapter {
-    private static int page_count = 2;
+    private static int page_count = 3;
     private String searchString = "";
 
     public String getSearchString() {
@@ -45,6 +46,8 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
             case 1:
                 //update with searchString newInstance
                 return ShowAllRecipeBooksFragment.newInstance();
+            case 2:
+                return RecipeFinderFragment.newInstance();
             default:
                 return null;
         }
@@ -58,6 +61,8 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
                 return "Recipes";
             case 1:
                 return "Recipe Books";
+            case 2:
+                return "Recipe Finder";
             default:
                 return "";
         }

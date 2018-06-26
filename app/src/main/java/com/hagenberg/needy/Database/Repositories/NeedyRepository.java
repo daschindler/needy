@@ -59,8 +59,12 @@ public class NeedyRepository {
         new insertRecipeAsyncTask(mRecipeData).execute(recipe);
     }
 
-    public void update (Recipe recipe) {
+    public void update (Recipe... recipe) {
         new updateRecipeAsyncTask(mRecipeData).execute(recipe);
+    }
+
+    public void delete (Recipe... recipe){
+        new deleteRecipeAsyncTask(mRecipeData).execute(recipe);
     }
 
 
@@ -85,8 +89,12 @@ public class NeedyRepository {
         new insertRecipeBookAsyncTask(mRecipeBookData).execute(recipeBooks);
     }
 
-    public void update (RecipeBook recipeBook) {
+    public void update (RecipeBook... recipeBook) {
         new updateRecipeBookAsyncTask(mRecipeBookData).execute(recipeBook);
+    }
+
+    public void delete (RecipeBook... recipeBook){
+        new deleteRecipeBookAsyncTask(mRecipeBookData).execute(recipeBook);
     }
 
 
@@ -104,6 +112,21 @@ public class NeedyRepository {
         @Override
         protected Void doInBackground(final Recipe... params) {
             mRecipeAsyncTaskData.insertAll(params[0]);
+            return null;
+        }
+    }
+
+    private static class deleteRecipeAsyncTask extends AsyncTask<Recipe, Void, Void> {
+
+        private RecipeData mRecipeAsyncTaskData;
+
+        deleteRecipeAsyncTask(RecipeData dao) {
+            mRecipeAsyncTaskData = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final Recipe... params) {
+            mRecipeAsyncTaskData.delete(params);
             return null;
         }
     }
@@ -143,6 +166,21 @@ public class NeedyRepository {
         }
     }
 
+    private static class deleteRecipeBookAsyncTask extends AsyncTask<RecipeBook, Void, Void> {
+
+        private RecipeBookData mRecipeBookAsyncTaskData;
+
+        deleteRecipeBookAsyncTask(RecipeBookData dao) {
+            mRecipeBookAsyncTaskData = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final RecipeBook... params) {
+            mRecipeBookAsyncTaskData.delete(params);
+            return null;
+        }
+    }
+
     private static class updateRecipeBookAsyncTask extends AsyncTask<RecipeBook, Void, Void> {
 
         private RecipeBookData mRecipeBookAsyncTaskData;
@@ -153,7 +191,7 @@ public class NeedyRepository {
 
         @Override
         protected Void doInBackground(final RecipeBook... params) {
-            mRecipeBookAsyncTaskData.update(params[0]);
+            mRecipeBookAsyncTaskData.update(params);
             return null;
         }
     }

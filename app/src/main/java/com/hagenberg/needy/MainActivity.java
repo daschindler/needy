@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         AskStoragePermissions();
     }
 
+    //region Database Demo
     //Demo wie man mit Dominiks cooler Datenbank interagieren kann
     public void ShowDatabaseFunctionality() {
         //Beispiel: im OnCreate von einer Activity, die ein Rezept mit ID 3 anzeigt
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         int id = 3;
 
         //Passendes ViewModel holen:
-        RecipeViewModel recipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
+        final RecipeViewModel recipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
 
         //Views initialisieren
         //textView = findViewById ...
@@ -81,23 +82,16 @@ public class MainActivity extends AppCompatActivity {
 
         //Live-Data "beobachten" (observe)
         recipeById.observe(this, new Observer<Recipe>() {
+            boolean isLoaded = false;
+
             @Override
             public void onChanged(@Nullable final Recipe recipe) {
-                //In dem Code-Abschnitt landet man, wenn das Rezept aus der Datenbank geladen wurde.
-
-                /*
-                Das laden passiert in einem eigenen Thread, so kann sich inzwischen der UI-Thread
-                kümmern, um was sich ein UI-Thread so kümmert.
-                */
-
-                //AB HIER IST MAN WIEDER IM UI-THREAD! MAN KANN VIEWS ÄNDERN
-
-                //ich weiss nicht ob diese != null abfrage nötig ist, aber BE SAFE
                 if(recipe != null){
                     Log.d("Recipe with ID 3", recipe.getName());
+                    //view.settext(recipe. ...)
+                }else{
+                    //this recipe got deleted
                 }
-
-                //view.settext(recipe. ...)
             }
         });
 
@@ -130,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
         recipeViewModel.insert(sampleRecipe1);
         //Wenn der Insert erfolgreich abgeschlossen ist, gibt euch der Observer bescheid, dass sich allRecipies geändert hat
     }
+    //endregion
 
     private void AskStoragePermissions(){
         if (ContextCompat.checkSelfPermission(this,
