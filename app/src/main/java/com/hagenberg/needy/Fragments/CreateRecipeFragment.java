@@ -210,16 +210,18 @@ public class CreateRecipeFragment extends Fragment {
                     public void onChanged(@Nullable final List<Recipe> recipes) {
                         // allRecipes hat sich geändert (new entry, deleted entry, async insert, ...)
                         if(recipes != null){
-                            if (recipes.get(recipes.size()-1).getName().equals(recipe.getName())) {
-                                Toast.makeText(getActivity(), "Rezept angelegt", Toast.LENGTH_SHORT).show();
-                                dialogDescription.dismiss();
-                                getActivity().finish();
-                            } else {
-                                Toast.makeText(getActivity(), "Fehler bei der Erstellung", Toast.LENGTH_SHORT).show();
-                                dialogDescription.dismiss();
+                            if (recipes.size() > 0) {
+                                if (recipes.get(recipes.size()-1).getName().equals(recipe.getName())) {
+                                    Toast.makeText(getActivity(), "Recipe created", Toast.LENGTH_SHORT).show();
+                                    dialogDescription.dismiss();
+                                    getActivity().finish();
+                                } else {
+                                    Toast.makeText(getActivity(), "Error at creating the Recipe", Toast.LENGTH_SHORT).show();
+                                    dialogDescription.dismiss();
+                                }
                             }
                         } else {
-                            Toast.makeText(getActivity(), "Fehler", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
                             dialogDescription.dismiss();
                         }
                     }

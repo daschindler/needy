@@ -58,6 +58,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
     private ColorStateList originalLabelColors;
 
+    private int recipeId = 404040;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,96 +83,110 @@ public class ViewRecipeActivity extends AppCompatActivity {
         bt_edit = findViewById(R.id.bt_view_recipe_edit);
 
 
-        final LiveData<Recipe> selectedLiveRecipe = recipeViewModel.getRecipeById(intent.getIntExtra("id", 404040));
+        recipeId = intent.getIntExtra("id", 404040);
+
+        if (recipeId != 404040) {
+            final LiveData<Recipe> selectedLiveRecipe = recipeViewModel.getRecipeById(recipeId);
 
 
-        selectedLiveRecipe.observe(this, new Observer<Recipe>() {
-            @Override
-            public void onChanged(@Nullable final Recipe recipe) {
-                if(recipe != null){
-                    selectedRecipe = recipe;
-                    getSupportActionBar().setTitle(selectedRecipe.getName());
-                }
-            }
-        });
-
-        originalLabelColors = tv_description_label.getTextColors();
-
-        ll_ingredientsbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (ingredientsShown == false) {
-                    TextView tv_ingredients = new TextView(ViewRecipeActivity.this);
-                    tv_ingredients.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    tv_ingredients.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-
-                    StringBuilder ingredientString = new StringBuilder();
-                    if (selectedRecipe.getIngredients() != null) {
-                        for (Ingredient ingredient : selectedRecipe.getIngredients()) {
-                            ingredientString.append(ingredient.getAmount() + " " + ingredient.getAmountUnit().toString() + " " + ingredient.getName() + "\n");
-                        }
-                    } else {
-                        ingredientString.append("No ingredients added\n");
+            selectedLiveRecipe.observe(this, new Observer<Recipe>() {
+                @Override
+                public void onChanged(@Nullable final Recipe recipe) {
+                    if(recipe != null){
+                        selectedRecipe = recipe;
+                        getSupportActionBar().setTitle(selectedRecipe.getName());
+                        ShowIngredients();
                     }
-
-
-                    tv_ingredients.setText(ingredientString.toString());
-
-                    ll_ingredients.addView(tv_ingredients);
-                    imgv_ingredientsarrow.setImageResource(R.drawable.ic_expand_less_black_24dp);
-                    tv_ingredient_label.setTextColor(Color.rgb(0,0,0));
-                    ingredientsShown = true;
-                } else {
-                    ll_ingredients.removeAllViews();
-                    ingredientsShown = false;
-                    imgv_ingredientsarrow.setImageResource(R.drawable.ic_expand_more_grey_24dp);
-                    tv_ingredient_label.setTextColor(originalLabelColors);
                 }
-            }
-        });
+            });
 
-        ll_descriptionbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (descriptionShown == false) {
-                    TextView tv_description = new TextView(ViewRecipeActivity.this);
-                    tv_description.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    tv_description.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    tv_description.setPadding(40,0,40,0);
+            originalLabelColors = tv_description_label.getTextColors();
 
-                    tv_description.setText(selectedRecipe.getDescription() + "\n");
 
-                    imgv_descriptionarrow.setImageResource(R.drawable.ic_expand_less_black_24dp);
-                    tv_description_label.setTextColor(Color.rgb(0,0,0));
-                    descriptionShown = true;
-                    ll_description.addView(tv_description);
-                } else {
-                    ll_description.removeAllViews();
-                    descriptionShown = false;
-                    imgv_descriptionarrow.setImageResource(R.drawable.ic_expand_more_grey_24dp);
-                    tv_description_label.setTextColor(originalLabelColors);
+            ll_ingredientsbutton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (ingredientsShown == false) {
+                        ShowIngredients();
+                    } else {
+                        ll_ingredients.removeAllViews();
+                        ingredientsShown = false;
+                        imgv_ingredientsarrow.setImageResource(R.drawable.ic_expand_more_grey_24dp);
+                        tv_ingredient_label.setTextColor(originalLabelColors);
+                    }
                 }
-            }
-        });
+            });
 
-        bt_share.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CreateFileAndShare();
-            }
-        });
+            ll_descriptionbutton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (descriptionShown == false) {
+                        TextView tv_description = new TextView(ViewRecipeActivity.this);
+                        tv_description.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                        tv_description.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        tv_description.setPadding(40,0,40,0);
 
-        bt_edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intentToEdit = new Intent(ViewRecipeActivity.this, EditRecipeActivity.class);
-                ViewRecipeActivity.this.startActivity(intentToEdit);
-            }
-        });
+                        tv_description.setText(selectedRecipe.getDescription() + "\n");
+
+                        imgv_descriptionarrow.setImageResource(R.drawable.ic_expand_less_black_24dp);
+                        tv_description_label.setTextColor(Color.rgb(0,0,0));
+                        descriptionShown = true;
+                        ll_description.addView(tv_description);
+                    } else {
+                        ll_description.removeAllViews();
+                        descriptionShown = false;
+                        imgv_descriptionarrow.setImageResource(R.drawable.ic_expand_more_grey_24dp);
+                        tv_description_label.setTextColor(originalLabelColors);
+                    }
+                }
+            });
+
+            bt_share.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    CreateFileAndShare();
+                }
+            });
+
+            bt_edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intentToEdit = new Intent(ViewRecipeActivity.this, EditRecipeActivity.class);
+                    intentToEdit.putExtra("id", recipeId);
+                    ViewRecipeActivity.this.startActivity(intentToEdit);
+                }
+            });
+        } else {
+            Toast.makeText(this, "Error loading recipe :(", Toast.LENGTH_SHORT).show();
+        }
+
+
 
 
     }
 
+    private void ShowIngredients() {
+        TextView tv_ingredients = new TextView(ViewRecipeActivity.this);
+        tv_ingredients.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        tv_ingredients.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+        StringBuilder ingredientString = new StringBuilder();
+        if (selectedRecipe.getIngredients() != null) {
+            for (Ingredient ingredient : selectedRecipe.getIngredients()) {
+                ingredientString.append(ingredient.getAmount() + " " + ingredient.getAmountUnit().toString() + " " + ingredient.getName() + "\n");
+            }
+        } else {
+            ingredientString.append("No ingredients added\n");
+        }
+
+
+        tv_ingredients.setText(ingredientString.toString());
+
+        ll_ingredients.addView(tv_ingredients);
+        imgv_ingredientsarrow.setImageResource(R.drawable.ic_expand_less_black_24dp);
+        tv_ingredient_label.setTextColor(Color.rgb(0,0,0));
+        ingredientsShown = true;
+    }
 
 
     private void CreateFileAndShare() {
