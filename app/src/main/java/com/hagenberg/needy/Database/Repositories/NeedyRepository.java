@@ -161,7 +161,7 @@ public class NeedyRepository {
 
         @Override
         protected Void doInBackground(final RecipeBook... params) {
-            mRecipeBookAsyncTaskData.insertAll(params[0]);
+            mRecipeBookAsyncTaskData.update(params);
             return null;
         }
     }
