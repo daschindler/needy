@@ -8,12 +8,18 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +28,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -88,9 +95,10 @@ public class CreateRecipeFragment extends Fragment {
         }
     }
 
-    TextView tv_create_recipe_name;
+    EditText et_create_recipe_name;
     Button bt_new_ingredient, bt_continue;
     LinearLayout ll_ingredients;
+    private ImageView imgvAddSymbol;
 
     //hier werden alle Ids zu den dynamisch erzeugten Ingredient Views gespeichert um
     //ihre Inhalte später abrufen zu können
@@ -105,19 +113,25 @@ public class CreateRecipeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_create_recipe, container, false);
-        tv_create_recipe_name = rootView.findViewById(R.id.tv_create_recipe_name);
-        bt_new_ingredient = rootView.findViewById(R.id.bt_create_recipe_new_ingredient);
+        et_create_recipe_name = rootView.findViewById(R.id.et_create_recipe_name);
+        //bt_new_ingredient = rootView.findViewById(R.id.bt_create_recipe_new_ingredient);
         bt_continue = rootView.findViewById(R.id.bt_create_recipe_saverecipe);
         ll_ingredients = rootView.findViewById(R.id.ll_create_recipe_ingredients);
+        imgvAddSymbol = rootView.findViewById(R.id.img_create_recipe_ingredients_add);
+
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        final int displayWidth = size.x;
 
         //Dass schon einmal ein Ingredient angezeigt wird, wenn das Fragment geladen wurde
-        CreateNewIngredientView();
+        CreateNewIngredientView(displayWidth);
 
 
-        bt_new_ingredient.setOnClickListener(new View.OnClickListener() {
+        imgvAddSymbol.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CreateNewIngredientView();
+                CreateNewIngredientView(displayWidth);
             }
         });
 
@@ -125,7 +139,7 @@ public class CreateRecipeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 infoValid = true;
-                final String recipeName = tv_create_recipe_name.getText().toString();
+                final String recipeName = et_create_recipe_name.getText().toString();
                 if (!recipeName.equals("")) {
                     if (!ingredientViewIdList.isEmpty()) {
                         for (IngredientViewId ingredientIds : ingredientViewIdList) {
@@ -163,11 +177,11 @@ public class CreateRecipeFragment extends Fragment {
                         if (infoValid == true){
                             openDialogToFinish(recipeName);
                         } else {
-                            Toast.makeText(getActivity(), "Alle angelegten Felder muessen ausgefuellt werden!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "All fields must be filled...", Toast.LENGTH_SHORT).show();
                         }
                     }
                 } else {
-                    Toast.makeText(getActivity(), "Das Rezept braucht einen Namen.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Recipe needs a name...", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -238,7 +252,7 @@ public class CreateRecipeFragment extends Fragment {
         return shake;
     }
 
-    private void CreateNewIngredientView() {
+    private void CreateNewIngredientView(int displayWidth) {
         //create vertical layout to fit 2 horizontal layout
         final LinearLayout llnewIngredientVertical = new LinearLayout(getActivity());
         llnewIngredientVertical.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -258,37 +272,47 @@ public class CreateRecipeFragment extends Fragment {
         llnewIngredientHorizontal2.setPadding(0,0,0,0);
 
         EditText etnewIngredientName = new EditText(getActivity());
-        etnewIngredientName.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 4f));
+        etnewIngredientName.setLayoutParams(new LinearLayout.LayoutParams(displayWidth/2, ViewGroup.LayoutParams.MATCH_PARENT));
         etnewIngredientName.setHint("Name");
         etnewIngredientName.setId(idCounter++);
 
         EditText etNewIngredientAmount = new EditText(getActivity());
-        etNewIngredientAmount.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 2f));
-        etNewIngredientAmount.setHint("Menge");
-        etNewIngredientAmount.setInputType(InputType.TYPE_CLASS_NUMBER);
+        etNewIngredientAmount.setLayoutParams(new LinearLayout.LayoutParams(displayWidth/2, ViewGroup.LayoutParams.MATCH_PARENT));
+        etNewIngredientAmount.setHint("Amount");
+        etNewIngredientAmount.setInputType(InputType.TYPE_CLASS_NUMBER |  InputType.TYPE_NUMBER_FLAG_DECIMAL);
         etNewIngredientAmount.setId(idCounter++);
 
         ArrayList<String> spinnerArray = new ArrayList<String>();
+        spinnerArray.add(Unit.Unit.toString());
         spinnerArray.add(Unit.CoffeeSpoon.toString());
         spinnerArray.add(Unit.Gram.toString());
         spinnerArray.add(Unit.Liter.toString());
-        spinnerArray.add(Unit.Unit.toString());
+
 
         Spinner newIngredientSpinner = new Spinner(getActivity());
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, spinnerArray);
         newIngredientSpinner.setAdapter(spinnerArrayAdapter);
-        newIngredientSpinner.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 2f));
-        newIngredientSpinner.setPrompt("Einheit");
+        newIngredientSpinner.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f));
+        newIngredientSpinner.setPrompt("Unit");
         newIngredientSpinner.setId(idCounter++);
 
-        Button btDeleteIngredient = new Button(getActivity());
-        btDeleteIngredient.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f));
-        btDeleteIngredient.setText("Delete");
+        //View fillerView = new View(getActivity());
+        //fillerView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+
+        ImageView imgDeleteIngredient = new ImageView(getActivity());
+        imgDeleteIngredient.setImageResource(R.drawable.ic_delete_grey_24dp);
+        LinearLayout.LayoutParams imgDeleteIngredientParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        Resources r = getResources();
+        //float dp20 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, r.getDisplayMetrics());
+        //imgDeleteIngredient.setPadding(0,(int)dp20,0,0);
+        float dp25 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 25, r.getDisplayMetrics());
+        imgDeleteIngredientParams.setMargins(0,0,(int)dp25, 0);
+        imgDeleteIngredient.setLayoutParams(imgDeleteIngredientParams);
 
         llnewIngredientHorizontal1.addView(etnewIngredientName);
         llnewIngredientHorizontal1.addView(etNewIngredientAmount);
         llnewIngredientHorizontal2.addView(newIngredientSpinner);
-        llnewIngredientHorizontal2.addView(btDeleteIngredient);
+        llnewIngredientHorizontal2.addView(imgDeleteIngredient);
 
         llnewIngredientVertical.addView(llnewIngredientHorizontal1);
         llnewIngredientVertical.addView(llnewIngredientHorizontal2);
@@ -296,9 +320,15 @@ public class CreateRecipeFragment extends Fragment {
         final IngredientViewId ingredientViewId = new IngredientViewId(etnewIngredientName.getId(), etNewIngredientAmount.getId(), newIngredientSpinner.getId());
         ingredientViewIdList.add(ingredientViewId);
 
-        ll_ingredients.addView(llnewIngredientVertical);
+        View seperatorLine = new View(getActivity());
+        seperatorLine.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1));
+        seperatorLine.setBackgroundColor(Color.rgb(181,181,181));
 
-        btDeleteIngredient.setOnClickListener(new View.OnClickListener() {
+        llnewIngredientVertical.setPadding(0,100,0,100);
+        ll_ingredients.addView(llnewIngredientVertical);
+        ll_ingredients.addView(seperatorLine);
+
+        imgDeleteIngredient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ll_ingredients.removeView(llnewIngredientVertical);

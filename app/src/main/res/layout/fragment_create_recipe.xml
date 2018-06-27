@@ -9,33 +9,69 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="20dp"
-        android:id="@+id/tv_create_recipe_name"
-        android:paddingTop="20dp"
-        android:gravity="center"
-        android:textSize="20dp"
-        android:hint="Rezeptname"
-        android:background="#efefef"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
+        android:background="@drawable/shadow_orange"
+        android:paddingLeft="35dp"
+        android:id="@+id/et_create_recipe_name"
+        android:hint="Recipename"
         android:textStyle="bold"
-        android:textSize="15dp"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
-        android:text="Zutaten" />
+        android:textSize="28dp"
+        android:paddingTop="25dp"
+        android:paddingBottom="25dp"/>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_weight="1"
         android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/shadow_201358">
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp"
+                android:text="Ingredients"
+                android:textColor="@color/black"
+                android:textSize="20dp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"></View>
+
+
+            <ImageView
+                android:id="@+id/img_create_recipe_ingredients_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="25dp"
+                android:paddingTop="20dp"
+                android:src="@drawable/ic_add_black_24dp"></ImageView>
+
+
+
+        </LinearLayout>
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:id="@+id/ll_create_recipe_ingredients"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingLeft="100px"
+            android:paddingRight="100px">
 
             <!--
             <LinearLayout
@@ -70,24 +106,27 @@
 
 
         </LinearLayout>
+        </LinearLayout>
     </ScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <Button
+        <!--<Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:id="@+id/bt_create_recipe_new_ingredient"
-            android:text="Neue Zutat"/>
+            android:text="Neue Zutat"/>-->
         <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@color/white"
+            android:textColor="@color/colorPrimary"
             android:id="@+id/bt_create_recipe_saverecipe"
-            android:text="Weiter"/>
+            android:text="Next"/>
     </LinearLayout>
 
 

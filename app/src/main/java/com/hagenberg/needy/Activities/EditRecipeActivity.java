@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.Display;
 import android.view.Gravity;
@@ -66,6 +67,8 @@ public class EditRecipeActivity extends AppCompatActivity {
 
     private ColorStateList colorGrey;
 
+    private int firstStart = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,11 +116,14 @@ public class EditRecipeActivity extends AppCompatActivity {
                 @Override
                 public void onChanged(@Nullable final Recipe recipe) {
                     if(recipe != null){
-                        selectedRecipe = recipe;
-                        getSupportActionBar().setTitle("Edit " + selectedRecipe.getName());
-                        etRecipeName.setText(selectedRecipe.getName());
-                        ShowEditIngredients(displayWidth);
-                        ShowEditDescription(displayWidth);
+                        if (firstStart == 0) {
+                            selectedRecipe = recipe;
+                            getSupportActionBar().setTitle("Edit " + selectedRecipe.getName());
+                            etRecipeName.setText(selectedRecipe.getName());
+                            ShowEditIngredients(displayWidth);
+                            ShowEditDescription(displayWidth);
+                            firstStart++;
+                        }
                     }
                 }
             });
@@ -144,7 +150,7 @@ public class EditRecipeActivity extends AppCompatActivity {
             imgvInfoSymbol.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast toast = Toast.makeText(EditRecipeActivity.this, "If no name and amount is filled, Ingredient will be deleted...", Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(EditRecipeActivity.this, "If no name is filled, ingredient will be deleted...", Toast.LENGTH_LONG);
                     TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
                     if( v != null) v.setGravity(Gravity.CENTER);
                     toast.show();
@@ -193,9 +199,12 @@ public class EditRecipeActivity extends AppCompatActivity {
 
                             i = i +2;
 
-                            if (!editTextName.getText().toString().equals("") && !editTextAmount.getText().toString().equals("")){
+                            if (!editTextName.getText().toString().equals("")){
                                 String newIngName = editTextName.getText().toString();
-                                Double newIngAmountDouble = Double.valueOf(editTextAmount.getText().toString());
+                                Double newIngAmountDouble = 0.0;
+                                if (!editTextAmount.getText().toString().equals("")) {
+                                    newIngAmountDouble = Double.valueOf(editTextAmount.getText().toString());
+                                }
                                 Unit newIngUnit = Unit.valueOf(spUnit.getSelectedItem().toString());
 
                                 Ingredient newIngredient = new Ingredient(newIngName, newIngAmountDouble.intValue(), newIngUnit);
@@ -208,6 +217,7 @@ public class EditRecipeActivity extends AppCompatActivity {
                     selectedRecipe.setIngredients(newIngredients);
 
                     recipeViewModel.update(selectedRecipe);
+
 
                     EditRecipeActivity.this.finish();
                 }
@@ -289,7 +299,7 @@ public class EditRecipeActivity extends AppCompatActivity {
         } else {
             etIngredientAmount.setText(String.valueOf(currentIngredient.getAmount()));
         }
-
+        etIngredientAmount.setInputType(InputType.TYPE_CLASS_NUMBER |  InputType.TYPE_NUMBER_FLAG_DECIMAL);
         etIngredientAmount.setTextColor(colorGrey);
         viewIngredientList.add(etIngredientAmount);
 
