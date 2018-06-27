@@ -1,7 +1,9 @@
 package com.hagenberg.needy.Adapters;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -25,6 +27,7 @@ public class ShowFoundRecipesByIngredientsListAdapter extends RecyclerView.Adapt
     private List<Recipe> allRecipes;
     private List<Recipe> availableRecipes;
     private List<String> availableIngredients;
+    private Context context;
 
     public void updateRecipies(List<Recipe> allRecipes){
         if(allRecipes == null){
@@ -46,7 +49,9 @@ public class ShowFoundRecipesByIngredientsListAdapter extends RecyclerView.Adapt
         notifyDataSetChanged();
     }
 
-    public ShowFoundRecipesByIngredientsListAdapter(List<Recipe> recipes) {
+    public ShowFoundRecipesByIngredientsListAdapter(Context context, List<Recipe> recipes) {
+        this.context = context;
+
         this.allRecipes = recipes;
         this.availableIngredients = new LinkedList<String>();
 
@@ -117,6 +122,22 @@ public class ShowFoundRecipesByIngredientsListAdapter extends RecyclerView.Adapt
         Log.d("Recipe with color:", ColorTypeConverters.someObjectListToString(recipe.getColor()));
 
         viewHolder.tvIngredients.setText(ingredientsString);
+
+        ingredientsString = ingredientsString.toLowerCase();
+        String lowerName = recipe.getName().toLowerCase();
+
+        viewHolder.cvDrinkIcon.setImageDrawable(context.getDrawable(R.drawable.cocktail));
+
+        if(ingredientsString.contains("beer") || lowerName.contains("beer")){
+            viewHolder.cvDrinkIcon.setImageDrawable(context.getDrawable(R.drawable.beer));
+        }else if(ingredientsString.contains("wine") || lowerName.contains("wine")){
+            viewHolder.cvDrinkIcon.setImageDrawable(context.getDrawable(R.drawable.wine));
+        }else if(ingredientsString.contains("hot") || lowerName.contains("hot")
+                || ingredientsString.contains("coffee") || lowerName.contains("coffee")){
+            viewHolder.cvDrinkIcon.setImageDrawable(context.getDrawable(R.drawable.hotcoffee));
+        }else if(ingredientsString.contains("gin") || lowerName.contains("gin")){
+            viewHolder.cvDrinkIcon.setImageDrawable(context.getDrawable(R.drawable.gin));
+        }
 
         viewHolder.tvRecipeName.setOnClickListener(new View.OnClickListener() {
             @Override

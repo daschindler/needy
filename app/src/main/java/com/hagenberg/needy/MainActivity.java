@@ -121,8 +121,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        insertTestRecipes(recipeViewModel);
+    }
 
+    public void insertTestRecipes(RecipeViewModel recipeViewModel){
         //In Datenbank inserten:
+
+        Color c;
+        Color c2;
+        Color c3;
+        Color c4;
 
         Random r = new Random();
         int randomAmount = r.nextInt(3);
@@ -132,15 +140,49 @@ public class MainActivity extends AppCompatActivity {
         randomAmount = r.nextInt(3);
         Ingredient i3 = new Ingredient("water", randomAmount, Unit.Liter);
 
-        Color c;
+        switch (randomAmount){
+            case 1:
+                c4 = Color.BLUE;
+            case 2:
+                c4 = Color.GREEN;
+            default:
+                c4 = Color.RED;
+        }
+
+        randomAmount = r.nextInt(3);
+        Ingredient i4 = new Ingredient("coffee", randomAmount, Unit.Liter);
+
+        switch (randomAmount){
+            case 1:
+                c3 = Color.BLUE;
+            case 2:
+                c3 = Color.GREEN;
+            default:
+                c3 = Color.RED;
+        }
+
+        randomAmount = r.nextInt(3);
+        Ingredient i5 = new Ingredient("beer", randomAmount, Unit.Liter);
 
         switch (randomAmount){
             case 1:
                 c = Color.BLUE;
             case 2:
                 c = Color.GREEN;
-                default:
-                    c = Color.RED;
+            default:
+                c = Color.RED;
+        }
+
+        randomAmount = r.nextInt(3);
+        Ingredient i6 = new Ingredient("gin", randomAmount, Unit.Liter);
+
+        switch (randomAmount){
+            case 1:
+                c2 = Color.BLUE;
+            case 2:
+                c2 = Color.GREEN;
+            default:
+                c2 = Color.RED;
         }
 
         LinkedList<Ingredient> ings = new LinkedList<>();
@@ -148,12 +190,32 @@ public class MainActivity extends AppCompatActivity {
 
         Recipe sampleRecipe1 = new Recipe("Salty Water", "Desc fuer sample1", ings);
 
-        sampleRecipe1.setColor(c);
+        ings = new LinkedList<>();
+        ings.add(i2); ings.add(i4);
 
-        //Das jetzt so in die Datenbank gespeichert wird:
+        Recipe sampleRecipe2 = new Recipe("Hot Schwips", "Desc fuer sample1", ings);
+
+        ings = new LinkedList<>();
+        ings.add(i5);
+
+        Recipe sampleRecipe3 = new Recipe("Just Beer", "Desc fuer sample1", ings);
+
+        ings = new LinkedList<>();
+        ings.add(i6); ings.add(i2);
+
+        Recipe sampleRecipe4 = new Recipe("Somethin Ginish", "Desc fuer sample1", ings);
+
+        sampleRecipe1.setColor(c);
+        sampleRecipe2.setColor(c2);
+        sampleRecipe3.setColor(c3);
+        sampleRecipe4.setColor(c4);
+
         recipeViewModel.insert(sampleRecipe1);
-        //Wenn der Insert erfolgreich abgeschlossen ist, gibt euch der Observer bescheid, dass sich allRecipies geändert hat
+        recipeViewModel.insert(sampleRecipe2);
+        recipeViewModel.insert(sampleRecipe3);
+        recipeViewModel.insert(sampleRecipe4);
     }
+
     //endregion
 
     private void AskStoragePermissions(){

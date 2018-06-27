@@ -84,7 +84,7 @@ public class RecipeFinderFragment extends Fragment {
             recipeList = new LinkedList<>();
         }
 
-        recipesListAdapter = new ShowFoundRecipesByIngredientsListAdapter(recipeList);
+        recipesListAdapter = new ShowFoundRecipesByIngredientsListAdapter(getContext(), recipeList);
 
         ingredientsListAdapter = new ShowAllIngredientsListAdapter(recipeList, recipesListAdapter);
 
