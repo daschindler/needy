@@ -76,10 +76,9 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
                 RecipeBook recipeBookNew = checkViews();
                 if(recipeBookNew!= null) {
                     if(update) {
-                        //recipeBookViewModel.update(recipeBookNew);
+                        recipeBookViewModel.update(recipeBookNew);
                         onBackPressed();
                     }
-                    //insert
                     else {
                         recipeBookViewModel.insert(recipeBookNew);
                         onBackPressed();    //Go back to main activity.
@@ -207,8 +206,10 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        if(!update) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.create_recipe_book_menu, menu);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 

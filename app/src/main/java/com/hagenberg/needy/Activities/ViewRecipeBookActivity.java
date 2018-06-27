@@ -261,6 +261,7 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         //delete happens
+                        recipeBookViewModel.delete(publicRB);
                         onBackPressed();
                     }
                 });

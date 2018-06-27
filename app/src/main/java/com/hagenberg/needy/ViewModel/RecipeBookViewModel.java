@@ -39,7 +39,7 @@ public class RecipeBookViewModel extends AndroidViewModel {
 
     public void insert(RecipeBook... recipebooks) { mRepository.insert(recipebooks); }
 
-    public void update(RecipeBook... recipebook) { mRepository.insert(recipebook); }
+    public void update(RecipeBook... recipebook) { mRepository.update(recipebook); }
 
     public void delete(RecipeBook... recipebook) { mRepository.delete(recipebook); }
 }
