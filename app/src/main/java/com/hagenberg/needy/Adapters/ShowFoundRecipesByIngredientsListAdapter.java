@@ -19,6 +19,8 @@ import com.hagenberg.needy.R;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class ShowFoundRecipesByIngredientsListAdapter extends RecyclerView.Adapter<ShowFoundRecipesByIngredientsListAdapter.ViewHolder> {
     private List<Recipe> allRecipes;
     private List<Recipe> availableRecipes;
@@ -63,7 +65,7 @@ public class ShowFoundRecipesByIngredientsListAdapter extends RecyclerView.Adapt
                         if(ings != null){
                             for(Ingredient ing : ings){
                                 if(ing != null) {
-                                    if (!availableIngredients.contains(ing.getName())) {
+                                    if (!availableIngredients.contains(ing.getName().toLowerCase())) {
                                         makeAble = false;
                                     }
                                 }
@@ -85,7 +87,7 @@ public class ShowFoundRecipesByIngredientsListAdapter extends RecyclerView.Adapt
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, final int i) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.recipe_list_item, parent, false);
+        View view = inflater.inflate(R.layout.recipe_found_list_item, parent, false);
         ViewHolder vh = new ViewHolder(view);
         return vh;
     }
@@ -95,7 +97,26 @@ public class ShowFoundRecipesByIngredientsListAdapter extends RecyclerView.Adapt
         final Recipe recipe = availableRecipes.get(i);
         viewHolder.tvRecipeName.setText(recipe.getName());
 
+        String ingredientsString = "";
+
+        List<Ingredient> ingredients = recipe.getIngredients();
+        if(ingredients != null){
+            for(Ingredient ing : ingredients){
+                if(ingredientsString != ""){
+                    ingredientsString+=", ";
+                }
+
+                ingredientsString += ing.getName();
+            }
+        }
+
+        if(ingredientsString == ""){
+            ingredientsString = "Just air.";
+        }
+
         Log.d("Recipe with color:", ColorTypeConverters.someObjectListToString(recipe.getColor()));
+
+        viewHolder.tvIngredients.setText(ingredientsString);
 
         viewHolder.tvRecipeName.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,7 +127,7 @@ public class ShowFoundRecipesByIngredientsListAdapter extends RecyclerView.Adapt
                 view.getContext().startActivity(intent);
             }
         });
-        viewHolder.rowLayout.setOnClickListener(new View.OnClickListener() {
+        viewHolder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), ViewRecipeActivity.class);
@@ -122,13 +143,18 @@ public class ShowFoundRecipesByIngredientsListAdapter extends RecyclerView.Adapt
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvRecipeName;
-        public View rowLayout;
+        public TextView tvRecipeName; //recipeName
+        public TextView tvIngredients; //ingredients
+        public CircleImageView cvDrinkIcon; //drink_icon_view
+
+        public View view;
 
         public ViewHolder(View v) {
             super(v);
-            rowLayout = v;
-            tvRecipeName = v.findViewById(R.id.textMain);
+            view = v;
+            tvRecipeName = v.findViewById(R.id.recipeName);
+            tvIngredients = v.findViewById(R.id.ingredients);
+            cvDrinkIcon = v.findViewById(R.id.drink_icon_view);
         }
 
     }

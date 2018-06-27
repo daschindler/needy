@@ -36,6 +36,10 @@ dependencies {
 
     //implementation 'com.android.support:recyclerview-v7:26.1.0'
 
+
+    //Circular ImageView
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+
     //Firebase
     implementation 'com.firebaseui:firebase-ui-database:3.3.1'
 

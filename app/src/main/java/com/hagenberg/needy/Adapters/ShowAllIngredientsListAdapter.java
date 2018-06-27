@@ -1,6 +1,5 @@
 package com.hagenberg.needy.Adapters;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.hagenberg.needy.Activities.ViewRecipeActivity;
 import com.hagenberg.needy.Entity.Ingredient;
 import com.hagenberg.needy.Entity.Recipe;
 import com.hagenberg.needy.R;
@@ -22,7 +20,7 @@ public class ShowAllIngredientsListAdapter extends RecyclerView.Adapter<ShowAllI
     private List<Recipe> recipes;
 
     private List<String> allIngredients = new LinkedList<String>();
-    private List<String> availableIngredients = new LinkedList<String>();
+    private List<String> selectedIngredients = new LinkedList<String>();
 
     private ShowFoundRecipesByIngredientsListAdapter recipeAdapter;
 
@@ -35,7 +33,7 @@ public class ShowAllIngredientsListAdapter extends RecyclerView.Adapter<ShowAllI
     public boolean updateData(List<Recipe> recipes){
         if (recipes == null){
             this.recipes = new LinkedList<Recipe>();
-            recipeAdapter.updateIngredients(this.availableIngredients);
+            recipeAdapter.updateIngredients(this.selectedIngredients);
             return false;
         }
 
@@ -49,18 +47,18 @@ public class ShowAllIngredientsListAdapter extends RecyclerView.Adapter<ShowAllI
                     if(r.getIngredients() != null){
                         for(Ingredient i : r.getIngredients()){
                             if(!allIngredients.contains(i.getName())){
-                                this.allIngredients.add(i.getName());
+                                this.allIngredients.add(i.getName().toLowerCase());
                             }
                         }
                     }
                 }
             }
 
-            recipeAdapter.updateIngredients(this.availableIngredients);
+            recipeAdapter.updateIngredients(this.selectedIngredients);
             return true;
         }
 
-        recipeAdapter.updateIngredients(this.availableIngredients);
+        recipeAdapter.updateIngredients(this.selectedIngredients);
         return false;
     }
 
@@ -80,7 +78,7 @@ public class ShowAllIngredientsListAdapter extends RecyclerView.Adapter<ShowAllI
         final String ingredientName = this.allIngredients.get(i);
         viewHolder.tvIngredientName.setText(ingredientName);
 
-        if(availableIngredients.contains(ingredientName)){
+        if(selectedIngredients.contains(ingredientName)){
             viewHolder.cvIngredientHolder.setCardBackgroundColor(Color.DKGRAY);
             viewHolder.tvIngredientName.setTextColor(Color.WHITE);
         }else{
@@ -91,17 +89,17 @@ public class ShowAllIngredientsListAdapter extends RecyclerView.Adapter<ShowAllI
         viewHolder.cvIngredientHolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(availableIngredients.contains(ingredientName)){
+                if(selectedIngredients.contains(ingredientName)){
                     viewHolder.cvIngredientHolder.setCardBackgroundColor(Color.WHITE);
                     viewHolder.tvIngredientName.setTextColor(Color.BLACK);
-                    availableIngredients.remove(ingredientName);
+                    selectedIngredients.remove(ingredientName);
                 }else{
                     viewHolder.cvIngredientHolder.setCardBackgroundColor(Color.DKGRAY);
                     viewHolder.tvIngredientName.setTextColor(Color.WHITE);
-                    availableIngredients.add(ingredientName);
+                    selectedIngredients.add(ingredientName);
                 }
 
-                recipeAdapter.updateIngredients(availableIngredients);
+                recipeAdapter.updateIngredients(selectedIngredients);
             }
         });
     }
