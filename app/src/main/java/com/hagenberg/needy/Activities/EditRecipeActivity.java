@@ -39,6 +39,7 @@ import com.hagenberg.needy.R;
 import com.hagenberg.needy.ViewModel.RecipeViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class EditRecipeActivity extends AppCompatActivity {
 
@@ -52,11 +53,16 @@ public class EditRecipeActivity extends AppCompatActivity {
 
     private EditText etRecipeName;
 
+    //will be generated in ShowEditDescription
+    private EditText etDescription;
+
     private TextView tvIngredientLabel, tvDescriptionLabel;
-    private ImageView imgvIngredientSymbol, imgvDescriptionSymbol;
+    private ImageView imgvIngredientSymbol, imgvDescriptionSymbol, imgvInfoSymbol;
 
     private boolean ingredientsShown = false;
     private boolean descriptionShown = false;
+
+    private ArrayList<View> viewIngredientList = new ArrayList<>();
 
     private ColorStateList colorGrey;
 
@@ -69,7 +75,7 @@ public class EditRecipeActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        RecipeViewModel recipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
+        final RecipeViewModel recipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
         recipeId = intent.getIntExtra("id", 404040);
 
         llDescription = findViewById(R.id.ll_edit_recipe_description);
@@ -82,6 +88,7 @@ public class EditRecipeActivity extends AppCompatActivity {
         tvDescriptionLabel = findViewById(R.id.tv_edit_recipe_description_label);
         imgvDescriptionSymbol = findViewById(R.id.img_edit_recipe_description_arrow);
         imgvIngredientSymbol = findViewById(R.id.img_edit_recipe_ingredients_arrow);
+        imgvInfoSymbol = findViewById(R.id.img_edit_recipe_info);
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -110,6 +117,7 @@ public class EditRecipeActivity extends AppCompatActivity {
                         getSupportActionBar().setTitle("Edit " + selectedRecipe.getName());
                         etRecipeName.setText(selectedRecipe.getName());
                         ShowEditIngredients(displayWidth);
+                        ShowEditDescription(displayWidth);
                     }
                 }
             });
@@ -133,25 +141,37 @@ public class EditRecipeActivity extends AppCompatActivity {
                 }
             });
 
+            imgvInfoSymbol.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast toast = Toast.makeText(EditRecipeActivity.this, "If no name and amount is filled, Ingredient will be deleted...", Toast.LENGTH_LONG);
+                    TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                    if( v != null) v.setGravity(Gravity.CENTER);
+                    toast.show();
+                }
+            });
+
             llDescriptionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (descriptionShown == false) {
+                    /*if (descriptionShown == false) {
                         ShowEditDescription(displayWidth);
                     } else {
                         HideEditDescription();
-                    }
+                    }*/
+                    //ShowEditDescription(displayWidth);
                 }
             });
 
             llIngredientButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (ingredientsShown == false) {
+                    /*if (ingredientsShown == false) {
                         ShowEditIngredients(displayWidth);
                     } else {
                         HideEditIngredients();
-                    }
+                    }*/
+                    //ShowEditIngredients(displayWidth);
 
                 }
             });
@@ -159,6 +179,36 @@ public class EditRecipeActivity extends AppCompatActivity {
             btSaveEditedRecipe.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    String newName = etRecipeName.getText().toString();
+                    String newDescription = "";
+                    if (etDescription.getText() != null) {
+                        newDescription = etDescription.getText().toString();
+                    }
+
+                    List<Ingredient> newIngredients = new ArrayList<>();
+                    for (int i = 0; i < viewIngredientList.size(); i++) {
+                            EditText editTextName = (EditText)viewIngredientList.get(i+0);
+                            EditText editTextAmount = (EditText)viewIngredientList.get(i+1);
+                            Spinner spUnit = (Spinner)viewIngredientList.get(i+2);
+
+                            i = i +2;
+
+                            if (!editTextName.getText().toString().equals("") && !editTextAmount.getText().toString().equals("")){
+                                String newIngName = editTextName.getText().toString();
+                                Double newIngAmountDouble = Double.valueOf(editTextAmount.getText().toString());
+                                Unit newIngUnit = Unit.valueOf(spUnit.getSelectedItem().toString());
+
+                                Ingredient newIngredient = new Ingredient(newIngName, newIngAmountDouble.intValue(), newIngUnit);
+                                newIngredients.add(newIngredient);
+                            }
+                    }
+
+                    selectedRecipe.setName(newName);
+                    selectedRecipe.setDescription(newDescription);
+                    selectedRecipe.setIngredients(newIngredients);
+
+                    recipeViewModel.update(selectedRecipe);
+
                     EditRecipeActivity.this.finish();
                 }
             });
@@ -186,93 +236,114 @@ public class EditRecipeActivity extends AppCompatActivity {
 
     }
 
-    private void ShowEditIngredients(int displayWidth) {
+    private void ShowEditIngredients(final int displayWidth) {
         ingredientsShown = true;
         tvIngredientLabel.setTextColor(Color.rgb(0,0,0));
-        imgvIngredientSymbol.setImageResource(R.drawable.ic_expand_less_black_24dp);
+        imgvIngredientSymbol.setImageResource(R.drawable.ic_add_black_24dp);
+        //imgvIngredientSymbol.setVisibility(View.GONE);
         if (selectedRecipe.getIngredients() != null) {
             if (selectedRecipe.getIngredients().size() > 0) {
                 llIngredients.setVisibility(View.VISIBLE);
                 for (Ingredient currentIngredient : selectedRecipe.getIngredients()) {
-                    //Layout per Ingredient
-                    LinearLayout horizontalEditIngredientLayout = new LinearLayout(EditRecipeActivity.this);
-                    LinearLayout.LayoutParams horizontalEditIngredientLayoutParams =
-                            new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    horizontalEditIngredientLayout.setLayoutParams(horizontalEditIngredientLayoutParams);
-                    horizontalEditIngredientLayout.setOrientation(LinearLayout.HORIZONTAL);
-                    horizontalEditIngredientLayout.setPadding(100,5,100,5);
-
-                    //IngredientName
-                    EditText etIngredientName = new EditText(EditRecipeActivity.this);
-                    LinearLayout.LayoutParams etIngredientNameParams =
-                            new LinearLayout.LayoutParams(displayWidth/2-125, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    etIngredientName.setLayoutParams(etIngredientNameParams);
-                    etIngredientName.setText(currentIngredient.getName());
-                    etIngredientName.setTextColor(colorGrey);
-
-                    //IngredientAmount
-                    EditText etIngredientAmount = new EditText(EditRecipeActivity.this);
-                    LinearLayout.LayoutParams etIngredientAmountParams =
-                            new LinearLayout.LayoutParams(displayWidth/4-125, ViewGroup.LayoutParams.WRAP_CONTENT );
-                    etIngredientAmount.setLayoutParams(etIngredientAmountParams);
-                    etIngredientAmount.setText(String.valueOf(currentIngredient.getAmount()));
-                    etIngredientAmount.setTextColor(colorGrey);
-
-                    //IngredientUnit
-                    ArrayList<String> spinnerArray = new ArrayList<String>();
-                    spinnerArray.add(Unit.Unit.toString());
-                    spinnerArray.add(Unit.Gram.toString());
-                    spinnerArray.add(Unit.Liter.toString());
-                    spinnerArray.add(Unit.CoffeeSpoon.toString());
-
-                    Spinner newIngredientSpinner = new Spinner(EditRecipeActivity.this);
-                    ArrayAdapter<String> spinnerArrayAdapter =
-                            new ArrayAdapter<String>(EditRecipeActivity.this, android.R.layout.simple_spinner_dropdown_item, spinnerArray);
-                    newIngredientSpinner.setAdapter(spinnerArrayAdapter);
-                    LinearLayout.LayoutParams newIngredientSpinnerParams
-                            = new LinearLayout.LayoutParams(displayWidth/4+250, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    newIngredientSpinner.setLayoutParams(newIngredientSpinnerParams);
-                    newIngredientSpinner.setPrompt("Unit");
-                    newIngredientSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                            if (view != null && adapterView != null){
-                                ((TextView)adapterView.getChildAt(0)).setTextColor(colorGrey);
-                            }
-                        }
-
-                        @Override
-                        public void onNothingSelected(AdapterView<?> adapterView) {
-
-                        }
-                    });
-
-                    for (int i = 0; i < spinnerArray.size(); i++) {
-                        if (currentIngredient.getAmountUnit().toString().contains(spinnerArray.get(i))) {
-                            newIngredientSpinner.setSelection(i);
-                        }
-                    }
-
-                    //Add views to superview
-                    horizontalEditIngredientLayout.addView(etIngredientName);
-                    horizontalEditIngredientLayout.addView(etIngredientAmount);
-                    horizontalEditIngredientLayout.addView(newIngredientSpinner);
-                    llIngredients.addView(horizontalEditIngredientLayout);
+                    AddIngredientToView(currentIngredient, displayWidth);
                 }
             }
         }
+
+        imgvIngredientSymbol.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddIngredientToView(new Ingredient("",0,Unit.Unit), displayWidth);
+            }
+        });
 
 
 
     }
 
+    private void AddIngredientToView(Ingredient currentIngredient, int displayWidth) {
+        //Layout per Ingredient
+        LinearLayout horizontalEditIngredientLayout = new LinearLayout(EditRecipeActivity.this);
+        LinearLayout.LayoutParams horizontalEditIngredientLayoutParams =
+                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        horizontalEditIngredientLayout.setLayoutParams(horizontalEditIngredientLayoutParams);
+        horizontalEditIngredientLayout.setOrientation(LinearLayout.HORIZONTAL);
+        horizontalEditIngredientLayout.setPadding(100,5,100,5);
+
+        //IngredientName
+        EditText etIngredientName = new EditText(EditRecipeActivity.this);
+        LinearLayout.LayoutParams etIngredientNameParams =
+                new LinearLayout.LayoutParams(displayWidth/2-125, ViewGroup.LayoutParams.WRAP_CONTENT);
+        etIngredientName.setLayoutParams(etIngredientNameParams);
+        etIngredientName.setText(currentIngredient.getName());
+        etIngredientName.setTextColor(colorGrey);
+        viewIngredientList.add(etIngredientName);
+
+        //IngredientAmount
+        EditText etIngredientAmount = new EditText(EditRecipeActivity.this);
+        LinearLayout.LayoutParams etIngredientAmountParams =
+                new LinearLayout.LayoutParams(displayWidth/4-125, ViewGroup.LayoutParams.WRAP_CONTENT );
+        etIngredientAmount.setLayoutParams(etIngredientAmountParams);
+        if (currentIngredient.getAmount() == 0) {
+            etIngredientAmount.setText("");
+        } else {
+            etIngredientAmount.setText(String.valueOf(currentIngredient.getAmount()));
+        }
+
+        etIngredientAmount.setTextColor(colorGrey);
+        viewIngredientList.add(etIngredientAmount);
+
+        //IngredientUnit
+        ArrayList<String> spinnerArray = new ArrayList<String>();
+        spinnerArray.add(Unit.Unit.toString());
+        spinnerArray.add(Unit.Gram.toString());
+        spinnerArray.add(Unit.Liter.toString());
+        spinnerArray.add(Unit.CoffeeSpoon.toString());
+
+        Spinner newIngredientSpinner = new Spinner(EditRecipeActivity.this);
+        ArrayAdapter<String> spinnerArrayAdapter =
+                new ArrayAdapter<String>(EditRecipeActivity.this, android.R.layout.simple_spinner_dropdown_item, spinnerArray);
+        newIngredientSpinner.setAdapter(spinnerArrayAdapter);
+        LinearLayout.LayoutParams newIngredientSpinnerParams
+                = new LinearLayout.LayoutParams(displayWidth/4+250, ViewGroup.LayoutParams.WRAP_CONTENT);
+        newIngredientSpinner.setLayoutParams(newIngredientSpinnerParams);
+        newIngredientSpinner.setPrompt("Unit");
+        newIngredientSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (view != null && adapterView != null){
+                    ((TextView)adapterView.getChildAt(0)).setTextColor(colorGrey);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        for (int i = 0; i < spinnerArray.size(); i++) {
+            if (currentIngredient.getAmountUnit().toString().contains(spinnerArray.get(i))) {
+                newIngredientSpinner.setSelection(i);
+            }
+        }
+        viewIngredientList.add(newIngredientSpinner);
+
+        //Add views to superview
+        horizontalEditIngredientLayout.addView(etIngredientName);
+        horizontalEditIngredientLayout.addView(etIngredientAmount);
+        horizontalEditIngredientLayout.addView(newIngredientSpinner);
+        llIngredients.addView(horizontalEditIngredientLayout);
+    }
+
     private void ShowEditDescription(int displayWidth) {
         descriptionShown = true;
         tvDescriptionLabel.setTextColor(Color.rgb(0,0,0));
-        imgvDescriptionSymbol.setImageResource(R.drawable.ic_expand_less_black_24dp);
+        imgvDescriptionSymbol.setImageResource(R.drawable.ic_clear_black_24dp);
+        //imgvDescriptionSymbol.setVisibility(View.GONE);
         llDescription.setVisibility(View.VISIBLE);
 
-        EditText etDescription = new EditText(EditRecipeActivity.this);
+        etDescription = new EditText(EditRecipeActivity.this);
         LinearLayout.LayoutParams etDescriptionParams = new LinearLayout.LayoutParams(((displayWidth/2)+(displayWidth/4)), ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
         etDescription.setLayoutParams(etDescriptionParams);
         //etDescription.setPadding(100,0,100,0);
@@ -294,6 +365,13 @@ public class EditRecipeActivity extends AppCompatActivity {
         }
 
         llDescription.addView(etDescription);
+
+        imgvDescriptionSymbol.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                etDescription.setText("");
+            }
+        });
 
     }
 

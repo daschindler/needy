@@ -95,6 +95,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
                     if(recipe != null){
                         selectedRecipe = recipe;
                         getSupportActionBar().setTitle(selectedRecipe.getName());
+                        HideIngredients();
                         ShowIngredients();
                     }
                 }
@@ -109,10 +110,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
                     if (ingredientsShown == false) {
                         ShowIngredients();
                     } else {
-                        ll_ingredients.removeAllViews();
-                        ingredientsShown = false;
-                        imgv_ingredientsarrow.setImageResource(R.drawable.ic_expand_more_grey_24dp);
-                        tv_ingredient_label.setTextColor(originalLabelColors);
+                        HideIngredients();
                     }
                 }
             });
@@ -163,6 +161,13 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
 
 
+    }
+
+    private void HideIngredients() {
+        ll_ingredients.removeAllViews();
+        ingredientsShown = false;
+        imgv_ingredientsarrow.setImageResource(R.drawable.ic_expand_more_grey_24dp);
+        tv_ingredient_label.setTextColor(originalLabelColors);
     }
 
     private void ShowIngredients() {
