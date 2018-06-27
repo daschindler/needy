@@ -5,6 +5,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 
+import com.hagenberg.needy.Entity.TypeConverters.ColorTypeConverters;
 import com.hagenberg.needy.Entity.TypeConverters.IngredientsTypeConverters;
 
 import java.util.List;
@@ -25,6 +26,10 @@ public class Recipe {
 
     @ColumnInfo(name = "name")
     private String name;
+
+    @ColumnInfo(name = "color")
+    @TypeConverters(ColorTypeConverters.class)
+    private Color color;
 
     @ColumnInfo(name = "ingredients")
     @TypeConverters(IngredientsTypeConverters.class)
@@ -65,6 +70,14 @@ public class Recipe {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 }
 

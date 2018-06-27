@@ -21,10 +21,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.hagenberg.needy.Adapters.MainPagerAdapter;
+import com.hagenberg.needy.Entity.Color;
+import com.hagenberg.needy.Entity.Ingredient;
 import com.hagenberg.needy.Entity.Recipe;
+import com.hagenberg.needy.Entity.Unit;
 import com.hagenberg.needy.ViewModel.RecipeViewModel;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -118,7 +123,32 @@ public class MainActivity extends AppCompatActivity {
 
 
         //In Datenbank inserten:
-        Recipe sampleRecipe1 = new Recipe("sample 1", "Desc fuer sample1", null);
+
+        Random r = new Random();
+        int randomAmount = r.nextInt(3);
+        Ingredient i = new Ingredient("salz", randomAmount, Unit.CoffeeSpoon);
+        randomAmount = r.nextInt(3);
+        Ingredient i2 = new Ingredient("vodka", randomAmount, Unit.Liter);
+        randomAmount = r.nextInt(3);
+        Ingredient i3 = new Ingredient("water", randomAmount, Unit.Liter);
+
+        Color c;
+
+        switch (randomAmount){
+            case 1:
+                c = Color.BLUE;
+            case 2:
+                c = Color.GREEN;
+                default:
+                    c = Color.RED;
+        }
+
+        LinkedList<Ingredient> ings = new LinkedList<>();
+        ings.add(i); ings.add(i2); ings.add(i3);
+
+        Recipe sampleRecipe1 = new Recipe("Salty Water", "Desc fuer sample1", ings);
+
+        sampleRecipe1.setColor(c);
 
         //Das jetzt so in die Datenbank gespeichert wird:
         recipeViewModel.insert(sampleRecipe1);

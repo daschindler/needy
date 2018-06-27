@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.hagenberg.needy.Activities.ViewRecipeActivity;
 import com.hagenberg.needy.Entity.Ingredient;
 import com.hagenberg.needy.Entity.Recipe;
+import com.hagenberg.needy.Entity.TypeConverters.ColorTypeConverters;
 import com.hagenberg.needy.R;
 
 import java.util.LinkedList;
@@ -93,6 +95,7 @@ public class ShowFoundRecipesByIngredientsListAdapter extends RecyclerView.Adapt
         final Recipe recipe = availableRecipes.get(i);
         viewHolder.tvRecipeName.setText(recipe.getName());
 
+        Log.d("Recipe with color:", ColorTypeConverters.someObjectListToString(recipe.getColor()));
 
         viewHolder.tvRecipeName.setOnClickListener(new View.OnClickListener() {
             @Override

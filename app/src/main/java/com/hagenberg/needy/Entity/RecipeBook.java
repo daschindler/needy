@@ -3,6 +3,7 @@ package com.hagenberg.needy.Entity;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.Relation;
 import android.arch.persistence.room.TypeConverters;
 
 import com.hagenberg.needy.Entity.TypeConverters.RecipeTypeConverters;
@@ -29,6 +30,8 @@ public class RecipeBook {
     @ColumnInfo(name = "recipies")
     @TypeConverters(RecipeTypeConverters.class)
     private List<Recipe> recipies;
+    /*@Relation(parentColumn = "recipies", entityColumn = "uid")
+    private List<Recipe> pets;*/
 
     // --- Getter & Setter ---
 
