@@ -41,15 +41,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         //ShowDatabaseFunctionality();
-
+        getSupportActionBar().setElevation(0);
         setContentView(R.layout.activity_main);
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager = findViewById(R.id.viewpager);
 
         viewPagerAdapter = new MainPagerAdapter(getSupportFragmentManager(), this);
 
         viewPagerAdapter.setSearchString("");
         viewPager.setAdapter(viewPagerAdapter);
-
+        viewPager.setCurrentItem(1);
         handleIntent(getIntent());
 
         AskStoragePermissions();
