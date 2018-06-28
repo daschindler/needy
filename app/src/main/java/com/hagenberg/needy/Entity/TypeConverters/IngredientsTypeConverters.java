@@ -27,6 +27,8 @@ public class IngredientsTypeConverters {
 
     @TypeConverter
     public static String someObjectListToString(List<Ingredient> someObjects) {
-        return gson.toJson(someObjects);
+        String gs =  gson.toJson(someObjects);
+
+        return gs;
     }
 }

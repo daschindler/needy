@@ -34,7 +34,7 @@ public class ShowAllRecipesFragment extends Fragment {
     RecyclerView rvRecipes;
     FloatingActionButton fabAddRecipe;
     RecyclerView.LayoutManager layoutManager;
-    ShowAllRecipesListAdapter listAdapter = new ShowAllRecipesListAdapter(new LinkedList<Recipe>());
+    ShowAllRecipesListAdapter listAdapter = new ShowAllRecipesListAdapter(new LinkedList<Recipe>(), getContext());
 
     public void setSearchString(String searchString) {
         this.searchString = searchString;
@@ -91,11 +91,11 @@ public class ShowAllRecipesFragment extends Fragment {
 
         if(recipeList==null) {
             recipeList = new LinkedList<Recipe>();
-            listAdapter = new ShowAllRecipesListAdapter(recipeList);
+            listAdapter = new ShowAllRecipesListAdapter(recipeList, getContext());
             rvRecipes.setAdapter(listAdapter);
         } else {
             recipeList = searchRecipeList(recipeList, searchString);
-            listAdapter = new ShowAllRecipesListAdapter(recipeList);
+            listAdapter = new ShowAllRecipesListAdapter(recipeList, getContext());
             rvRecipes.setAdapter(listAdapter);
         }
         allRecipes.observe(this, new Observer<List<Recipe>>() {

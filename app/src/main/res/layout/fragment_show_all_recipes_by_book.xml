@@ -1,0 +1,30 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.hagenberg.needy.Fragments.ShowAllRecipesFragment">
+
+    <TextView
+        android:id="@+id/tv_bookDesc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="Description"
+        android:textAlignment="center" />
+
+    <ScrollView
+        android:layout_below="@id/tv_bookDesc"
+        android:id="@+id/show_recipes_sv_recipes"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/show_recipes_rv_recipes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </ScrollView>
+
+</RelativeLayout>

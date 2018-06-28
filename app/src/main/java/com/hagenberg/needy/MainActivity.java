@@ -40,12 +40,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ShowDatabaseFunctionality();
+        //ShowDatabaseFunctionality();
 
         setContentView(R.layout.activity_main);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
 
-        viewPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
+        viewPagerAdapter = new MainPagerAdapter(getSupportFragmentManager(), this);
+
         viewPagerAdapter.setSearchString("");
         viewPager.setAdapter(viewPagerAdapter);
 

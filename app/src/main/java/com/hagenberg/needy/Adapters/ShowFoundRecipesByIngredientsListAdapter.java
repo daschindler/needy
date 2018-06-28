@@ -177,6 +177,5 @@ public class ShowFoundRecipesByIngredientsListAdapter extends RecyclerView.Adapt
             tvIngredients = v.findViewById(R.id.ingredients);
             cvDrinkIcon = v.findViewById(R.id.drink_icon_view);
         }
-
     }
 }
