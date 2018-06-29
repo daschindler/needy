@@ -103,7 +103,7 @@ public class ImportRecipeBookActivity extends AppCompatActivity {
                 String[] ingredientArray = recipeArray[y].split("/");
                 try {
                     String ingredientName = ingredientArray[0];
-                    int ingredientAmount = Integer.valueOf(ingredientArray[1]);
+                    double ingredientAmount = Double.valueOf(ingredientArray[1]);
                     Unit ingredientUnit = Unit.valueOf(ingredientArray[2]);
                     ingredients.add(new Ingredient(ingredientName, ingredientAmount, ingredientUnit));
                 } catch (Exception ex) {

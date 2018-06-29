@@ -35,5 +35,11 @@ public class Ingredient {
         this.amount = amount;
         this.amountUnit = amountUnit;
     }
+
+    public Ingredient(String name, double amount, Unit amountUnit) {
+        this.name = name;
+        this.amount = amount;
+        this.amountUnit = amountUnit;
+    }
 }
 
