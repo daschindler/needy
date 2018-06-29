@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -84,13 +86,15 @@ public class ViewRecipeActivity extends AppCompatActivity {
         bt_share = findViewById(R.id.bt_view_recipe_share);
         bt_edit = findViewById(R.id.bt_view_recipe_edit);
 
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        final int displayWidth = size.x;
 
         recipeId = intent.getIntExtra("id", 404040);
 
         if (recipeId != 404040) {
             final LiveData<Recipe> selectedLiveRecipe = recipeViewModel.getRecipeById(recipeId);
-
-
             selectedLiveRecipe.observe(this, new Observer<Recipe>() {
                 @Override
                 public void onChanged(@Nullable final Recipe recipe) {
@@ -98,7 +102,9 @@ public class ViewRecipeActivity extends AppCompatActivity {
                         selectedRecipe = recipe;
                         getSupportActionBar().setTitle(selectedRecipe.getName());
                         HideIngredients();
-                        ShowIngredients();
+                        ShowIngredients(displayWidth);
+                        HideDescription();
+                        ShowDescription();
                     }
                 }
             });
@@ -110,7 +116,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     if (ingredientsShown == false) {
-                        ShowIngredients();
+                        ShowIngredients(displayWidth);
                     } else {
                         HideIngredients();
                     }
@@ -121,22 +127,9 @@ public class ViewRecipeActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     if (descriptionShown == false) {
-                        TextView tv_description = new TextView(ViewRecipeActivity.this);
-                        tv_description.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                        tv_description.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                        tv_description.setPadding(40,0,40,0);
-
-                        tv_description.setText(selectedRecipe.getDescription() + "\n");
-
-                        imgv_descriptionarrow.setImageResource(R.drawable.ic_expand_less_black_24dp);
-                        tv_description_label.setTextColor(Color.rgb(0,0,0));
-                        descriptionShown = true;
-                        ll_description.addView(tv_description);
+                        ShowDescription();
                     } else {
-                        ll_description.removeAllViews();
-                        descriptionShown = false;
-                        imgv_descriptionarrow.setImageResource(R.drawable.ic_expand_more_grey_24dp);
-                        tv_description_label.setTextColor(originalLabelColors);
+                        HideDescription();
                     }
                 }
             });
@@ -165,31 +158,89 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
     }
 
+    private void HideDescription() {
+        ll_description.removeAllViews();
+        descriptionShown = false;
+        imgv_descriptionarrow.setImageResource(R.drawable.ic_expand_more_grey_24dp);
+        tv_description_label.setTextColor(originalLabelColors);
+    }
+
+    private void ShowDescription() {
+        TextView tv_description = new TextView(ViewRecipeActivity.this);
+        tv_description.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        tv_description.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        tv_description.setTextSize(17);
+        tv_description.setPadding(40,0,40,40);
+
+        tv_description.setText(selectedRecipe.getDescription() + "\n");
+
+        imgv_descriptionarrow.setImageResource(R.drawable.ic_expand_less_black_24dp);
+        tv_description_label.setTextColor(Color.rgb(0,0,0));
+        descriptionShown = true;
+        ll_description.addView(tv_description);
+    }
+
     private void HideIngredients() {
         ll_ingredients.removeAllViews();
+        ll_ingredients.setPadding(0,0,0,0);
         ingredientsShown = false;
         imgv_ingredientsarrow.setImageResource(R.drawable.ic_expand_more_grey_24dp);
         tv_ingredient_label.setTextColor(originalLabelColors);
     }
 
-    private void ShowIngredients() {
-        TextView tv_ingredients = new TextView(ViewRecipeActivity.this);
-        tv_ingredients.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        tv_ingredients.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-
-        StringBuilder ingredientString = new StringBuilder();
+    private void ShowIngredients(int displayWidth) {
         if (selectedRecipe.getIngredients() != null) {
-            for (Ingredient ingredient : selectedRecipe.getIngredients()) {
-                ingredientString.append(ingredient.getAmount() + " " + ingredient.getAmountUnit().toString() + " " + ingredient.getName() + "\n");
+            for (Ingredient loopIngredient : selectedRecipe.getIngredients()){
+                ll_ingredients.setPadding(0,0,0,60);
+
+                LinearLayout horizontalTextLayout = new LinearLayout(this);
+                LinearLayout.LayoutParams horizontalTextLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                horizontalTextLayout.setOrientation(LinearLayout.HORIZONTAL);
+                horizontalTextLayout.setLayoutParams(horizontalTextLayoutParams);
+                horizontalTextLayout.setPadding((displayWidth/3+displayWidth/50),10,displayWidth/4,10);
+
+
+                TextView tvIngredientAmount = new TextView(this);
+                LinearLayout.LayoutParams tvIngredientAmountParams =
+                        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                tvIngredientAmount.setText(String.valueOf(loopIngredient.getAmount()));
+                tvIngredientAmount.setTextColor(originalLabelColors);
+                tvIngredientAmount.setTextSize(17);
+                tvIngredientAmount.setLayoutParams(tvIngredientAmountParams);
+
+                View fillerViewAmountUnit = new View(this);
+                fillerViewAmountUnit.setLayoutParams(new LinearLayout.LayoutParams(displayWidth/30, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+                TextView tvIngredientUnit = new TextView(this);
+                LinearLayout.LayoutParams tvIngredientUnitParams =
+                        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                tvIngredientUnit.setText(loopIngredient.getAmountUnit().toString());
+                tvIngredientUnit.setTextColor(originalLabelColors);
+                tvIngredientUnit.setTextSize(17);
+                tvIngredientUnit.setLayoutParams(tvIngredientUnitParams);
+
+                View fillerViewUnitName = new View(this);
+                fillerViewUnitName.setLayoutParams(new LinearLayout.LayoutParams(displayWidth/30, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+
+                TextView tvIngredientName = new TextView(this);
+                LinearLayout.LayoutParams tvIngredientNameParams =
+                        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                tvIngredientName.setText(loopIngredient.getName().toString());
+                tvIngredientName.setTextColor(originalLabelColors);
+                tvIngredientName.setTextSize(17);
+                tvIngredientName.setLayoutParams(tvIngredientNameParams);
+
+                horizontalTextLayout.addView(tvIngredientAmount);
+                horizontalTextLayout.addView(fillerViewAmountUnit);
+                horizontalTextLayout.addView(tvIngredientUnit);
+                horizontalTextLayout.addView(fillerViewUnitName);
+                horizontalTextLayout.addView(tvIngredientName);
+
+                ll_ingredients.addView(horizontalTextLayout);
             }
-        } else {
-            ingredientString.append("No ingredients added\n");
         }
 
-
-        tv_ingredients.setText(ingredientString.toString());
-
-        ll_ingredients.addView(tv_ingredients);
         imgv_ingredientsarrow.setImageResource(R.drawable.ic_expand_less_black_24dp);
         tv_ingredient_label.setTextColor(Color.rgb(0,0,0));
         ingredientsShown = true;
