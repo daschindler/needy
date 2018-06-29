@@ -108,6 +108,10 @@ public class ShowAllRecipesFragment extends Fragment {
                     listAdapter.updateData(searchedRecipes);
                     listAdapter.notifyDataSetChanged();
                 }
+                else {
+                    listAdapter.updateData(new LinkedList<Recipe>());
+                    listAdapter.notifyDataSetChanged();
+                }
             }
         });
     }

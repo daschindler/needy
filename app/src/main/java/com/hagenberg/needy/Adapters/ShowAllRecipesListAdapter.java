@@ -28,7 +28,7 @@ public class ShowAllRecipesListAdapter extends RecyclerView.Adapter<ShowAllRecip
     Context context;
 
     public boolean updateData(List<Recipe> recipes){
-        if(recipes.size()>0) {
+        if(recipes!=null) {
             this.recipes = recipes;
             return true;
         }
