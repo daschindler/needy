@@ -33,14 +33,14 @@ public class CreateRecipeActivity extends AppCompatActivity implements CreateRec
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.view_recipe_menu, menu);
+        inflater.inflate(R.menu.create_recipe_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.view_recipe_menu_import_recipe:
+            case R.id.create_recipe_menu_import_recipe:
                 Intent intent = new Intent(this, ImportRecipeActivity.class);
                 this.startActivity(intent);
                 break;

@@ -60,6 +60,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
     private int recipeId = 404040;
 
+    RecipeViewModel recipeViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +70,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        RecipeViewModel recipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
+        recipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
 
         ll_descriptionbutton = findViewById(R.id.ll_view_recipe_descriptionbutton);
         ll_edit = findViewById(R.id.ll_view_recipe_editbutton);
@@ -250,12 +252,19 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.view_recipe_menu, menu);
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
+            case R.id.view_recipe_menu_delete:
+                recipeViewModel.delete(selectedRecipe);
+                Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
+                this.finish();
+                break;
             default:
                 this.finish();
                 break;
