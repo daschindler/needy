@@ -197,7 +197,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
                 LinearLayout.LayoutParams horizontalTextLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 horizontalTextLayout.setOrientation(LinearLayout.HORIZONTAL);
                 horizontalTextLayout.setLayoutParams(horizontalTextLayoutParams);
-                horizontalTextLayout.setPadding((displayWidth/3+displayWidth/50),10,displayWidth/4,10);
+                horizontalTextLayout.setPadding((displayWidth/3-displayWidth/50),10,displayWidth/10,10);
 
 
                 TextView tvIngredientAmount = new TextView(this);
@@ -295,7 +295,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
                 formattedRecipe.append(ingredient.getAmountUnit().toString()+";");
             }
         } else {
-            formattedRecipe.append("no ingredientname/no ingredientdesc/no unit;");
+            formattedRecipe.append("no ingredientname//;");
         }
 
         return formattedRecipe.toString();

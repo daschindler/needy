@@ -207,7 +207,7 @@ public class EditRecipeActivity extends AppCompatActivity {
                                 }
                                 Unit newIngUnit = Unit.valueOf(spUnit.getSelectedItem().toString());
 
-                                Ingredient newIngredient = new Ingredient(newIngName, newIngAmountDouble.intValue(), newIngUnit);
+                                Ingredient newIngredient = new Ingredient(newIngName, newIngAmountDouble, newIngUnit);
                                 newIngredients.add(newIngredient);
                             }
                     }
@@ -263,7 +263,7 @@ public class EditRecipeActivity extends AppCompatActivity {
         imgvIngredientSymbol.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AddIngredientToView(new Ingredient("",0,Unit.Unit), displayWidth);
+                AddIngredientToView(new Ingredient("",0.0,Unit.Unit), displayWidth);
             }
         });
 

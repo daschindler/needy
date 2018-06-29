@@ -163,7 +163,7 @@ public class CreateRecipeFragment extends Fragment {
                             if (infoValid == true) {
                                 Spinner spUnit = rootView.findViewById(ingredientIds.getUnitId());
                                 Unit unit = Unit.valueOf(spUnit.getSelectedItem().toString());
-                                int numberAmount = Integer.parseInt(amount);
+                                Double numberAmount = Double.valueOf(amount);
                                 Ingredient ingredient = new Ingredient(name, numberAmount, unit);
                                 ingredients.add(ingredient);
 
@@ -230,7 +230,6 @@ public class CreateRecipeFragment extends Fragment {
                                     dialogDescription.dismiss();
                                     getActivity().finish();
                                 } else {
-                                    Toast.makeText(getActivity(), "Error at creating the Recipe", Toast.LENGTH_SHORT).show();
                                     dialogDescription.dismiss();
                                 }
                             }

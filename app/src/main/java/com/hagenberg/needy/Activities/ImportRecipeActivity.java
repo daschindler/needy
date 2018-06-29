@@ -3,6 +3,7 @@ package com.hagenberg.needy.Activities;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import com.hagenberg.needy.Entity.Ingredient;
 import com.hagenberg.needy.Entity.Recipe;
 import com.hagenberg.needy.Entity.Unit;
+import com.hagenberg.needy.MainActivity;
 import com.hagenberg.needy.R;
 import com.hagenberg.needy.ViewModel.RecipeViewModel;
 
@@ -143,7 +145,10 @@ public class ImportRecipeActivity extends AppCompatActivity {
                             //Pfad wird an andere Activity mitgegeben
                             public void onClick(View view) {
                                 StoreRecipe(files[llProgExplorer.getId()]);
-                                ImportRecipeActivity.this.finish();
+                                Toast.makeText(ImportRecipeActivity.this,"Added " + files[llProgExplorer.getId()].getName(), Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
                             }
                         });
 
@@ -179,9 +184,14 @@ public class ImportRecipeActivity extends AppCompatActivity {
         for (int i = 2; i <recipeArry.length; i++){
             String[] ingredientArry = recipeArry[i].split("/");
             String ingredientName = ingredientArry[0];
-            int ingredientAmount = Integer.valueOf(ingredientArry[1]);
-            Unit ingredientUnit = Unit.valueOf(ingredientArry[2]);
-
+            Double ingredientAmount = 0.0;
+            if (!ingredientArry[1].equals("")) {
+                ingredientAmount = Double.valueOf(ingredientArry[1]);
+            }
+            Unit ingredientUnit = Unit.Unit;
+            if (!ingredientArry[2].equals("")) {
+                ingredientUnit = Unit.valueOf(ingredientArry[2]);
+            }
             ingredientList.add(new Ingredient(ingredientName, ingredientAmount, ingredientUnit));
 
         }
