@@ -79,6 +79,7 @@ public class ShowAllRecipesListAdapter extends RecyclerView.Adapter<ShowAllRecip
         String lowerName = recipe.getName().toLowerCase();
 
         viewHolder.cvDrinkIcon.setImageDrawable(context.getDrawable(R.drawable.cocktail));
+        //viewHolder.cvDrinkIcon.setImageDrawable(context.getDrawable(R.drawable.cocktail));
 
         if(ingredientsString.contains("beer") || lowerName.contains("beer")){
             viewHolder.cvDrinkIcon.setImageDrawable(context.getDrawable(R.drawable.beer));

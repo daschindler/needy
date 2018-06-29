@@ -10,6 +10,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.hagenberg.needy.Entity.Recipe;
 import com.hagenberg.needy.Entity.RecipeBook;
@@ -36,7 +38,7 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
     public MainPagerAdapter(FragmentManager fm, FragmentActivity fa) {
         super(fm);
 
-        RecipeBookViewModel recipeBookViewModel = ViewModelProviders.of(fa).get(RecipeBookViewModel.class);
+        /*RecipeBookViewModel recipeBookViewModel = ViewModelProviders.of(fa).get(RecipeBookViewModel.class);
         final LiveData<List<RecipeBook>> allRecipeBooks = recipeBookViewModel.getAllLiveRecipeBooks();
 
         allRecipeBooks.observe(fa, new Observer<List<RecipeBook>>() {
@@ -50,19 +52,22 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
 
                 notifyDataSetChanged();
             }
-        });
+        });*/
     }
 
     @Override
     public int getItemPosition(@NonNull Object object) {
-        /*try {
-            ShowAllRecipesFragment fragment = (ShowAllRecipesFragment) object;
-            fragment.setSearchString(searchString);
-        } catch(Exception ex) {
+        if (object.getClass() == ShowAllRecipeBooksFragment.class) {
             ShowAllRecipeBooksFragment fragment = (ShowAllRecipeBooksFragment) object;
             fragment.setSearchString(searchString);
-        }*/
-
+        } else if (object.getClass() == ShowAllRecipesFragment.class) {
+            ShowAllRecipesFragment fragment = (ShowAllRecipesFragment) object;
+            fragment.setSearchString(searchString);
+        } else if (object.getClass() == ShowAllRecipesByBookFragment.class) {
+            return super.getItemPosition(object);
+        } else if (object.getClass() == RecipeFinderFragment.class) {
+            return super.getItemPosition(object);
+        }
         return super.getItemPosition(object);
     }
 
@@ -76,9 +81,9 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
             case 2:
                 return ShowAllRecipeBooksFragment.newInstance();
             default:
-                if(rBooks.size() >= (position - 2)){
+                /*if(rBooks.size() >= (position - 2)){
                     return ShowAllRecipesByBookFragment.newInstance(rBooks.get(position-3));
-                }
+                }*/
 
                 return null;
         }
@@ -95,16 +100,16 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
             case 2:
                 return "All Books";
             default:
-                if(rBooks.size() >= (position - 2)){
+                /*if(rBooks.size() >= (position - 2)){
                     return rBooks.get(position-3).getName();
                 }
-
+*/
                 return "";
         }
     }
 
     @Override
     public int getCount() {
-        return rBooks.size() + 3;
+        return 3; //rBooks.size() + 3;
     }
 }

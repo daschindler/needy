@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +25,7 @@ public class ShowAllRecipeBooksListAdapter extends RecyclerView.Adapter<ShowAllR
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-        View view = inflater.inflate(R.layout.recipe_list_item, viewGroup, false);
+        View view = inflater.inflate(R.layout.recipe_book_card_item, viewGroup, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
@@ -40,6 +41,35 @@ public class ShowAllRecipeBooksListAdapter extends RecyclerView.Adapter<ShowAllR
                 view.getContext().startActivity(intent);
             }
         });
+        viewHolder.tvRecipes.setText(getRecipeText(recipeBooks.get(i)));
+        viewHolder.ivIcon.setImageResource(R.drawable.ic_cocktail_book);
+        viewHolder.rowLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), ViewRecipeBookActivity.class);
+                intent.putExtra("id", recipeBooks.get(i).getUid());
+                view.getContext().startActivity(intent);
+            }
+        });
+    }
+
+    private String getRecipeText(RecipeBook recipeBook) {
+        StringBuilder result = new StringBuilder();
+        int i = 0;
+        for(Recipe rec : recipeBook.getRecipies()) {
+            if(i < 3) {
+                result.append(rec.getName());
+                result.append(", ");
+                i++;
+            }
+        }
+        if(i==3) {
+            result.append("...");
+        } else if (i < 3) {
+            result.delete(result.length()-2, result.length());
+        }
+        return result.toString();
+
     }
 
     @Override
@@ -54,11 +84,15 @@ public class ShowAllRecipeBooksListAdapter extends RecyclerView.Adapter<ShowAllR
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tvRecipeName;
         public View rowLayout;
+        public TextView tvRecipes;
+        public ImageView ivIcon;
 
         public ViewHolder(View v) {
             super(v);
             rowLayout = v;
-            tvRecipeName = v.findViewById(R.id.textMain);
+            tvRecipeName = v.findViewById(R.id.tv_rb_name);
+            tvRecipes = v.findViewById(R.id.tv_rb_recipes);
+            ivIcon = v.findViewById(R.id.iv_rb_icon);
         }
     }
 
