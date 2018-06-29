@@ -123,7 +123,7 @@ public class ShowAllRecipesFragment extends Fragment {
 
         List<Recipe> searchedRecipeList = new LinkedList<Recipe>();
         for(Recipe recipe : recipeList) {
-            if(recipe.getName().startsWith(searchString)){
+            if(recipe.getName().toLowerCase().startsWith(searchString.toLowerCase())){
                 searchedRecipeList.add(recipe);
             }
         }

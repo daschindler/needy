@@ -105,7 +105,7 @@ public class ShowAllRecipeBooksFragment extends Fragment {
 
         if(recipeBooks != null){
             for(RecipeBook book : recipeBooks) {
-                if(book.getName().startsWith(searchString)){
+                if(book.getName().toLowerCase().startsWith(searchString.toLowerCase())){
                     searchedBooks.add(book);
                 }
             }
