@@ -28,6 +28,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Fragment with the Views for the List of all Recipes. Used in the MainPagerAdapter.
+ */
 public class ShowAllRecipesFragment extends Fragment {
     RecipeViewModel recipeViewModel;
     String searchString;
@@ -36,28 +39,44 @@ public class ShowAllRecipesFragment extends Fragment {
     RecyclerView.LayoutManager layoutManager;
     ShowAllRecipesListAdapter listAdapter = new ShowAllRecipesListAdapter(new LinkedList<Recipe>(), getContext());
 
+    /**
+     * Setter for the searchString property, sets the new searchString for this fragment.
+     * @param searchString
+     */
     public void setSearchString(String searchString) {
         this.searchString = searchString;
-        //Update recipes with this search string
-
         setUpListAdapter(searchString);
-        //Toast.makeText(getContext(), "Updating this views layouts with new search string: " + searchString, Toast.LENGTH_LONG).show();
     }
 
     public ShowAllRecipesFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * Used in the MainPagerAdapter for creating a new Instance of the Fragment.
+     * @return
+     */
     public static ShowAllRecipesFragment newInstance() {
         ShowAllRecipesFragment fragment = new ShowAllRecipesFragment();
         return fragment;
     }
 
+    /**
+     * Called when the fragment is created.
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Called when the views are created, inflates the layouts and calls the Setup-Method for the RecyclerView.
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -83,6 +102,11 @@ public class ShowAllRecipesFragment extends Fragment {
 
     }
 
+    /**
+     * Sets up the list adapter with the recipe-values from the database, and puts an observer on them. After changes to the recipes, the observer is called and
+     * changes the dataset of the list adapter to the new one. Also uses the filtered recipes, if searchString is something else than "".
+     * @param searchString
+     */
     private void setUpListAdapter(final String searchString) {
         recipeViewModel = ViewModelProviders.of(this.getActivity()).get(RecipeViewModel.class);
         LiveData<List<Recipe>> allRecipes = recipeViewModel.getAllRecipes();
@@ -116,6 +140,12 @@ public class ShowAllRecipesFragment extends Fragment {
         });
     }
 
+    /**
+     * Filters the recipeList by the searchString parameter given, and returns the filtered Recipes.
+     * @param recipeList
+     * @param searchString
+     * @return
+     */
     private List<Recipe> searchRecipeList(List<Recipe> recipeList, String searchString) {
         if (searchString == "") {
             return recipeList;
@@ -131,21 +161,15 @@ public class ShowAllRecipesFragment extends Fragment {
     }
 
 
+    /**
+     * Inserts test values into the database, not used anymore.
+     * @param rvm
+     */
     private void insertTestValues(RecipeViewModel rvm) {
         List<Ingredient> ingredients = new ArrayList<>();
         Recipe rec = new Recipe("Recipe1", "Description of Recipe1", ingredients);
         Recipe rec1 = new Recipe("Recipe2", "sweg", ingredients);
         rvm.insert(rec);
         rvm.insert(rec1);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
-            case R.id.main_menu_search:
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 }

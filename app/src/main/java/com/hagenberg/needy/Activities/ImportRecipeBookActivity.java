@@ -71,6 +71,7 @@ public class ImportRecipeBookActivity extends AppCompatActivity {
         });
     }
 
+    //Unbuilds the imported recipebook file, by unbuilding its string, and splitting the lines by the built in seperators from before.
     private void StoreRecipeBook(File file) {
         StringBuilder unbuildString = new StringBuilder();
 
@@ -93,12 +94,14 @@ public class ImportRecipeBookActivity extends AppCompatActivity {
         String recipeBookDescription = recipeBookArray[1];
         final List<Recipe> recipes = new ArrayList<>();
 
+        //Split recipes.
         for(int i = 2; i < recipeBookArray.length; i++) {
             String[] recipeArray = recipeBookArray[i].split(":");
             String recipeName = recipeArray[0];
             String recipeDesc = recipeArray[1];
             List<Ingredient> ingredients = new ArrayList<>();
 
+            //Split ingredients for actual recipe.
             for(int y = 2; y < recipeArray.length; y++) {
                 String[] ingredientArray = recipeArray[y].split("/");
                 try {
@@ -107,41 +110,41 @@ public class ImportRecipeBookActivity extends AppCompatActivity {
                     Unit ingredientUnit = Unit.valueOf(ingredientArray[2]);
                     ingredients.add(new Ingredient(ingredientName, ingredientAmount, ingredientUnit));
                 } catch (Exception ex) {
-                    //in here ==> no ingredients for this recipe (makes no sense though).
+                    //in here ==> no ingredients for this recipe
                     y = recipeArray.length;
                 }
 
             }
-
             recipes.add(new Recipe(recipeName, recipeDesc, ingredients));
         }
 
         final RecipeBook importedBook = new RecipeBook();
         importedBook.setName(recipeBookName);
         importedBook.setDescription(recipeBookDescription);
-        //importedBook.setRecipies(recipes);
         final RecipeViewModel rViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
         final RecipeBookViewModel rbViewModel = ViewModelProviders.of(this).get(RecipeBookViewModel.class);
 
+        //Observe all recipes from the database.
         rViewModel.getAllRecipes().getValue();
         rViewModel.getAllRecipes().observe(this, new Observer<List<Recipe>>() {
             @Override
             public void onChanged(@Nullable final List<Recipe> startRecipes) {
                 if(startRecipes!=null){
                     if(!inserted) {
+                        //Insert Recipes from the imported book into db.
                         initialRecipes = startRecipes;
                         for (Recipe insertRec : recipes) {
                             rViewModel.insert(insertRec);
                         }
                         inserted = true;
                     } else {
+                        //Recipes are done inserting, recipebook is inserted now with its previous inserted recipes.
                         if(startRecipes.size()==initialRecipes.size()+recipes.size()) {
                             List<Recipe> newRecipes = filterRecipes(initialRecipes, startRecipes);
                             importedBook.setRecipies(newRecipes);
                             rbViewModel.insert(importedBook);
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
-                            //ImportRecipeBookActivity.this.finish();
                         }
                     }
                 }
@@ -172,6 +175,7 @@ public class ImportRecipeBookActivity extends AppCompatActivity {
         return false;
     }
 
+    //Sets up the layout of a file browser, which only shows ".rbneedy"-files. Also sets up a "Level Up"-Button.
     private void setupFileBrowser(File topfile) {
         actPathFile = topfile;
         File directories = new File(topfile.getAbsolutePath());

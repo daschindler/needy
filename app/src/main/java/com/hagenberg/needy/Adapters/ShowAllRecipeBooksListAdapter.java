@@ -18,9 +18,18 @@ import com.hagenberg.needy.R;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * ListAdapter for RecyclerView that shows all Recipe Books.
+ */
 public class ShowAllRecipeBooksListAdapter extends RecyclerView.Adapter<ShowAllRecipeBooksListAdapter.ViewHolder> {
     List<RecipeBook> recipeBooks;
 
+    /**
+     * Called on viewHolder creation, inflates layout.
+     * @param viewGroup View which we inflate from.
+     * @param i position of the view in the list.
+     * @return
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -30,6 +39,12 @@ public class ShowAllRecipeBooksListAdapter extends RecyclerView.Adapter<ShowAllR
         return viewHolder;
     }
 
+    /**
+     * Called when data for the adapter is set, sets the views of each list item to the correct values from their recipe book.
+     * Also sets the onClickListeners to show the detail of the recipebook if clicked.
+     * @param viewHolder ViewHolder that holds current view that needs to get its data set.
+     * @param i position of the view in the list.
+     */
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int i) {
         viewHolder.tvRecipeName.setText(recipeBooks.get(i).getName());
@@ -53,6 +68,11 @@ public class ShowAllRecipeBooksListAdapter extends RecyclerView.Adapter<ShowAllR
         });
     }
 
+    /**
+     * Converts the list of recipes from a recipebook to a string which can be displayed in the list items cardView.
+     * @param recipeBook Book for which the recipes should be converted to a string.
+     * @return
+     */
     private String getRecipeText(RecipeBook recipeBook) {
         StringBuilder result = new StringBuilder();
         int i = 0;
@@ -72,15 +92,26 @@ public class ShowAllRecipeBooksListAdapter extends RecyclerView.Adapter<ShowAllR
 
     }
 
+    /**
+     * Returns with the size of the recipebooks in the list, hence the list size.
+     * @return
+     */
     @Override
     public int getItemCount() {
         return recipeBooks.size();
     }
 
+    /**
+     * Called to change the data if new recipebooks were added or old ones deleted.
+     * @param recipeBooks new set of recipebooks.
+     */
     public void updateData(List<RecipeBook> recipeBooks) {
         this.recipeBooks = recipeBooks;
     }
 
+    /**
+     * ViewHolder class that initializes the views of the list item layout.
+     */
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tvRecipeName;
         public View rowLayout;
@@ -96,6 +127,10 @@ public class ShowAllRecipeBooksListAdapter extends RecyclerView.Adapter<ShowAllR
         }
     }
 
+    /**
+     * Constructor that sets the recipebooks for the adapter.
+     * @param recipeBooks
+     */
     public ShowAllRecipeBooksListAdapter(List<RecipeBook> recipeBooks) {
         this.recipeBooks = recipeBooks;
     }

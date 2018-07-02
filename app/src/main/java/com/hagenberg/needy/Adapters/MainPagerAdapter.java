@@ -25,12 +25,19 @@ import com.hagenberg.needy.ViewModel.RecipeViewModel;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Adapter Class for ViewPager in the MainActivity
+ */
 public class MainPagerAdapter extends FragmentPagerAdapter {
 
     LinkedList<RecipeBook> rBooks = new LinkedList<>();
 
     private String searchString = "";
 
+    /**
+     * Setter for searchstring
+     * @param searchString
+     */
     public void setSearchString(String searchString) {
         this.searchString = searchString;
     }
@@ -55,6 +62,11 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
         });*/
     }
 
+    /**
+     * Returns position of each fragment, used for setting the searchstring when loading fragments new.
+     * @param object
+     * @return
+     */
     @Override
     public int getItemPosition(@NonNull Object object) {
         if (object.getClass() == ShowAllRecipeBooksFragment.class) {
@@ -71,6 +83,11 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
         return super.getItemPosition(object);
     }
 
+    /**
+     * Returns the fragment for the given position parameter.
+     * @param position
+     * @return
+     */
     @Override
     public Fragment getItem(int position) {
         switch (position) {
@@ -89,6 +106,11 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
         }
     }
 
+    /**
+     * Returns a different page title for each Page of the ViewPager
+     * @param position
+     * @return
+     */
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
@@ -108,6 +130,10 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
         }
     }
 
+    /**
+     * Returns the amount of pages in the view pager.
+     * @return
+     */
     @Override
     public int getCount() {
         return 3; //rBooks.size() + 3;

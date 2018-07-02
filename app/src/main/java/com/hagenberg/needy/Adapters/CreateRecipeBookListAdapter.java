@@ -15,19 +15,28 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by thomasmaier on 08.05.18.
+ * ListAdapter for RecyclerView
+ * Organizes recipes in CreateRB-View, for displaying recipes with checkbox.
  */
-
 public class CreateRecipeBookListAdapter extends RecyclerView.Adapter<CreateRecipeBookListAdapter.ViewHolder> {
     private List<Recipe> recipes;
     private Boolean[] isChecked;
 
+    /**
+     * Updates the listdata with the recipe parameter, and sets everything unchecked.
+     * @param recipes List of the new recipes.
+     */
     public void updateData(List<Recipe> recipes) {
         this.recipes = recipes;
         this.isChecked = setUnchecked(new Boolean[recipes.size()]);
 
     }
 
+    /**
+     * Updates the listdata with new recipes, and sets everything in the given array to checked if true.
+     * @param recipes List of the new recipes.
+     * @param checked Holds values for each recipe, true ==> recipe is checked.
+     */
     public void updateData(List<Recipe> recipes, Boolean[] checked) {
         if(recipes.size()==checked.length) {
             this.recipes = recipes;
@@ -35,6 +44,11 @@ public class CreateRecipeBookListAdapter extends RecyclerView.Adapter<CreateReci
         }
     }
 
+    /**
+     * Sets all checked values in the array to unchecked
+     * @param recipes array with the correct length, which will be set to false.
+     * @return
+     */
     private Boolean[] setUnchecked(Boolean[] recipes) {
         for (int i = 0; i<recipes.length; i++){
             recipes[i] = Boolean.FALSE;
@@ -42,6 +56,12 @@ public class CreateRecipeBookListAdapter extends RecyclerView.Adapter<CreateReci
         return recipes;
     }
 
+    /**
+     * Called on creating the view, creates the ViewHolder.
+     * @param parent View from which we inflate.
+     * @param viewType not used.
+     * @return
+     */
     @Override
     public CreateRecipeBookListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -50,6 +70,11 @@ public class CreateRecipeBookListAdapter extends RecyclerView.Adapter<CreateReci
         return vh;
     }
 
+    /**
+     * Called when data is set for the adapter. Sets the recipe data for the list item, and the listeners for clicking the checkboxes.
+     * @param vh ViewHolder to set the data for
+     * @param position Position in the list
+     */
     @Override
     public void onBindViewHolder(final CreateRecipeBookListAdapter.ViewHolder vh, final int position) {
         final String name = recipes.get(position).getName();
@@ -92,15 +117,28 @@ public class CreateRecipeBookListAdapter extends RecyclerView.Adapter<CreateReci
         });
     }
 
+    /**
+     * Returns size of list.
+     * @return
+     */
     @Override
     public int getItemCount() {
         return recipes.size();
     }
 
+    /**
+     * Checks  if the list item for the given index is checked or not.
+     * @param index for which the list item should be looked up.
+     * @return
+     */
     private boolean isRecipeChecked(int index) {
         return this.isChecked[index];
     }
 
+    /**
+     * Returns all recipes in the list that are currently checked.
+     * @return
+     */
     public List<Recipe> getCheckedRecipes() {
         int index = 0;
         List<Recipe> checkedRecipes = new LinkedList<Recipe>();
@@ -113,8 +151,10 @@ public class CreateRecipeBookListAdapter extends RecyclerView.Adapter<CreateReci
         return checkedRecipes;
     }
 
+    /**
+     * ViewHolder class for this adapter.
+     */
     public class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
         public CheckedTextView tvRecipeName;
         public View rowLayout;
 
@@ -125,11 +165,20 @@ public class CreateRecipeBookListAdapter extends RecyclerView.Adapter<CreateReci
         }
     }
 
+    /**
+     * Constructor that initializes the recipes.
+     * @param recipes new recipe list.
+     */
     public CreateRecipeBookListAdapter(List<Recipe> recipes) {
         this.recipes = recipes;
         this.isChecked = setUnchecked(new Boolean[recipes.size()]);
     }
 
+    /**
+     * Constructor that initializes the recipes, and sets everything in the list to the checked-value in the given array.
+     * @param recipes new recipe list.
+     * @param isChecked array with checked values for the recipe list.
+     */
     public CreateRecipeBookListAdapter(List<Recipe> recipes, Boolean[] isChecked) {
         this.recipes = recipes;
         this.isChecked = isChecked;
