@@ -31,6 +31,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * ActivityClass for importing a Recipe Book.
+ */
 public class ImportRecipeActivity extends AppCompatActivity {
 
     private LinearLayout ll_explorer;

@@ -42,6 +42,9 @@ import com.hagenberg.needy.ViewModel.RecipeViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * ActivityClass for editing a Recipe Book.
+ */
 public class EditRecipeActivity extends AppCompatActivity {
 
     private int recipeId = 404040;

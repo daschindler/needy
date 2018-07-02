@@ -42,6 +42,9 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * ActivityClass for viewing a Recipe Book.
+ */
 public class ViewRecipeActivity extends AppCompatActivity {
 
     private LinearLayout ll_ingredientsbutton, ll_descriptionbutton;

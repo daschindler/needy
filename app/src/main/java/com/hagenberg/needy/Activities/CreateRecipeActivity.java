@@ -15,6 +15,9 @@ import android.view.MenuItem;
 import com.hagenberg.needy.Fragments.CreateRecipeFragment;
 import com.hagenberg.needy.R;
 
+/**
+ * ActivityClass for creating a Recipe
+ */
 public class CreateRecipeActivity extends AppCompatActivity implements CreateRecipeFragment.OnFragmentInteractionListener {
 
     @Override

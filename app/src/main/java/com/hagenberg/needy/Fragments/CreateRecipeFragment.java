@@ -45,12 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link CreateRecipeFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link CreateRecipeFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * The fragment for creating a Recipe.
  */
 public class CreateRecipeFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
