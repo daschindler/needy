@@ -65,7 +65,7 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
     /**
      * Returns position of each fragment, used for setting the searchstring when loading fragments new.
      * @param object
-     * @return
+     * @return position of fragment in adapter.
      */
     @Override
     public int getItemPosition(@NonNull Object object) {
@@ -86,7 +86,7 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
     /**
      * Returns the fragment for the given position parameter.
      * @param position
-     * @return
+     * @return Fragment at given position.
      */
     @Override
     public Fragment getItem(int position) {
@@ -109,7 +109,7 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
     /**
      * Returns a different page title for each Page of the ViewPager
      * @param position
-     * @return
+     * @return Title for the given position.
      */
     @Nullable
     @Override
@@ -132,7 +132,7 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
 
     /**
      * Returns the amount of pages in the view pager.
-     * @return
+     * @return Page amount in viewpager.
      */
     @Override
     public int getCount() {

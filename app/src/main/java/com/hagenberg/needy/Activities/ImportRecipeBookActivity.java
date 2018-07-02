@@ -35,6 +35,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Activity for importing recipe books, and displaying a file browser to search through the files.
+ */
 public class ImportRecipeBookActivity extends AppCompatActivity {
 
     private LinearLayout llFiles;
@@ -44,6 +47,10 @@ public class ImportRecipeBookActivity extends AppCompatActivity {
     public boolean inserted = false;
     public List<Recipe> initialRecipes = new LinkedList<Recipe>();
 
+    /**
+     * Called on activity creation, inits views.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +78,10 @@ public class ImportRecipeBookActivity extends AppCompatActivity {
         });
     }
 
-    //Unbuilds the imported recipebook file, by unbuilding its string, and splitting the lines by the built in seperators from before.
+    /**
+     * Unbuilds the imported recipebook file, by unbuilding its string, and splitting the lines by the built in seperators from before.
+     * @param file Stores the imported file from the filesystem into the database.
+     */
     private void StoreRecipeBook(File file) {
         StringBuilder unbuildString = new StringBuilder();
 
@@ -152,7 +162,12 @@ public class ImportRecipeBookActivity extends AppCompatActivity {
         });
     }
 
-    //Returns the newly inserted Recipes, that weren't in the list before importing the recipe book.
+    /**
+     * Returns the newly inserted Recipes, that weren't in the list before importing the recipe book.
+     * @param startRecipes recipes before insertion
+     * @param endRecipes recipes after insertion
+     * @return the difference between start and endRecipes, to get the ones that were inserted after startRecipes.
+     */
     private List<Recipe> filterRecipes(List<Recipe> startRecipes, List<Recipe> endRecipes) {
         List<Recipe> newRecipes = new LinkedList<Recipe>();
 
@@ -165,7 +180,12 @@ public class ImportRecipeBookActivity extends AppCompatActivity {
         return newRecipes;
     }
 
-    //Returns true if the parameter recipe is contained in the list of recipes.
+    /**
+     * Returns true if the parameter recipe is contained in the list of recipes.
+     * @param recipe Recipe to search for in list.
+     * @param startRecipes Recipe list we search through
+     * @return true if recipe is in startRecipes, or false otherwise.
+     */
     private boolean isRecipeInList(Recipe recipe, List<Recipe> startRecipes) {
         for(Recipe rec : startRecipes) {
             if(rec.getUid()==recipe.getUid()) {
@@ -175,7 +195,10 @@ public class ImportRecipeBookActivity extends AppCompatActivity {
         return false;
     }
 
-    //Sets up the layout of a file browser, which only shows ".rbneedy"-files. Also sets up a "Level Up"-Button.
+    /**
+     * Sets up the layout of a file browser, which only shows ".rbneedy"-files. Also sets up a "Level Up"-Button.
+     * @param topfile Topfile of the file system we are in.
+     */
     private void setupFileBrowser(File topfile) {
         actPathFile = topfile;
         File directories = new File(topfile.getAbsolutePath());

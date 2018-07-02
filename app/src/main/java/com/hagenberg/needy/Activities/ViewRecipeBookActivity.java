@@ -39,6 +39,9 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.LinkedList;
 
+/**
+ * Activity for detail view of recipebook.
+ */
 public class ViewRecipeBookActivity extends AppCompatActivity {
 
     TextView tvName;
@@ -52,6 +55,10 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
     ViewRecipeBookListAdapter listAdapter = new ViewRecipeBookListAdapter(new LinkedList<Recipe>());
     LiveData<RecipeBook> rb;
 
+    /**
+     * Called on creation of activity, inits the views and sets onClickListeners.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,7 +124,12 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
         });
     }
 
-    //Callback for the requested permission to write the user storage, with the result of this request.
+    /**
+     * Callback for the requested permission to write the user storage, with the result of this request.
+     * @param requestCode Code with which the permission request was submitted to the user.
+     * @param permissions permissions app asked for
+     * @param grantResults results for the questioned permissions.
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -133,7 +145,10 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
         }
     }
 
-    //Check if permission needed is already given.
+    /**
+     * Check if permission needed is already given.
+     * @return true if permission is already granted, and false otherwise.
+     */
     private boolean checkStoragePermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             return false;
@@ -141,11 +156,18 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
         return true;
     }
 
-    //Ask for permission to access user storage.
+    /**
+     * Ask for permission to access user storage.
+     */
     private void askStoragePermission(){
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},0);
     }
 
+    /**
+     * Inflates the options menu, called on activity creation.
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -154,7 +176,11 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    //Delete the recipe book displayed, after the user clicks on the paper basket in the action bar.
+    /**
+     * Delete the recipe book displayed, after the user clicks on the paper basket in the action bar.
+     * @param item Item that the user has clicked on.
+     * @return handled by super class.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
@@ -165,8 +191,10 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
         }
     }
 
-    //Creates a file out of the recipebook displayed in the view. The file is seperated by / and : and ; and is later decodable in the ImportRecipeBookActivity.
-    //The file is then saved to the storage in the '/needy'-folder.
+    /**
+     * Creates a file out of the recipebook displayed in the view. The file is seperated by / and : and ; and is later decodable in the ImportRecipeBookActivity.
+     * The file is then saved to the storage in the '/needy'-folder.
+     */
     private void CreateFileToShare() {
         try {
             File folder = new File(Environment.getExternalStorageDirectory().toString()+ "/needy");
@@ -195,7 +223,11 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
         startActivity(Intent.createChooser(sharingIntent, "Share Recipe Book via"));
     }
 
-    //Creates the string for the file to save. With a stringbuilder the recipe book is encoded with seperators, which are later used to rebuild the recipe book.
+    /**
+     * Creates the string for the file to save. With a stringbuilder the recipe book is encoded with seperators, which are later used to rebuild the recipe book.
+     * @param recipeBook Recipebook that needs to be formatted.
+     * @return the string the recipe book was formated too.
+     */
     private String FormatRecipebookToString(RecipeBook recipeBook) {
         StringBuilder formattedRecipeBook = new StringBuilder();
 
@@ -222,7 +254,11 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
         return formattedRecipeBook.toString();
     }
 
-    //Creates a string for a recipe. This method is needed because every book can have more than one recipes, which have to be encoded to be saved.
+    /**
+     * Creates a string for a recipe. This method is needed because every book can have more than one recipes, which have to be encoded to be saved.
+     * @param recipe The recipe that needs to be formatted to a string.
+     * @return The formatted string for the recipe.
+     */
     private String FormatRecipeToString(Recipe recipe) {
         StringBuilder formattedRecipe = new StringBuilder();
 
@@ -251,9 +287,10 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
         return formattedRecipe.toString();
     }
 
-    //Start a dialog to ask the user if he really wants to delete his recipe book. If yes ==> deletion and back to MainActivity.
+    /**
+     * Start a dialog to ask the user if he really wants to delete his recipe book. If yes ==> deletion and back to MainActivity.
+     */
     private void deleteRecipeBook() {
-        //Start up delete-dialog
         if(rb!=null) {
             final Dialog deleteDialog = new Dialog(this, R.style.DescriptionDialog);
             deleteDialog.setContentView(R.layout.dialog_delete_recipe_book);

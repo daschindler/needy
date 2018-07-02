@@ -28,7 +28,7 @@ public class ShowAllRecipeBooksListAdapter extends RecyclerView.Adapter<ShowAllR
      * Called on viewHolder creation, inflates layout.
      * @param viewGroup View which we inflate from.
      * @param i position of the view in the list.
-     * @return
+     * @return ViewHolder that holds the views of the list item.
      */
     @NonNull
     @Override
@@ -71,7 +71,7 @@ public class ShowAllRecipeBooksListAdapter extends RecyclerView.Adapter<ShowAllR
     /**
      * Converts the list of recipes from a recipebook to a string which can be displayed in the list items cardView.
      * @param recipeBook Book for which the recipes should be converted to a string.
-     * @return
+     * @return A string with the text of the recipes for the given recipebook.
      */
     private String getRecipeText(RecipeBook recipeBook) {
         StringBuilder result = new StringBuilder();
@@ -94,7 +94,7 @@ public class ShowAllRecipeBooksListAdapter extends RecyclerView.Adapter<ShowAllR
 
     /**
      * Returns with the size of the recipebooks in the list, hence the list size.
-     * @return
+     * @return size of the recipeBooks list.
      */
     @Override
     public int getItemCount() {

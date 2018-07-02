@@ -47,7 +47,7 @@ public class CreateRecipeBookListAdapter extends RecyclerView.Adapter<CreateReci
     /**
      * Sets all checked values in the array to unchecked
      * @param recipes array with the correct length, which will be set to false.
-     * @return
+     * @return Returns an Array with the size of recipes-list, where all values are set to false.
      */
     private Boolean[] setUnchecked(Boolean[] recipes) {
         for (int i = 0; i<recipes.length; i++){
@@ -60,7 +60,7 @@ public class CreateRecipeBookListAdapter extends RecyclerView.Adapter<CreateReci
      * Called on creating the view, creates the ViewHolder.
      * @param parent View from which we inflate.
      * @param viewType not used.
-     * @return
+     * @return The ViewHolder-Class holding the inflated views.
      */
     @Override
     public CreateRecipeBookListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -119,7 +119,7 @@ public class CreateRecipeBookListAdapter extends RecyclerView.Adapter<CreateReci
 
     /**
      * Returns size of list.
-     * @return
+     * @return size of list.
      */
     @Override
     public int getItemCount() {
@@ -129,7 +129,7 @@ public class CreateRecipeBookListAdapter extends RecyclerView.Adapter<CreateReci
     /**
      * Checks  if the list item for the given index is checked or not.
      * @param index for which the list item should be looked up.
-     * @return
+     * @return true if recipe is checked in the views, and false if recipe isn't checked.
      */
     private boolean isRecipeChecked(int index) {
         return this.isChecked[index];

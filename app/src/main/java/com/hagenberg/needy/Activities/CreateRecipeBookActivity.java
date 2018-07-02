@@ -39,6 +39,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * ActivityClass for creating a Recipe Book.
+ */
 public class CreateRecipeBookActivity extends AppCompatActivity {
 
     Button btFinish;
@@ -55,6 +58,10 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
     Boolean update = false; //Activity used for both update and create, if update == true ==> RecipeBook will be updated, not inserted.
 
 
+    /**
+     * onCreate method called when Activity is created. Initializes Views and adapters for display.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,7 +106,10 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
         initializeListAdapter();
     }
 
-    //Checks if all the views are filled, and shakes the views that aren't. If User got everything correct, his recipebook is returned by this method.
+    /**
+     * Checks if all the views are filled, and shakes the views that aren't. If User got everything correct, his recipebook is returned by this method.
+     * @return a RecipeBook with the user given values, if all is filled out, or otherwise an empty recipebook.
+     */
     private RecipeBook checkViews() {
         RecipeBook recipeBook = new RecipeBook();
         if(update) {
@@ -132,7 +142,9 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
         return recipeBook;
     }
 
-    //Initializes the RecyclerView, creates observer for recyclerviews data. Two different branches in this method, on for updating and one for usual inserting.
+    /**
+     * Initializes the RecyclerView, creates observer for recyclerviews data. Two different branches in this method, on for updating and one for usual inserting.
+     */
     private void initializeListAdapter() {
         recipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
         recipeBookViewModel = ViewModelProviders.of(this).get(RecipeBookViewModel.class);
@@ -186,7 +198,12 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
         rvChoosenRecipes.setAdapter(listAdapter);
     }
 
-    //Returns a boolean array with true set for the recipes in the database, that are also in the recipebook which is updated in this activity.
+    /**
+     * Returns a boolean array with true set for the recipes in the database, that are also in the recipebook which is updated in this activity.
+     * @param allRec list of all recipes available in the db
+     * @param rbRec list of the recipes related to recipebooks.
+     * @return returns an array as big as allRec-List, which holds true if the value on this position in the allRec is also in the rbRec, and false if otherwise.
+     */
     private Boolean[] updateRecipeView(List<Recipe> allRec, List<Recipe> rbRec) {
         Boolean[] checked = new Boolean[allRec.size()];
 
@@ -201,7 +218,12 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
         return checked;
     }
 
-    //Checks if a recipe is contained in a list of recipes, and returns true if so.
+    /**
+     * Checks if a recipe is contained in a list of recipes, and returns true if so.
+     * @param rbRec List of recipes
+     * @param recipe Recipe
+     * @return Returns true if recipe is in rbRec, and false otherwise.
+     */
     private boolean recipeBookIncluded(List<Recipe> rbRec, Recipe recipe) {
         for(Recipe rec : rbRec) {
             if(rec.getUid()==recipe.getUid()) {
@@ -211,6 +233,11 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
         return false;
     }
 
+    /**
+     * Called on creation, to create and inflate the options menu.
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if(!update) {   //Displays the import button in the action bar only when a recipebook is created, not updated.
@@ -220,6 +247,11 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Callback method for when a user clicks an item in the options menu. Handles the clicks on those items.
+     * @param item An item in the menu.
+     * @return Handled by superclass.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
@@ -236,12 +268,12 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
-    //Callback for Permission requests. User was asked about sharing his storage with this application, the answer is handled in this callback-method.
+    /**
+     * Callback for Permission requests. User was asked about sharing his storage with this application, the answer is handled in this callback-method.
+     * @param requestCode code with which the permission-question was submitted to the user.
+     * @param permissions permissions we asked for
+     * @param grantResults results for the asked permissions.
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -258,7 +290,10 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
         }
     }
 
-    //Checks if a user has given this app the permission to write the storage.
+    /**
+     * Checks if a user has given this app the permission to write the storage.
+     * @return true if permission already granted, false if not.
+     */
     private boolean checkStoragePermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             return false;
@@ -266,7 +301,9 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
         return true;
     }
 
-    //Asks the user for permission to write to his storage.
+    /**
+     * Asks the user for permission to write to his storage.
+     */
     private void askStoragePermission(){
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},0);
     }

@@ -35,7 +35,7 @@ public class ViewRecipeBookListAdapter extends RecyclerView.Adapter<ViewRecipeBo
      * Called on adapter creation, inflates each list item with the correct layout and passes it on to a viewholder.
      * @param viewGroup View used for inflating the layout.
      * @param i position of the view in the recyclerview list.
-     * @return
+     * @return ViewHolder holding the views of the list item.
      */
     @NonNull
     @Override
@@ -96,7 +96,7 @@ public class ViewRecipeBookListAdapter extends RecyclerView.Adapter<ViewRecipeBo
     /**
      * Returns a computed string for the ingredients given as parameter. This string is displayed in the list item below the recipe name.
      * @param ingredients
-     * @return
+     * @return String describing the ingredients of the parameter ingredients.
      */
     private String getIngredients(List<Ingredient> ingredients) {
         String ingredientsString = "" ;
@@ -119,7 +119,7 @@ public class ViewRecipeBookListAdapter extends RecyclerView.Adapter<ViewRecipeBo
 
     /**
      * Returns the size of the recyclerView item list.
-     * @return
+     * @return list size.
      */
     @Override
     public int getItemCount() {

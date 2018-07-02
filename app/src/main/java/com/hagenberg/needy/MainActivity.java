@@ -31,11 +31,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * LauncherActivity, sets up ViewPager.
+ */
 public class MainActivity extends AppCompatActivity {
 
     MainPagerAdapter viewPagerAdapter;
     ViewPager viewPager;
 
+    /**
+     * Called after the startup.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -230,6 +237,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Called after initializing the activity. Inflates the menu.
+     * @param menu menu to inflate.
+     * @return handled by super class.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater  = getMenuInflater();
@@ -272,12 +284,19 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Handles queries of the searchable view.
+     * @param intent
+     */
     @Override
     protected void onNewIntent(Intent intent) {
         handleIntent(intent);
     }
 
-    //Handles a search query, and sets it for the displayed fragments of the ViewPagerAdapter.
+    /**
+     * Handles a search query, and sets it for the displayed fragments of the ViewPagerAdapter.
+     * @param intent calling intent. 
+     */
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);

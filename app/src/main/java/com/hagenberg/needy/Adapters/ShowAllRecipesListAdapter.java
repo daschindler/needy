@@ -33,7 +33,7 @@ public class ShowAllRecipesListAdapter extends RecyclerView.Adapter<ShowAllRecip
     /**
      * Called when data for adapter should be updated. Sets adapter recipes to the parameter value.
      * @param recipes
-     * @return
+     * @return true if update was successful, false otherwise.
      */
     public boolean updateData(List<Recipe> recipes){
         if(recipes!=null) {
@@ -57,7 +57,7 @@ public class ShowAllRecipesListAdapter extends RecyclerView.Adapter<ShowAllRecip
      * Called when ViewHolder is created, to inflate the correct list item layout. Then initializes the viewholder and returns it.
      * @param parent View which is used for inflating the list item.
      * @param i position of the view in the recyclerview list.
-     * @return
+     * @return ViewHolder holding the views of the list item.
      */
     @NonNull
     @Override
@@ -134,30 +134,11 @@ public class ShowAllRecipesListAdapter extends RecyclerView.Adapter<ShowAllRecip
             }
         });
 
-        /*final String recipeName = recipes.get(i).getName();
-        viewHolder.tvRecipeName.setText(recipeName);
-        viewHolder.tvRecipeName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Call detail view of clicked Recipe.
-                Intent intent = new Intent(view.getContext(), ViewRecipeActivity.class);
-                intent.putExtra("id", recipes.get(i).getUid());
-                view.getContext().startActivity(intent);
-            }
-        });
-        viewHolder.rowLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), ViewRecipeActivity.class);
-                intent.putExtra("id", recipes.get(i).getUid());
-                view.getContext().startActivity(intent);
-            }
-        });*/
     }
 
     /**
      * Returns the item size of the recipe list.
-     * @return
+     * @return list size.
      */
     @Override
     public int getItemCount() {

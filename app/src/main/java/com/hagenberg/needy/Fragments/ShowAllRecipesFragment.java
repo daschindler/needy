@@ -28,8 +28,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+
 /**
- * Fragment with the Views for the List of all Recipes. Used in the MainPagerAdapter.
+ * @author thomasmaier
+ * Fragment with the Views for the List of all Recipes. Used in the MainPagerAdapter
  */
 public class ShowAllRecipesFragment extends Fragment {
     RecipeViewModel recipeViewModel;
@@ -54,7 +56,7 @@ public class ShowAllRecipesFragment extends Fragment {
 
     /**
      * Used in the MainPagerAdapter for creating a new Instance of the Fragment.
-     * @return
+     * @return An instance of the created fragment.
      */
     public static ShowAllRecipesFragment newInstance() {
         ShowAllRecipesFragment fragment = new ShowAllRecipesFragment();
@@ -75,7 +77,7 @@ public class ShowAllRecipesFragment extends Fragment {
      * @param inflater
      * @param container
      * @param savedInstanceState
-     * @return
+     * @return Returns the inflated Fragment as a view.
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -144,7 +146,7 @@ public class ShowAllRecipesFragment extends Fragment {
      * Filters the recipeList by the searchString parameter given, and returns the filtered Recipes.
      * @param recipeList
      * @param searchString
-     * @return
+     * @return A filtered list containing only items with names starting with the searchstring-parameter.
      */
     private List<Recipe> searchRecipeList(List<Recipe> recipeList, String searchString) {
         if (searchString == "") {
