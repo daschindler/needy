@@ -22,6 +22,9 @@ import com.hagenberg.needy.ViewModel.RecipeViewModel;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Code behind the "Finder"-Fragment
+ */
 public class RecipeFinderFragment extends Fragment {
     //forthepush
     RecipeViewModel recipeViewModel;
@@ -69,6 +72,9 @@ public class RecipeFinderFragment extends Fragment {
 
     }
 
+    /**
+     * Make all the data ready needed for this fragment to work.
+     */
     private void setupData() {
         recipeViewModel = ViewModelProviders.of(this.getActivity()).get(RecipeViewModel.class);
         LiveData<List<Recipe>> allRecipes = recipeViewModel.getAllRecipes();
@@ -92,21 +98,14 @@ public class RecipeFinderFragment extends Fragment {
         });
     }
 
+    /**
+     * Setup the List-Adapters needed for this view.
+     * @param recipeList List with all stored Recipes
+     */
     private void setUpListAdapter(List<Recipe> recipeList){
         recipesListAdapter = new ShowFoundRecipesByIngredientsListAdapter(getContext(), recipeList);
         ingredientsListAdapter = new ShowAllIngredientsListAdapter(recipeList, recipesListAdapter);
         rvRecipes.setAdapter(recipesListAdapter);
         rvIngredients.setAdapter(ingredientsListAdapter);
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
-            case R.id.main_menu_search:
-                //ToDo
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 }
