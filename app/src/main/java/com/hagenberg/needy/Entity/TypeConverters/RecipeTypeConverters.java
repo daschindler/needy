@@ -14,6 +14,11 @@ public class RecipeTypeConverters {
 
     static Gson gson = new Gson();
 
+    /**
+     *
+     * @param data as Json-String
+     * @return a List of Recipes by the given json-string
+     */
     @TypeConverter
     public static List<Recipe> stringToSomeObjectList(String data) {
         if (data == null) {
@@ -25,6 +30,11 @@ public class RecipeTypeConverters {
         return gson.fromJson(data, listType);
     }
 
+    /**
+     *
+     * @param someObjects as List of Recipes
+     * @return a Json-String from the given Recipe-List
+     */
     @TypeConverter
     public static String someObjectListToString(List<Recipe> someObjects) {
         return gson.toJson(someObjects);

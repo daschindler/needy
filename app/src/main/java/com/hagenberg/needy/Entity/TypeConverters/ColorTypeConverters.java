@@ -15,6 +15,11 @@ public class ColorTypeConverters {
 
     static Gson gson = new Gson();
 
+    /**
+     *
+     * @param data as String
+     * @return Color Object (Enum) created from the given String, returning orange as default
+     */
     @TypeConverter
     public static Color stringToSomeObjectList(String data) {
         switch(data){
@@ -29,13 +34,18 @@ public class ColorTypeConverters {
         }
     }
 
+    /**
+     *
+     * @param someObject
+     * @return the Color-Object as simple String, holding it's value
+     */
     @TypeConverter
-    public static String someObjectListToString(Color someObjects) {
-        if(someObjects == Color.BLUE){
+    public static String someObjectListToString(Color someObject) {
+        if(someObject == Color.BLUE){
             return "BLUE";
-        }else if(someObjects == Color.RED){
+        }else if(someObject == Color.RED){
             return "RED";
-        }else if(someObjects == Color.GREEN){
+        }else if(someObject == Color.GREEN){
             return "GREEN";
         }
 

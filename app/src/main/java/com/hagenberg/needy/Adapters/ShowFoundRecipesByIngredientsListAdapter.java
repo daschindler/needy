@@ -23,12 +23,14 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/** ListAdapter for ListViews, showing all Recipes filtered through an ingredient list */
 public class ShowFoundRecipesByIngredientsListAdapter extends RecyclerView.Adapter<ShowFoundRecipesByIngredientsListAdapter.ViewHolder> {
     private List<Recipe> allRecipes;
     private List<Recipe> availableRecipes;
     private List<String> availableIngredients;
     private Context context;
 
+    /** Update list view with new recipes */
     public void updateRecipies(List<Recipe> allRecipes){
         if(allRecipes == null){
             this.allRecipes = new LinkedList<Recipe>();
@@ -41,6 +43,7 @@ public class ShowFoundRecipesByIngredientsListAdapter extends RecyclerView.Adapt
         notifyDataSetChanged();
     }
 
+    /** Update list view with new ingredients */
     public void updateIngredients(List<String> availableIngredients){
         this.availableIngredients = availableIngredients;
 
@@ -58,6 +61,7 @@ public class ShowFoundRecipesByIngredientsListAdapter extends RecyclerView.Adapt
         getAvailableRecipes();
     }
 
+    /** Looking for the recipes that are makeable with the availableIngredients */
     private void getAvailableRecipes(){
         availableRecipes = new LinkedList<Recipe>();
 
@@ -97,6 +101,7 @@ public class ShowFoundRecipesByIngredientsListAdapter extends RecyclerView.Adapt
         return vh;
     }
 
+    /** Setting the Data for the Views */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
         final Recipe recipe = availableRecipes.get(i);

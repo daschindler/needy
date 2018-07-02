@@ -12,6 +12,7 @@ import com.hagenberg.needy.Entity.RecipeBook;
 
 import java.util.List;
 
+/** Direct Actions for the Database for RecipeBooks. SQL-Queries and Room-Actions are defined here */
 @Dao
 public interface RecipeBookData {
     @Query("SELECT * FROM RecipeBook")

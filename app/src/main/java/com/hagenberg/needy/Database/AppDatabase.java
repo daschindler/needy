@@ -15,6 +15,11 @@ public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase INSTANCE;
 
+    /**
+     *
+     * @param context
+     * @return The Database is only loaded once. When it's loaded the constructor will only return the instance to the database that's already been loaded
+     */
     public static AppDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (AppDatabase.class) {

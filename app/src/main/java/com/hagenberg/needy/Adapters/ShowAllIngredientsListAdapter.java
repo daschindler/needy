@@ -16,6 +16,9 @@ import com.hagenberg.needy.R;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * The Adapter for Ingredient-Lists
+ */
 public class ShowAllIngredientsListAdapter extends RecyclerView.Adapter<ShowAllIngredientsListAdapter.ViewHolder> {
     private List<Recipe> recipes;
 
@@ -30,36 +33,45 @@ public class ShowAllIngredientsListAdapter extends RecyclerView.Adapter<ShowAllI
         updateData(recipes);
     }
 
-    public boolean updateData(List<Recipe> recipes){
+    /**
+     * Update "All Ingredients" by all available recipes
+     * @param recipes all available recipes
+     */
+    public void updateData(List<Recipe> recipes){
         if (recipes == null){
             this.recipes = new LinkedList<Recipe>();
             recipeAdapter.updateIngredients(this.selectedIngredients);
-            return false;
+            return;
         }
 
         if(recipes.size() > 0) {
             this.recipes = recipes;
 
-            this.allIngredients = new LinkedList<String>();
+            this.allIngredients = new LinkedList<>();
 
             for (Recipe r : recipes){
                 if(r != null){
+
                     if(r.getIngredients() != null){
+
                         for(Ingredient i : r.getIngredients()){
-                            if(!allIngredients.contains(i.getName())){
+
+                            if(!allIngredients.contains(i.getName().toLowerCase())){
                                 this.allIngredients.add(i.getName().toLowerCase());
                             }
+
                         }
+
                     }
+
                 }
             }
 
             recipeAdapter.updateIngredients(this.selectedIngredients);
-            return true;
+            return;
         }
 
         recipeAdapter.updateIngredients(this.selectedIngredients);
-        return false;
     }
 
     @NonNull
@@ -73,6 +85,11 @@ public class ShowAllIngredientsListAdapter extends RecyclerView.Adapter<ShowAllI
         return vh;
     }
 
+    /**
+     * Bind Viewholder, Setting all the Information for the current Viewholder
+     * @param viewHolder
+     * @param i position of current Ingredient in IngredientList
+     */
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int i) {
         final String ingredientName = this.allIngredients.get(i);
@@ -104,11 +121,18 @@ public class ShowAllIngredientsListAdapter extends RecyclerView.Adapter<ShowAllI
         });
     }
 
+    /**
+     *
+     * @return size of Ingredient-List
+     */
     @Override
     public int getItemCount() {
         return allIngredients.size();
     }
 
+    /**
+     * Setup Fields to be filled later for the ViewHolder
+     */
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tvIngredientName;
         public CardView cvIngredientHolder;

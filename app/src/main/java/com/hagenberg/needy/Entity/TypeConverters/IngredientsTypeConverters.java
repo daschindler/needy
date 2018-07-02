@@ -14,6 +14,11 @@ public class IngredientsTypeConverters {
 
     static Gson gson = new Gson();
 
+    /**
+     *
+     * @param data as JsonString
+     * @return a List of Ingredients as Objects from the given Json-String
+     */
     @TypeConverter
     public static List<Ingredient> stringToSomeObjectList(String data) {
         if (data == null) {
@@ -25,6 +30,11 @@ public class IngredientsTypeConverters {
         return gson.fromJson(data, listType);
     }
 
+    /**
+     *
+     * @param someObjects as List of Ingredients
+     * @return the given List of Ingredients as Json-String
+     */
     @TypeConverter
     public static String someObjectListToString(List<Ingredient> someObjects) {
         String gs =  gson.toJson(someObjects);

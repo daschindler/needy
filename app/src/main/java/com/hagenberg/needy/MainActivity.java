@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //ShowDatabaseFunctionality();
+        ShowDatabaseFunctionality();
         getSupportActionBar().setElevation(0);
         setContentView(R.layout.activity_main);
         viewPager = findViewById(R.id.viewpager);
