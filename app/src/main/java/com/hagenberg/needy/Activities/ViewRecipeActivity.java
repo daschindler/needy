@@ -170,7 +170,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
         tv_description.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         tv_description.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         tv_description.setTextSize(17);
-        tv_description.setPadding(40,0,40,40);
+        tv_description.setPadding(110,0,100,40);
 
         tv_description.setText(selectedRecipe.getDescription() + "\n");
 
@@ -197,12 +197,12 @@ public class ViewRecipeActivity extends AppCompatActivity {
                 LinearLayout.LayoutParams horizontalTextLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 horizontalTextLayout.setOrientation(LinearLayout.HORIZONTAL);
                 horizontalTextLayout.setLayoutParams(horizontalTextLayoutParams);
-                horizontalTextLayout.setPadding((displayWidth/3-displayWidth/50),10,displayWidth/10,10);
+                horizontalTextLayout.setPadding((displayWidth/12),10,displayWidth/12,10);
 
 
                 TextView tvIngredientAmount = new TextView(this);
                 LinearLayout.LayoutParams tvIngredientAmountParams =
-                        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        new LinearLayout.LayoutParams((160), ViewGroup.LayoutParams.WRAP_CONTENT);
                 tvIngredientAmount.setText(String.valueOf(loopIngredient.getAmount()));
                 tvIngredientAmount.setTextColor(originalLabelColors);
                 tvIngredientAmount.setTextSize(17);
@@ -225,17 +225,23 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
                 TextView tvIngredientName = new TextView(this);
                 LinearLayout.LayoutParams tvIngredientNameParams =
-                        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        new LinearLayout.LayoutParams((displayWidth/3), ViewGroup.LayoutParams.WRAP_CONTENT);
                 tvIngredientName.setText(loopIngredient.getName().toString());
                 tvIngredientName.setTextColor(originalLabelColors);
                 tvIngredientName.setTextSize(17);
                 tvIngredientName.setLayoutParams(tvIngredientNameParams);
 
-                horizontalTextLayout.addView(tvIngredientAmount);
-                horizontalTextLayout.addView(fillerViewAmountUnit);
-                horizontalTextLayout.addView(tvIngredientUnit);
-                horizontalTextLayout.addView(fillerViewUnitName);
+                //horizontalTextLayout.addView(tvIngredientAmount);
+                //horizontalTextLayout.addView(fillerViewAmountUnit);
+                //horizontalTextLayout.addView(tvIngredientUnit);
+                //horizontalTextLayout.addView(fillerViewUnitName);
                 horizontalTextLayout.addView(tvIngredientName);
+                horizontalTextLayout.addView(fillerViewAmountUnit);
+                horizontalTextLayout.addView(tvIngredientAmount);
+                //horizontalTextLayout.addView(fillerViewUnitName);
+                horizontalTextLayout.addView(tvIngredientUnit);
+                //horizontalTextLayout.addView(fillerViewUnitName);
+
 
                 ll_ingredients.addView(horizontalTextLayout);
             }

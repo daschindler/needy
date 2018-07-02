@@ -14,6 +14,7 @@
         android:textSize="20dp"
         android:textStyle="bold"
         android:text="Recipedescription"
+        android:textColor="@color/colorPrimary"
         android:layout_weight="10"
         android:textAlignment="center"/>
 
@@ -24,9 +25,9 @@
         android:inputType="textMultiLine"
         android:id="@+id/et_create_recipe_dialog_description"
         android:lines="7"
-        android:background="#efefef"
         android:hint="Type here..."
         android:gravity="top|left"
+        android:backgroundTint="@color/colorPrimary"
         />
 
     <LinearLayout
@@ -38,13 +39,17 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Abbrechen"
+            android:text="Cancel"
+            android:background="@color/white"
+            android:textColor="@color/colorPrimary"
             android:id="@+id/bt_create_recipe_dialog_cancel"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Speichern"
+            android:text="Save"
+            android:background="@color/white"
+            android:textColor="@color/colorPrimary"
             android:id="@+id/bt_create_recipe_dialog_save"/>
     </LinearLayout>
 
