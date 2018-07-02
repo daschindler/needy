@@ -44,7 +44,7 @@ import java.util.List;
 
 public class ViewRecipeActivity extends AppCompatActivity {
 
-    private LinearLayout ll_ingredientsbutton, ll_descriptionbutton, ll_share, ll_edit;
+    private LinearLayout ll_ingredientsbutton, ll_descriptionbutton;
     private LinearLayout ll_ingredients, ll_description;
 
     private ImageView imgv_ingredientsarrow, imgv_descriptionarrow;
@@ -75,7 +75,6 @@ public class ViewRecipeActivity extends AppCompatActivity {
         recipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
 
         ll_descriptionbutton = findViewById(R.id.ll_view_recipe_descriptionbutton);
-        ll_edit = findViewById(R.id.ll_view_recipe_editbutton);
         ll_ingredientsbutton = findViewById(R.id.ll_view_recipe_ingredientbutton);
         ll_description = findViewById(R.id.ll_view_recipe_description);
         ll_ingredients = findViewById(R.id.ll_view_recipe_ingredients);
@@ -86,10 +85,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
         bt_share = findViewById(R.id.bt_view_recipe_share);
         bt_edit = findViewById(R.id.bt_view_recipe_edit);
 
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        final int displayWidth = size.x;
+        final int displayWidth = getDisplayWidth();
 
         recipeId = intent.getIntExtra("id", 404040);
 
@@ -158,6 +154,20 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * @return
+     * The displaywidth of the device where it is executed.
+     */
+    private int getDisplayWidth() {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        return size.x;
+    }
+
+    /**
+     * This method hides the description in the view
+     */
     private void HideDescription() {
         ll_description.removeAllViews();
         descriptionShown = false;
@@ -165,6 +175,10 @@ public class ViewRecipeActivity extends AppCompatActivity {
         tv_description_label.setTextColor(originalLabelColors);
     }
 
+    /**
+     * This method shows the view where the description of the
+     * current recipe is displayed
+     */
     private void ShowDescription() {
         TextView tv_description = new TextView(ViewRecipeActivity.this);
         tv_description.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -180,6 +194,9 @@ public class ViewRecipeActivity extends AppCompatActivity {
         ll_description.addView(tv_description);
     }
 
+    /**
+     * Hides the ingredients view
+     */
     private void HideIngredients() {
         ll_ingredients.removeAllViews();
         ll_ingredients.setPadding(0,0,0,0);
@@ -188,6 +205,11 @@ public class ViewRecipeActivity extends AppCompatActivity {
         tv_ingredient_label.setTextColor(originalLabelColors);
     }
 
+    /**
+     * Show all ingredients that are needed for the current recipe
+     * @param displayWidth
+     * Is needed for a good looking layout on every phone
+     */
     private void ShowIngredients(int displayWidth) {
         if (selectedRecipe.getIngredients() != null) {
             for (Ingredient loopIngredient : selectedRecipe.getIngredients()){
@@ -198,7 +220,6 @@ public class ViewRecipeActivity extends AppCompatActivity {
                 horizontalTextLayout.setOrientation(LinearLayout.HORIZONTAL);
                 horizontalTextLayout.setLayoutParams(horizontalTextLayoutParams);
                 horizontalTextLayout.setPadding((displayWidth/12),10,displayWidth/12,10);
-
 
                 TextView tvIngredientAmount = new TextView(this);
                 LinearLayout.LayoutParams tvIngredientAmountParams =
@@ -219,10 +240,6 @@ public class ViewRecipeActivity extends AppCompatActivity {
                 tvIngredientUnit.setTextSize(17);
                 tvIngredientUnit.setLayoutParams(tvIngredientUnitParams);
 
-                View fillerViewUnitName = new View(this);
-                fillerViewUnitName.setLayoutParams(new LinearLayout.LayoutParams(displayWidth/30, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-
                 TextView tvIngredientName = new TextView(this);
                 LinearLayout.LayoutParams tvIngredientNameParams =
                         new LinearLayout.LayoutParams((displayWidth/3), ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -231,17 +248,10 @@ public class ViewRecipeActivity extends AppCompatActivity {
                 tvIngredientName.setTextSize(17);
                 tvIngredientName.setLayoutParams(tvIngredientNameParams);
 
-                //horizontalTextLayout.addView(tvIngredientAmount);
-                //horizontalTextLayout.addView(fillerViewAmountUnit);
-                //horizontalTextLayout.addView(tvIngredientUnit);
-                //horizontalTextLayout.addView(fillerViewUnitName);
                 horizontalTextLayout.addView(tvIngredientName);
                 horizontalTextLayout.addView(fillerViewAmountUnit);
                 horizontalTextLayout.addView(tvIngredientAmount);
-                //horizontalTextLayout.addView(fillerViewUnitName);
                 horizontalTextLayout.addView(tvIngredientUnit);
-                //horizontalTextLayout.addView(fillerViewUnitName);
-
 
                 ll_ingredients.addView(horizontalTextLayout);
             }
@@ -253,6 +263,11 @@ public class ViewRecipeActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * is called when user presses on share
+     * the recipe is stored as .needy file on the sdcard root /needy folder
+     * folder will be generated if not already there
+     */
     private void CreateFileAndShare() {
         try {
             File folder = new File(Environment.getExternalStorageDirectory().toString()+"/needy");
@@ -279,6 +294,11 @@ public class ViewRecipeActivity extends AppCompatActivity {
         startActivity(Intent.createChooser(sharingIntent, "share file with"));
     }
 
+    /**
+     * Makes a .needy formatted String out of an object that is later stored in the .needy file
+     * @param recipe
+     * @return
+     */
     private String FormatRecipeToString(Recipe recipe) {
         StringBuilder formattedRecipe = new StringBuilder();
 

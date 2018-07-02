@@ -60,9 +60,6 @@ public class EditRecipeActivity extends AppCompatActivity {
     private TextView tvIngredientLabel, tvDescriptionLabel;
     private ImageView imgvIngredientSymbol, imgvDescriptionSymbol, imgvInfoSymbol;
 
-    private boolean ingredientsShown = false;
-    private boolean descriptionShown = false;
-
     private ArrayList<View> viewIngredientList = new ArrayList<>();
 
     private ColorStateList colorGrey;
@@ -93,10 +90,7 @@ public class EditRecipeActivity extends AppCompatActivity {
         imgvIngredientSymbol = findViewById(R.id.img_edit_recipe_ingredients_arrow);
         imgvInfoSymbol = findViewById(R.id.img_edit_recipe_info);
 
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        final int displayWidth = size.x;
+        final int displayWidth = getDisplayWidth();
 
         llDescription.setPadding(displayWidth/8,0,displayWidth/8,55);
         llIngredients.setPadding(0,0,0,35);
@@ -105,10 +99,7 @@ public class EditRecipeActivity extends AppCompatActivity {
 
         colorGrey = tvIngredientLabel.getTextColors();
 
-
-        //Hide SoftKeyboard
-        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
+        HideSoftKeyboard();
 
         if (recipeId != 404040) {
             final LiveData<Recipe> selectedLiveRecipe = recipeViewModel.getRecipeById(recipeId);
@@ -157,69 +148,10 @@ public class EditRecipeActivity extends AppCompatActivity {
                 }
             });
 
-            llDescriptionButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    /*if (descriptionShown == false) {
-                        ShowEditDescription(displayWidth);
-                    } else {
-                        HideEditDescription();
-                    }*/
-                    //ShowEditDescription(displayWidth);
-                }
-            });
-
-            llIngredientButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    /*if (ingredientsShown == false) {
-                        ShowEditIngredients(displayWidth);
-                    } else {
-                        HideEditIngredients();
-                    }*/
-                    //ShowEditIngredients(displayWidth);
-
-                }
-            });
-
             btSaveEditedRecipe.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    String newName = etRecipeName.getText().toString();
-                    String newDescription = "";
-                    if (etDescription.getText() != null) {
-                        newDescription = etDescription.getText().toString();
-                    }
-
-                    List<Ingredient> newIngredients = new ArrayList<>();
-                    for (int i = 0; i < viewIngredientList.size(); i++) {
-                            EditText editTextName = (EditText)viewIngredientList.get(i+0);
-                            EditText editTextAmount = (EditText)viewIngredientList.get(i+1);
-                            Spinner spUnit = (Spinner)viewIngredientList.get(i+2);
-
-                            i = i +2;
-
-                            if (!editTextName.getText().toString().equals("")){
-                                String newIngName = editTextName.getText().toString();
-                                Double newIngAmountDouble = 0.0;
-                                if (!editTextAmount.getText().toString().equals("")) {
-                                    newIngAmountDouble = Double.valueOf(editTextAmount.getText().toString());
-                                }
-                                Unit newIngUnit = Unit.valueOf(spUnit.getSelectedItem().toString());
-
-                                Ingredient newIngredient = new Ingredient(newIngName, newIngAmountDouble, newIngUnit);
-                                newIngredients.add(newIngredient);
-                            }
-                    }
-
-                    selectedRecipe.setName(newName);
-                    selectedRecipe.setDescription(newDescription);
-                    selectedRecipe.setIngredients(newIngredients);
-
-                    recipeViewModel.update(selectedRecipe);
-
-
-                    EditRecipeActivity.this.finish();
+                    SaveEditedRecipe(recipeViewModel);
                 }
             });
 
@@ -229,28 +161,74 @@ public class EditRecipeActivity extends AppCompatActivity {
 
     }
 
-    private void HideEditDescription() {
-        llDescription.removeAllViews();
-        descriptionShown = false;
-        imgvDescriptionSymbol.setImageResource(R.drawable.ic_expand_more_grey_24dp);
-        tvDescriptionLabel.setTextColor(colorGrey);
-        llDescription.setVisibility(View.GONE);
+    /**
+     * The curent state of the Recipeview will be updated to the Database and
+     * the view will be closed.
+     * @param recipeViewModel
+     * Is needed for operating with the database
+     */
+    private void SaveEditedRecipe(RecipeViewModel recipeViewModel) {
+        String newName = etRecipeName.getText().toString();
+        String newDescription = "";
+        if (etDescription.getText() != null) {
+            newDescription = etDescription.getText().toString();
+        }
+
+        List<Ingredient> newIngredients = new ArrayList<>();
+        for (int i = 0; i < viewIngredientList.size(); i++) {
+                EditText editTextName = (EditText)viewIngredientList.get(i+0);
+                EditText editTextAmount = (EditText)viewIngredientList.get(i+1);
+                Spinner spUnit = (Spinner)viewIngredientList.get(i+2);
+
+                i = i +2;
+
+                if (!editTextName.getText().toString().equals("")){
+                    String newIngName = editTextName.getText().toString();
+                    Double newIngAmountDouble = 0.0;
+                    if (!editTextAmount.getText().toString().equals("")) {
+                        newIngAmountDouble = Double.valueOf(editTextAmount.getText().toString());
+                    }
+                    Unit newIngUnit = Unit.valueOf(spUnit.getSelectedItem().toString());
+
+                    Ingredient newIngredient = new Ingredient(newIngName, newIngAmountDouble, newIngUnit);
+                    newIngredients.add(newIngredient);
+                }
+        }
+
+        selectedRecipe.setName(newName);
+        selectedRecipe.setDescription(newDescription);
+        selectedRecipe.setIngredients(newIngredients);
+
+        recipeViewModel.update(selectedRecipe);
+
+
+        EditRecipeActivity.this.finish();
     }
 
-    private void HideEditIngredients() {
-        llIngredients.removeAllViews();
-        ingredientsShown = false;
-        imgvIngredientSymbol.setImageResource(R.drawable.ic_expand_more_grey_24dp);
-        tvIngredientLabel.setTextColor(colorGrey);
-        llIngredients.setVisibility(View.GONE);
-
+    /**
+     * The softkeyboard will be hidden, if this function is called
+     */
+    private void HideSoftKeyboard() {
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
+    /**
+     * @return
+     * The displaywidth of the device where it is executed.
+     */
+    private int getDisplayWidth() {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        return size.x;
+    }
+
+    /**
+     * Shows all ingredients of the current recipe
+     * @param displayWidth
+     */
     private void ShowEditIngredients(final int displayWidth) {
-        ingredientsShown = true;
         tvIngredientLabel.setTextColor(Color.rgb(0,0,0));
-        imgvIngredientSymbol.setImageResource(R.drawable.ic_add_black_24dp);
-        //imgvIngredientSymbol.setVisibility(View.GONE);
         if (selectedRecipe.getIngredients() != null) {
             if (selectedRecipe.getIngredients().size() > 0) {
                 llIngredients.setVisibility(View.VISIBLE);
@@ -266,11 +244,15 @@ public class EditRecipeActivity extends AppCompatActivity {
                 AddIngredientToView(new Ingredient("",0.0,Unit.Unit), displayWidth);
             }
         });
-
-
-
     }
 
+    /**
+     * Adds one specified ingredient to the View
+     * @param currentIngredient
+     * The ingredient that should be added to the View
+     * @param displayWidth
+     * Is needed for a good looking layout on every device
+     */
     private void AddIngredientToView(Ingredient currentIngredient, int displayWidth) {
         //Layout per Ingredient
         LinearLayout horizontalEditIngredientLayout = new LinearLayout(EditRecipeActivity.this);
@@ -346,25 +328,22 @@ public class EditRecipeActivity extends AppCompatActivity {
         llIngredients.addView(horizontalEditIngredientLayout);
     }
 
+    /**
+     * Shows the description of the current Recipe
+     * @param displayWidth
+     * Is needed for a good looking layout on every device
+     */
     private void ShowEditDescription(int displayWidth) {
-        descriptionShown = true;
         tvDescriptionLabel.setTextColor(Color.rgb(0,0,0));
-        imgvDescriptionSymbol.setImageResource(R.drawable.ic_clear_black_24dp);
-        //imgvDescriptionSymbol.setVisibility(View.GONE);
         llDescription.setVisibility(View.VISIBLE);
 
         etDescription = new EditText(EditRecipeActivity.this);
         LinearLayout.LayoutParams etDescriptionParams = new LinearLayout.LayoutParams(((displayWidth/2)+(displayWidth/4)), ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
         etDescription.setLayoutParams(etDescriptionParams);
-        //etDescription.setPadding(100,0,100,0);
         etDescription.setSingleLine(false);
-        //etDescription.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         etDescription.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
-        //etDescription.setLines(5);
-        //etDescription.setMaxLines(10);
         etDescription.setHint("Type here...");
         etDescription.setTextColor(colorGrey);
-        //etDescription.setBackgroundColor(Color.parseColor("#efefef"));
 
         if (selectedRecipe != null) {
             if (selectedRecipe.getDescription() != null) {

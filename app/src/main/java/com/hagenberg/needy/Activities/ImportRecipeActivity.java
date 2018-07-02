@@ -70,7 +70,11 @@ public class ImportRecipeActivity extends AppCompatActivity {
 
     }
 
-    //Aufruf des Setups für mitgegebene Ordner"ebene"
+    /**
+     * Shows all folders and .needy Files for the given filepath
+     * and makes them clickable
+     * @param filepath
+     */
     private void SetupFilebrowser(File filepath) {
         actPathFile = filepath;
         File dirs = new File(filepath.getAbsolutePath());
@@ -158,6 +162,10 @@ public class ImportRecipeActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method stores a given .needy file into the database
+     * @param file
+     */
     private void StoreRecipe(File file) {
         StringBuilder recipeFromFileString = new StringBuilder();
         try {

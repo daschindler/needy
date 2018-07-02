@@ -59,6 +59,12 @@ public class CreateRecipeActivity extends AppCompatActivity implements CreateRec
         return true;
     }
 
+    /**
+     * Checks if user accepted storage permission.
+     * @return
+     * This method returns true if user accepted storage permission,
+     * otherwise it returns false.
+     */
     private boolean checkStoragePermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             return false;
@@ -66,6 +72,9 @@ public class CreateRecipeActivity extends AppCompatActivity implements CreateRec
         return true;
     }
 
+    /**
+     * Asks the user for storage permission
+     */
     private void AskStoragePermissions(){
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.READ_CONTACTS)

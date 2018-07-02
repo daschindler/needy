@@ -71,7 +71,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="25dp"
                         android:paddingTop="20dp"
-                        android:src="@drawable/ic_expand_more_grey_24dp"></ImageView>
+                        android:src="@drawable/ic_add_black_24dp"></ImageView>
 
 
 
@@ -121,7 +121,7 @@
                         android:layout_marginRight="25dp"
                         android:paddingBottom="20dp"
                         android:paddingTop="20dp"
-                        android:src="@drawable/ic_expand_more_grey_24dp"></ImageView>
+                        android:src="@drawable/ic_clear_black_24dp"></ImageView>
                 </LinearLayout>
 
                 <LinearLayout
