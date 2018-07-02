@@ -23,10 +23,18 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * Adapter for recyclerview which displays all Recipes.
+ */
 public class ShowAllRecipesListAdapter extends RecyclerView.Adapter<ShowAllRecipesListAdapter.ViewHolder> {
     private List<Recipe> recipes;
     Context context;
 
+    /**
+     * Called when data for adapter should be updated. Sets adapter recipes to the parameter value.
+     * @param recipes
+     * @return
+     */
     public boolean updateData(List<Recipe> recipes){
         if(recipes!=null) {
             this.recipes = recipes;
@@ -35,11 +43,22 @@ public class ShowAllRecipesListAdapter extends RecyclerView.Adapter<ShowAllRecip
         return false;
     }
 
+    /**
+     * Constructor that initializes the adapter with a list of recipes and a context which the adapter needs.
+     * @param recipes
+     * @param context
+     */
     public ShowAllRecipesListAdapter(List<Recipe> recipes, Context context) {
         this.context = context;
         this.recipes = recipes;
     }
 
+    /**
+     * Called when ViewHolder is created, to inflate the correct list item layout. Then initializes the viewholder and returns it.
+     * @param parent View which is used for inflating the list item.
+     * @param i position of the view in the recyclerview list.
+     * @return
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, final int i) {
@@ -49,6 +68,12 @@ public class ShowAllRecipesListAdapter extends RecyclerView.Adapter<ShowAllRecip
         return vh;
     }
 
+    /**
+     * Called when data is set for the recyclerview. Initializes the views of the ViewHolder with the values of the recipe for the given position i.
+     * Also sets onClickListeners that lead to the detailView of the recipes, and sets icons for the recipes based on the name of them.
+     * @param viewHolder holds the current list items view.
+     * @param i position of the list item view in the whole recyclerview.
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
         final Recipe recipe = recipes.get(i);
@@ -79,7 +104,6 @@ public class ShowAllRecipesListAdapter extends RecyclerView.Adapter<ShowAllRecip
         String lowerName = recipe.getName().toLowerCase();
 
         viewHolder.cvDrinkIcon.setImageDrawable(context.getDrawable(R.drawable.cocktail));
-        //viewHolder.cvDrinkIcon.setImageDrawable(context.getDrawable(R.drawable.cocktail));
 
         if(ingredientsString.contains("beer") || lowerName.contains("beer")){
             viewHolder.cvDrinkIcon.setImageDrawable(context.getDrawable(R.drawable.beer));
@@ -131,11 +155,18 @@ public class ShowAllRecipesListAdapter extends RecyclerView.Adapter<ShowAllRecip
         });*/
     }
 
+    /**
+     * Returns the item size of the recipe list.
+     * @return
+     */
     @Override
     public int getItemCount() {
         return recipes.size();
     }
 
+    /**
+     * ViewHolder Class that initializes all views needed for a list item to display recipes.
+     */
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tvRecipeName; //recipeName
         public TextView tvIngredients; //ingredients

@@ -70,6 +70,7 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(publicRB !=null) {
+                    //Start up Create-RB-Activity with Update-Extra set.
                     Intent intent = new Intent(view.getContext(), CreateRecipeBookActivity.class);
                     intent.putExtra("id", publicRB.getUid());
                     view.getContext().startActivity(intent);
@@ -79,6 +80,7 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
             }
         });
 
+        //Check Permissions, and if given, save the file and share it via another apps intent filter.
         btShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -94,14 +96,17 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
         Intent calling = getIntent();
         Bundle extras = calling.getExtras();
 
+        //Get id to display the right recipe book.
         if(extras != null) {
             id = (int) extras.get("id");
         }
+
         rb = recipeBookViewModel.getRecipeBookById(id);
         rb.observe(this, new Observer<RecipeBook>() {
             @Override
             public void onChanged(@Nullable RecipeBook recipeBook) {
                 if(recipeBook!=null) {
+                    //Initialize the views with the values of the recipebook.
                     publicRB = recipeBook;
                     tvName.setText(recipeBook.getName());
                     tvDesc.setText(recipeBook.getDescription());
@@ -112,6 +117,7 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
         });
     }
 
+    //Callback for the requested permission to write the user storage, with the result of this request.
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -127,6 +133,7 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
         }
     }
 
+    //Check if permission needed is already given.
     private boolean checkStoragePermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             return false;
@@ -134,6 +141,7 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
         return true;
     }
 
+    //Ask for permission to access user storage.
     private void askStoragePermission(){
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},0);
     }
@@ -146,6 +154,7 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    //Delete the recipe book displayed, after the user clicks on the paper basket in the action bar.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
@@ -156,6 +165,8 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
         }
     }
 
+    //Creates a file out of the recipebook displayed in the view. The file is seperated by / and : and ; and is later decodable in the ImportRecipeBookActivity.
+    //The file is then saved to the storage in the '/needy'-folder.
     private void CreateFileToShare() {
         try {
             File folder = new File(Environment.getExternalStorageDirectory().toString()+ "/needy");
@@ -171,11 +182,12 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
             streamWriter.flush();
             fileOutput.getFD().sync();
             streamWriter.close();
-            //Toast.makeText(this,"This recipebook is saved in your storage and ready to be shared with your friends!", Toast.LENGTH_LONG).show();
         } catch (IOException ex) {
             Log.d("Write to storage", "Failed");
         }
 
+        //Show user a number of possible ways to share his file via other services, such as messengers like whatsapp or telegram. User can choose one option
+        // and from then on the file is handled by the chosen application.
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.setType("text/*");
         sharingIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(Environment.getExternalStorageDirectory().toString() +
@@ -183,6 +195,7 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
         startActivity(Intent.createChooser(sharingIntent, "Share Recipe Book via"));
     }
 
+    //Creates the string for the file to save. With a stringbuilder the recipe book is encoded with seperators, which are later used to rebuild the recipe book.
     private String FormatRecipebookToString(RecipeBook recipeBook) {
         StringBuilder formattedRecipeBook = new StringBuilder();
 
@@ -209,6 +222,7 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
         return formattedRecipeBook.toString();
     }
 
+    //Creates a string for a recipe. This method is needed because every book can have more than one recipes, which have to be encoded to be saved.
     private String FormatRecipeToString(Recipe recipe) {
         StringBuilder formattedRecipe = new StringBuilder();
 
@@ -237,6 +251,7 @@ public class ViewRecipeBookActivity extends AppCompatActivity {
         return formattedRecipe.toString();
     }
 
+    //Start a dialog to ask the user if he really wants to delete his recipe book. If yes ==> deletion and back to MainActivity.
     private void deleteRecipeBook() {
         //Start up delete-dialog
         if(rb!=null) {

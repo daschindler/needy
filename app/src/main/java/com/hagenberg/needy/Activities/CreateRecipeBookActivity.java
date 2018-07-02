@@ -52,7 +52,7 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
     List<Recipe> checkedRecipes;
     List<Recipe> allDatabaseRecipes;
     int id;
-    Boolean update = false;
+    Boolean update = false; //Activity used for both update and create, if update == true ==> RecipeBook will be updated, not inserted.
 
 
     @Override
@@ -61,6 +61,7 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_recipe_book);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        //Init views
         btFinish = findViewById(R.id.createRB_bt_finish);
         etRecipeBookName = findViewById(R.id.createRB_et_name);
         rvChoosenRecipes = findViewById(R.id.createRB_rv_recipes);
@@ -98,6 +99,7 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
         initializeListAdapter();
     }
 
+    //Checks if all the views are filled, and shakes the views that aren't. If User got everything correct, his recipebook is returned by this method.
     private RecipeBook checkViews() {
         RecipeBook recipeBook = new RecipeBook();
         if(update) {
@@ -122,12 +124,15 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
         if(!correctInput) {
             return null;
         }
+
+        //User filled out everything, recipebook is created now
         recipeBook.setRecipies(checkedRecipes);
         recipeBook.setName(etRecipeBookName.getText().toString());
         recipeBook.setDescription(etRecipeBookDescription.getText().toString());
         return recipeBook;
     }
 
+    //Initializes the RecyclerView, creates observer for recyclerviews data. Two different branches in this method, on for updating and one for usual inserting.
     private void initializeListAdapter() {
         recipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
         recipeBookViewModel = ViewModelProviders.of(this).get(RecipeBookViewModel.class);
@@ -181,6 +186,7 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
         rvChoosenRecipes.setAdapter(listAdapter);
     }
 
+    //Returns a boolean array with true set for the recipes in the database, that are also in the recipebook which is updated in this activity.
     private Boolean[] updateRecipeView(List<Recipe> allRec, List<Recipe> rbRec) {
         Boolean[] checked = new Boolean[allRec.size()];
 
@@ -195,6 +201,7 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
         return checked;
     }
 
+    //Checks if a recipe is contained in a list of recipes, and returns true if so.
     private boolean recipeBookIncluded(List<Recipe> rbRec, Recipe recipe) {
         for(Recipe rec : rbRec) {
             if(rec.getUid()==recipe.getUid()) {
@@ -206,7 +213,7 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if(!update) {
+        if(!update) {   //Displays the import button in the action bar only when a recipebook is created, not updated.
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.create_recipe_book_menu, menu);
         }
@@ -218,6 +225,7 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
         switch(item.getItemId()) {
             case R.id.createRB_menu_import:
                 if(checkStoragePermission()) {
+                    //If user gave permission to access storage, this method starts the import-Intent.
                     Intent intent = new Intent(this, ImportRecipeBookActivity.class);
                     startActivity(intent);
                 } else {
@@ -233,6 +241,7 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
+    //Callback for Permission requests. User was asked about sharing his storage with this application, the answer is handled in this callback-method.
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -249,6 +258,7 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
         }
     }
 
+    //Checks if a user has given this app the permission to write the storage.
     private boolean checkStoragePermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             return false;
@@ -256,6 +266,7 @@ public class CreateRecipeBookActivity extends AppCompatActivity {
         return true;
     }
 
+    //Asks the user for permission to write to his storage.
     private void askStoragePermission(){
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},0);
     }

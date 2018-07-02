@@ -26,6 +26,9 @@ import com.hagenberg.needy.ViewModel.RecipeBookViewModel;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Shows all RecipeBooks to display in this fragment
+ */
 public class ShowAllRecipeBooksFragment extends Fragment {
     RecipeBookViewModel recipeBookViewModel;
     String searchString = "";
@@ -38,21 +41,40 @@ public class ShowAllRecipeBooksFragment extends Fragment {
         // Required empty public constructor
     }
 
+    /**
+     * Setter for searchString, after a new searchString is set, the recyclerview is reloaded with the filtered recipebooks.
+     * @param searchString
+     */
     public void setSearchString(String searchString) {
         this.searchString = searchString;
         initializeRecyclerView(searchString);
     }
 
+    /**
+     * Creates a new instance of this fragment, used for the ViewPagerAdapater
+     * @return
+     */
     public static ShowAllRecipeBooksFragment newInstance() {
         ShowAllRecipeBooksFragment fragment = new ShowAllRecipeBooksFragment();
         return fragment;
     }
 
+    /**
+     * Called when Fragment is created newly.
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Called when Fragment views are created newly. In this method the views get inflated, and then the InitializeRecyclerView-Method is called.
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -77,6 +99,11 @@ public class ShowAllRecipeBooksFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Inits the RecyclerView and its adapter with the recipeBooks from the database. Also only uses the filtered RecipeBooks, if a searchString other than
+     * "" is set. If RecipeBooks are changed in the db, this method reacts as well since it sets an Observer to changes of RecipeBooks.
+     * @param searchString
+     */
     private void initializeRecyclerView(final String searchString) {
         recipeBookViewModel = ViewModelProviders.of(this.getActivity()).get(RecipeBookViewModel.class);
         LiveData<List<RecipeBook>> liveRecipeBooks = recipeBookViewModel.getAllLiveRecipeBooks();
@@ -100,6 +127,12 @@ public class ShowAllRecipeBooksFragment extends Fragment {
 
     }
 
+    /**
+     * Filters the recipeBooks parameter with the searchString, and returns the filtered recipe books.
+     * @param recipeBooks
+     * @param searchString
+     * @return
+     */
     private LinkedList<RecipeBook> searchRecipeBooks(List<RecipeBook> recipeBooks, String searchString) {
         LinkedList<RecipeBook> searchedBooks = new LinkedList<RecipeBook>();
 

@@ -17,13 +17,26 @@ import com.hagenberg.needy.R;
 
 import java.util.List;
 
+/**
+ * Adapter for the recyclerView that displays recipes in the detailView of the RecipeBook.
+ */
 public class ViewRecipeBookListAdapter extends RecyclerView.Adapter<ViewRecipeBookListAdapter.ViewHolder> {
     List<Recipe> recipes;
 
+    /**
+     * Constructor to init the adapters recipes with the parameter ones.
+     * @param recipes
+     */
     public ViewRecipeBookListAdapter(List<Recipe> recipes) {
         this.recipes = recipes;
     }
 
+    /**
+     * Called on adapter creation, inflates each list item with the correct layout and passes it on to a viewholder.
+     * @param viewGroup View used for inflating the layout.
+     * @param i position of the view in the recyclerview list.
+     * @return
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -33,6 +46,12 @@ public class ViewRecipeBookListAdapter extends RecyclerView.Adapter<ViewRecipeBo
         return rowVH;
     }
 
+    /**
+     * Called after data for Adapter has been set. Sets the given data of the recipes for each list items view.
+     * Also sets onClickListeners to the detailView of the recipe clicked on, and sets icons for different recipe names.
+     * @param viewHolder holds the views of the list item at this position.
+     * @param i position of the view in the recyclerView list.
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
         viewHolder.tvName.setText(recipes.get(i).getName());
@@ -74,6 +93,11 @@ public class ViewRecipeBookListAdapter extends RecyclerView.Adapter<ViewRecipeBo
         }
     }
 
+    /**
+     * Returns a computed string for the ingredients given as parameter. This string is displayed in the list item below the recipe name.
+     * @param ingredients
+     * @return
+     */
     private String getIngredients(List<Ingredient> ingredients) {
         String ingredientsString = "" ;
 
@@ -93,11 +117,18 @@ public class ViewRecipeBookListAdapter extends RecyclerView.Adapter<ViewRecipeBo
         return ingredientsString;
     }
 
+    /**
+     * Returns the size of the recyclerView item list.
+     * @return
+     */
     @Override
     public int getItemCount() {
         return recipes.size();
     }
 
+    /**
+     * ViewHolder class that holds the views of the layout of this list item.
+     */
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tvName;
         public View rowLayout;

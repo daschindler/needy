@@ -235,10 +235,12 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater  = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
 
+        //Set up searchview
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.main_menu_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
+        //Live search for each text change
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -253,6 +255,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //On opening the search view, the fragments get set an empty search string.
         menu.findItem(R.id.main_menu_search).setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem menuItem) {
@@ -274,10 +277,10 @@ public class MainActivity extends AppCompatActivity {
         handleIntent(intent);
     }
 
+    //Handles a search query, and sets it for the displayed fragments of the ViewPagerAdapter.
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            //use the query to search your data somehow
             viewPagerAdapter.setSearchString(query);
             viewPagerAdapter.notifyDataSetChanged();
         }
