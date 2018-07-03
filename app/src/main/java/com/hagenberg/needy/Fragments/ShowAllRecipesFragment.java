@@ -30,7 +30,6 @@ import java.util.List;
 
 
 /**
- * @author thomasmaier
  * Fragment with the Views for the List of all Recipes. Used in the MainPagerAdapter
  */
 public class ShowAllRecipesFragment extends Fragment {
